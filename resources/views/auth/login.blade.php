@@ -41,7 +41,7 @@
 
             <a wire:navigate class="text-sm text-green-600 underline rounded-md dark:text-green-400 hover:text-green-900 dark:hover:text-green-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 dark:focus:ring-offset-green-800"
                 href="{{ route('register') }}">
-                {{ __('Already registered?') }}
+                {{ __('Not registered yet?') }}
             </a>
         </div>
 

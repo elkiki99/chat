@@ -2,10 +2,15 @@
     <div class="flex h-screen">
         <!-- Sidebar: 1/3 of the width -->
         <div class="flex flex-col w-1/4 p-4 text-white bg-gray-100">
-            <h2 class="mb-4 text-lg font-bold">Chats</h2>
+            
+            <!-- User information -->
+            <h2 class="mb-4 text-lg font-bold">{{ Auth::user()->name }}</h2>
+            
             @forelse(App\Models\User::all() as $chat)
                 <ul>
-                    <li><a href="#" class="block px-4 py-2 rounded hover:bg-gray-700">Chat 1</a></li>
+                    <li>
+                        {{-- <a href="{{ route('chat', $chat->id) }} ">{{ $chat->name }}</a> --}}
+                    </li>
                 </ul>
             @empty
                 <p>No chats found.</p>
@@ -13,21 +18,20 @@
         </div>
 
         <!-- Main Content: 2/3 of the width -->
-        <div class="flex flex-col w-3/4 p-10 bg-gray-200">
-            <div class="flex-1 overflow-auto">
-                <!-- Chat messages go here -->
+        <div class="flex flex-col w-3/4 bg-gray-200">
+            <div class="flex-1 p-10 overflow-auto">
+                <!-- Chat -->
                 <div class="mb-4">
                     <p class="p-2 bg-white rounded shadow">Hello! How are you?</p>
                 </div>
                 <div class="mb-4">
                     <p class="p-2 bg-green-100 rounded shadow">I'm good, thanks! How about you?</p>
                 </div>
-                <!-- More chat messages -->
             </div>
 
-            <!-- Message input area -->
-            <div class="flex items-center pt-2 mt-4border-gray-300">
-                <button class="mr-2">
+            <!-- Message input -->
+            <div class="flex items-center px-4 py-2 bg-gray-300 mt-4border-gray-300">
+                <button class="">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                         stroke="currentColor" class="size-6">
                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -35,11 +39,12 @@
                     </svg>
                 </button>
 
-                <input type="text" placeholder="Type a message..."
-                    class="flex-1 p-2 mr-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" />
+                <x-text-input type="text" placeholder="Type a message here..." class="w-full mx-2" />
                 <button
-                    class="p-2 text-white bg-green-500 rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500">
-                    Send
+                    class="text-green-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+                        <path d="M3.478 2.404a.75.75 0 0 0-.926.941l2.432 7.905H13.5a.75.75 0 0 1 0 1.5H4.984l-2.432 7.905a.75.75 0 0 0 .926.94 60.519 60.519 0 0 0 18.445-8.986.75.75 0 0 0 0-1.218A60.517 60.517 0 0 0 3.478 2.404Z" />
+                      </svg>
                 </button>
             </div>
         </div>

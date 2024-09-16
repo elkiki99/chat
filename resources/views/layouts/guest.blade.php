@@ -19,11 +19,11 @@
 
 <body class="font-sans antialiased text-gray-900">
     <div
-        class="flex flex-col items-center min-h-screen pt-6 bg-gray-100 sm:justify-center sm:pt-0 dark:bg-gray-900 bg-gradient-to-b from-green-100 via-green-500 to-green-100">
+        class="flex flex-col items-center min-h-screen pt-6 bg-gray-100 sm:justify-center sm:pt-0 dark:bg-gray-900 bg-gradient-to-b from-white via-green-200 to-white">
 
         <div>
             <a wire:navigate href="/">
-                <x-application-logo class="w-20 h-20 text-green-100 fill-current" />
+                <x-application-logo class="w-20 h-20 text-green-800 fill-current" />
             </a>
         </div>
 
