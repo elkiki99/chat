@@ -1,21 +1,7 @@
 <x-app-layout>
     <div class="flex h-screen">
         <!-- Sidebar: 1/3 of the width -->
-        <div class="flex flex-col w-1/4 p-4 text-white bg-gray-100">
-            
-            <!-- User information -->
-            <h2 class="mb-4 text-lg font-bold">{{ Auth::user()->name }}</h2>
-            
-            @forelse(App\Models\User::all() as $chat)
-                <ul>
-                    <li>
-                        {{-- <a href="{{ route('chat', $chat->id) }} ">{{ $chat->name }}</a> --}}
-                    </li>
-                </ul>
-            @empty
-                <p>No chats found.</p>
-            @endforelse
-        </div>
+        <x-sidebar />
 
         <!-- Main Content: 2/3 of the width -->
         <div class="flex flex-col w-3/4 bg-gray-200">

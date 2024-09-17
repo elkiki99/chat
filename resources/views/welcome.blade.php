@@ -5,15 +5,16 @@
             <div class="flex items-center justify-between mb-8">
                 <x-application-logo class="w-auto h-16 text-green-800 animate-bounce" />
                 <a wire:navigate href="{{ route('dashboard') }}"
-                    class="inline-flex items-center px-4 py-2 text-xs font-semibold tracking-widest text-white uppercase transition duration-150 ease-in-out bg-green-800 border border-transparent rounded-md dark:bg-green-200 dark:text-green-800 hover:bg-green-700 dark:hover:bg-white focus:bg-green-700 dark:focus:bg-white active:bg-green-900 dark:active:bg-green-300 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 dark:focus:ring-offset-green-800">
+                    class="inline-flex items-center px-4 py-2 text-xs font-semibold tracking-widest text-green-700 uppercase transition duration-150 ease-in-out bg-white border border-green-300 rounded-md shadow-sm dark:bg-green-800 dark:border-green-500 dark:text-green-300 hover:bg-green-50 dark:hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 dark:focus:ring-offset-green-800 disabled:opacity-25">
                     Get started
                 </a>
             </div>
 
             <div class="text-left">
-                <h1 class="mb-4 text-5xl font-extrabold text-green-800 drop-shadow-lg">Welcome to <span class="underline">Chat
-                        App</span></h1>
-                <p class="text-xl text-green-700 drop-shadow-sm">
+                <h1 class="mb-4 text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-green-600 via-green-400 to-green-800 drop-shadow-lg">
+                    Welcome to Chat App
+                </h1>
+                <p class="text-xl text-green-600 drop-shadow-sm">
                     Chat App is your gateway to staying connected with your loved ones, no matter where you are.
                     Share memories, have fun in group chats, and enjoy one-on-one conversations, all in one place!
                 </p>

@@ -3,9 +3,10 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\Chat;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
@@ -44,5 +45,25 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function chats()
+    {
+        return $this->belongsToMany(Chat::class)->withTimestamps()->withPivot('joined_at');;
+    }
+
+    public function messages()
+    {
+        return $this->hasMany(Message::class);
+    }
+
+    public function contactsAddedByUser()
+    {
+        return $this->hasMany(Contact::class, 'contact_user_id');
+    }
+
+    public function contacts()
+    {
+        return $this->belongsToMany(User::class, 'contacts', 'user_id', 'contact_user_id');
     }
 }

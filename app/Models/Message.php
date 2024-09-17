@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Chat;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Message extends Model
 {
@@ -15,4 +17,14 @@ class Message extends Model
         'body',
         'status',
     ];
+
+    public function chat()
+    {
+        return $this->belongsTo(Chat::class);
+    }
+
+    public function message()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
