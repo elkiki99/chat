@@ -13,7 +13,7 @@ class ShowChats extends Component
 
     public function mount()
     {
-        $this->chats = Auth::user()->chats;
+        $this->chats = Auth::user()->chats()->with('users')->get();
         $this->selectedChat = Session::get('selected_chat') ?? null;
     }
 

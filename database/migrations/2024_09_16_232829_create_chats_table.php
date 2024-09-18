@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name')->nullable();
             $table->boolean('is_group')->default(false);
+            $table->string('chat_image')->nullable();
             $table->timestamps();
         });
     }

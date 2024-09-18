@@ -17,8 +17,9 @@ class ChatFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->word(),
+            'name' => $this->faker->boolean() ? $this->faker->word() : null,
             'is_group' => $this->faker->boolean(),
+            'chat_image' => $this->faker->boolean() ? $this->faker->imageUrl() : null,
         ];
     }
 }

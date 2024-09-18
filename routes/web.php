@@ -19,7 +19,4 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-// Route::get('/chat', [ChatController::class, 'index'])->name('chats.index');
-// Route::get('/chat/{id}', [ChatController::class, 'index'])->name('chat.show');
-
 require __DIR__.'/auth.php';
