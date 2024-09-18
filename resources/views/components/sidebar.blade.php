@@ -19,7 +19,7 @@
             </svg>
         </a>
     </div>
-
+    
     <!-- Bottom actions -->
     <div class="flex flex-col items-center mt-auto hover:cursor-pointer">
         <div class="p-2 border-b border-gray-300">

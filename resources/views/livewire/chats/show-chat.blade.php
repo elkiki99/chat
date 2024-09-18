@@ -2,22 +2,33 @@
     <div class="relative flex-1 p-10 overflow-auto">
         <div class="h-full">
             @if ($chat)
-                @forelse($messages as $message)
-                    <!-- Chat message -->
-                    <div class="mb-1 flex {{ $message->user_id === Auth::id() ? 'justify-end' : 'justify-start' }}">
-                        <div
-                            class="relative max-w-sm p-2 text-sm rounded shadow 
-                            {{ $message->user_id === Auth::id() ? 'bg-green-200 text-gray-800' : 'bg-white text-gray-800' }}">
+                @forelse($messages as $index => $message)
+                    @php
+                        $isLastInBlock = $index === count($messages) - 1 || $messages[$index + 1]->user_id !== $message->user_id;
+                    @endphp
 
+                    <!-- Chat message -->
+                    <div class="flex {{ $message->user_id === Auth::id() ? 'justify-end' : 'justify-start' }} {{ $isLastInBlock ? 'mb-2' : 'mb-1' }}">
+                        <div class="relative max-w-sm p-2 text-sm rounded shadow 
+                            {{ $message->user_id === Auth::id() ? 'bg-green-200 text-gray-800' : 'bg-white text-gray-800' }}">
+                            
                             <!-- Flex container for text and time/check -->
-                            <div class="flex flex-row items-end h-full gap-5">
-                                <!-- Message body -->
-                                <p class="flex-1">
-                                    {{ $message->body }}
-                                </p>
+                            <div class="flex flex-col h-full">
+                                <!-- Flex container for message and time -->
+                                <div class="flex items-start flex-1 gap-3">
+                                    <!-- User profile picture -->
+                                    <img src="{{ $message->user->profile_picture }}" alt="{{ $message->user->name }}"
+                                        class="object-cover w-8 h-8 rounded-full {{ $message->user_id !== Auth::id() ? 'block' : 'hidden' }}" />
+
+                                    <!-- Message details -->
+                                    <div class="flex flex-col flex-1">
+                                        <span class="font-semibold" {{ $message->user_id !== Auth::id() ? 'block' : 'hidden' }}>{{ $message->user->name }}</span>
+                                        <span>{{ $message->body }}</span>
+                                    </div>
+                                </div>
 
                                 <!-- Time and check icons -->
-                                <div class="flex items-center gap-1 text-xs text-gray-500">
+                                <div class="flex items-center self-end gap-1 mt-1 text-xs text-gray-500">
                                     <span>{{ $message->created_at->format('H:i') }}</span>
                                     <div class="{{ $message->user_id === Auth::id() ? 'block' : 'hidden' }}">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -37,8 +48,7 @@
                 <div class="absolute inset-0 flex flex-col items-center justify-center">
                     <x-application-logo class="block w-auto text-gray-300 fill-current size-32 dark:text-gray-200" />
                     <p class="mt-2 text-xl text-gray-700">Welcome to Chat App</p>
-                    <p class="mt-2 text-sm text-gray-400">Connect with people all around the globe, or just chat a
-                        friend!</p>
+                    <p class="mt-2 text-sm text-gray-400">Connect with people all around the globe, or just chat a friend!</p>
                 </div>
             @endif
         </div>
@@ -46,7 +56,7 @@
 
     <!-- Message input -->
     <div class="flex items-center px-4 py-2 mt-4 bg-white border-t border-gray-300">
-        <button class="">
+        <button class="mr-2">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1"
                 stroke="currentColor" class="size-5">
                 <path stroke-linecap="round" stroke-linejoin="round"
