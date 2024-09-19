@@ -3,6 +3,7 @@
 namespace App\Livewire\Chats;
 
 use Livewire\Component;
+use Livewire\Attributes\On;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
@@ -24,6 +25,7 @@ class ShowChats extends Component
         $this->dispatch('chatSelected', $chatId);
     }
 
+    #[On('echo:messages,MessengerEvent')]
     public function render()
     {
         return view('livewire.chats.show-chats', [

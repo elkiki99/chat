@@ -31,8 +31,6 @@ class MessengerEvent implements ShouldBroadcastNow
         $this->user_id = $user_id;
         $this->body = $body;
         $this->status = $status;
-
-        dd($this->chat_id, $this->user_id, $this->body, $this->status);
     }
 
     /**
@@ -42,9 +40,6 @@ class MessengerEvent implements ShouldBroadcastNow
      */
     public function broadcastOn(): Channel
     {
-        return new 
-            // Private
-            
-            Channel('message');
+        return new Channel('messages');
     }
 }

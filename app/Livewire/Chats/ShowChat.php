@@ -6,6 +6,7 @@ use App\Models\Chat;
 use Livewire\Component;
 use Livewire\Attributes\On;
 use App\Events\MessengerEvent;
+use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
@@ -40,21 +41,25 @@ class ShowChat extends Component
 
     public function sendMessage()
     {
-        MessengerEvent::dispatch($this->chat->id, Auth::id(), $this->body, 'sent');
-        $this->updateChatInRealTime();
+        event(new MessengerEvent($this->chat->id, Auth::id(), $this->body, 'sent'));
+
+        $this->chat->messages()->create([
+            'chat_id' => $this->chat->id,
+            'user_id' => Auth::id(),
+            'body' => $this->body,
+            'status' => 'sent',
+        ]);
         $this->body = '';
     }
 
-    #[On('echo:message, MessengerEvent')]
-    public function refreshMessages($event)
+    #[On('echo:messages,MessengerEvent')]
+    public function onMessengerEvent($message)
     {
-        $this->messages = $event->messages;
+        $this->updateChatInRealTime($message);
     }
 
     public function render()
     {
-        // $this->updateChatInRealTime();
-
         return view('livewire.chats.show-chat');
     }
 }
