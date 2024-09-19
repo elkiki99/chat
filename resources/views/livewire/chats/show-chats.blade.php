@@ -1,4 +1,4 @@
-<aside class="w-1/4 p-1 bg-white border-gray-300 border-x">
+<aside class="min-w-96 p-1 bg-white border-gray-300 border-x">
     <h2 class="px-4 py-2 text-xl font-semibold">Chats</h2>
 
     <div class="">
@@ -10,13 +10,13 @@
                         <div class="flex items-center gap-2">
                             <!-- Chat image -->
                             @if ($chat->is_group)
-                                <x-chat-image :chat="$chat" />
+                                <x-chat-image :chat="$chat" class="size-12" />
                             @else
                                 @php
                                     $user = $chat->users->where('id', '!=', Auth::id())->first();
                                 @endphp
 
-                                <x-profile-picture :user="$user" />
+                                <x-profile-picture :user="$user" class="size-12" />
                             @endif
 
                             <div class="flex-1">
@@ -48,7 +48,7 @@
                     </a>
                 </li>
             @empty
-                <li>No chats found</li>
+                <li class="p-4">No chats found</li>
             @endforelse
         </ul>
     </div>

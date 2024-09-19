@@ -1,15 +1,17 @@
+<!-- Bottom actions -->
 <aside class="flex flex-col w-12 p-2 text-white bg-gray-100">
-    <!-- Above actions -->
+    <!-- Chats -->
     <div class="flex flex-col items-center hover:cursor-pointer ">
         <div class="p-2 hover:bg-gray-200 hover:rounded-lg">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor"
-                class="text-gray-800 size-6 ">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1"
+                stroke="currentColor" class="text-gray-800 size-6 ">
                 <path stroke-linecap="round" stroke-linejoin="round"
                     d="M8.625 12a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 0 1-2.555-.337A5.972 5.972 0 0 1 5.41 20.97a5.969 5.969 0 0 1-.474-.065 4.48 4.48 0 0 0 .978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25Z" />
             </svg>
         </div>
     </div>
 
+    <!-- Contacts -->
     <div class="p-1 hover:bg-gray-200 hover:rounded-lg">
         <a wire:navigate href="#">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1"
@@ -19,9 +21,10 @@
             </svg>
         </a>
     </div>
-    
+
     <!-- Bottom actions -->
     <div class="flex flex-col items-center mt-auto hover:cursor-pointer">
+        <!-- Archived -->
         <div class="p-2 border-b border-gray-300">
             <div class="p-2 hover:bg-gray-200 hover:rounded-lg">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1"
@@ -31,6 +34,7 @@
                 </svg>
             </div>
 
+            <!-- Logout -->
             <div class="p-2 hover:bg-gray-200 hover:rounded-lg">
                 <form method="POST" action="{{ route('logout') }}" class="flex items-center justify-center">
                     @csrf
@@ -46,6 +50,7 @@
         </div>
 
         <div class="p-2">
+            <!-- Settings -->
             <div class="p-2 hover:bg-gray-200 hover:rounded-lg">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1"
                     stroke="currentColor" class="text-gray-800 size-6">
@@ -55,16 +60,11 @@
                 </svg>
             </div>
 
+            <!-- Profile -->
             <div class="px-2 pt-2 hover:bg-gray-200 hover:rounded-lg">
                 <a wire:navigate href="{{ route('profile.edit') }}">
-
                     <div class="inline-block bg-gray-200 rounded-full">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
-                            class="text-gray-300 size-6">
-                            <path fill-rule="evenodd"
-                                d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z"
-                                clip-rule="evenodd" />
-                        </svg>
+                        <x-profile-picture :user="Auth::user()" class="size-6" />
                     </div>
                 </a>
             </div>
