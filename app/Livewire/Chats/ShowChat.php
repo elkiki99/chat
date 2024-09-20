@@ -49,10 +49,13 @@ class ShowChat extends Component
             'body' => $this->body,
             'status' => 'sent',
         ]);
+        
         $this->body = '';
+        $this->updateChatInRealTime();
+        $this->dispatch('scrollDown');
     }
 
-    #[On('echo:messages,MessengerEvent')]
+    #[On('echo-private:messages,MessengerEvent')]
     public function onMessengerEvent($message)
     {
         $this->updateChatInRealTime($message);
