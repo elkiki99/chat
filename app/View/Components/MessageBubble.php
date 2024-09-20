@@ -12,16 +12,18 @@ class MessageBubble extends Component
 {
     public $chat;
     public $message;
+    public $isCurrentUser;
     public $isLastInBlock;
     public $isFirstInBlock;
 
     /**
      * Create a new component instance.
      */
-    public function __construct(Chat $chat, Message $message, bool $isLastInBlock, bool $isFirstInBlock)
+    public function __construct(Chat $chat, Message $message, $isLastInBlock, $isFirstInBlock, $isCurrentUser)
     {
         $this->chat = $chat;
         $this->message = $message;
+        $this->isCurrentUser = $isCurrentUser;
         $this->isLastInBlock = $isLastInBlock;
         $this->isFirstInBlock = $isFirstInBlock;
     }

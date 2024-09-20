@@ -17,20 +17,11 @@ class MessengerEvent implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public string $chat_id;
-    public string $user_id;
-    public string $body;
-    public string $status;
-
     /**
      * Create a new event instance.
      */
-    public function __construct($chat_id, $user_id, $body, $status)
+    public function __construct()
     {
-        $this->chat_id = $chat_id;
-        $this->user_id = $user_id;
-        $this->body = $body;
-        $this->status = $status;
     }
 
     /**
@@ -40,6 +31,6 @@ class MessengerEvent implements ShouldBroadcastNow
      */
     public function broadcastOn(): Channel
     {
-        return new Channel('messages');
+        return new Channel('message-sent');
     }
 }
