@@ -1,6 +1,10 @@
 <div class="flex flex-col w-full h-screen bg-gray-100">
-    <div id="chat-container" class="relative flex-1 p-5 overflow-auto lg:p-10">
-        <div class="h-full">
+    <div 
+        id="chat-container" 
+        class="relative flex-1 p-5 overflow-auto lg:p-10"
+        {{-- style="visibility: hidden;" --}}
+    >
+        <div class="h-full" x-cloak>
             @if ($chat)
                 @forelse($messages as $index => $message)
                     @php
@@ -40,10 +44,20 @@
 </div>
 
 <script>
-    window.addEventListener('scrollDown', () => {
-        let container = document.querySelector('#chat-container');
+    function scrollToBottom(container) {
         requestAnimationFrame(() => {
             container.scrollTop = container.scrollHeight;
+            // container.style.visibility = 'visible';
         });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        let container = document.querySelector('#chat-container');
+        scrollToBottom(container);
+    });
+
+    window.addEventListener('scrollDown', () => {
+        let container = document.querySelector('#chat-container');
+        scrollToBottom(container);
     });
 </script>
