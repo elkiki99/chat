@@ -9,7 +9,7 @@
 
     <!-- Message details -->
     <div
-        class="relative max-w-sm p-2 text-sm rounded shadow
+        class="relative max-w-md p-2 text-sm rounded shadow
                 {{ $isCurrentUser ? 'bg-green-200 text-gray-800' : 'bg-white text-gray-800' }}
                 {{ !$isFirstInBlock && $chat->is_group ? 'ml-11' : '' }}">
 
@@ -31,10 +31,7 @@
             <div class="flex items-center self-end gap-1 mt-1 text-xs text-gray-500">
                 <span>{{ $message->created_at->format('H:i') }}</span>
                 @if ($isCurrentUser)
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1"
-                        stroke="currentColor" class="w-4 h-4">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
-                    </svg>
+                    <x-chat-check :message="$message" />
                 @endif
             </div>
         </div>

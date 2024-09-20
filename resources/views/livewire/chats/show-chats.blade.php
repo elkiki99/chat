@@ -1,4 +1,4 @@
-<aside class="min-w-96 p-1 bg-white border-gray-300 border-x">
+<aside class="p-1 bg-white border-gray-300 min-w-96 border-x">
     <h2 class="px-4 py-2 text-xl font-semibold">Chats</h2>
 
     <div class="">
@@ -21,13 +21,7 @@
 
                             <div class="flex-1">
                                 <div class="flex items-center justify-between">
-                                    <p class="text-sm font-medium">
-                                        @if ($chat->is_group)
-                                            {{ $chat->name }}
-                                        @else
-                                            {{ $user->name }}
-                                        @endif
-                                    </p>
+                                    <x-chat-name :chat="$chat" :user="$user" />
 
                                     <p class="text-xs text-gray-500">
                                         {{ $chat->messages->last()->created_at->format('H:i') }}
@@ -35,11 +29,7 @@
                                 </div>
 
                                 <div class="flex items-center gap-1 mt-1">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                        stroke-width="1" stroke="currentColor" class="size-4">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="m4.5 12.75 6 6 9-13.5" />
-                                    </svg>
+                                    <x-chat-check :message="$chat->messages->last()" />
 
                                     <p class="text-sm text-gray-500">{{ Str::limit($chat->messages->last()->body, 25) }}</p>
                                 </div>
