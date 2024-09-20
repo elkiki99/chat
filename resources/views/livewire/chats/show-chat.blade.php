@@ -1,12 +1,11 @@
 <div class="flex flex-col w-full h-screen bg-gray-100">
 
-    <x-chat-header :chat="$chat" />
+    @if ($chat)
+        <x-chat-header :chat="$chat" />
 
-
-    <div id="chat-container" class="relative flex-1 overflow-auto">
-        <div class="p-6">
-            <div class="h-full" x-cloak>
-                @if ($chat)
+        <div id="chat-container" class="relative flex-1 overflow-auto">
+            <div class="p-6">
+                <div class="h-full" x-cloak>
                     @forelse($messages as $index => $message)
                         @php
                             $isCurrentUser = $message->user_id === Auth::id();
@@ -14,26 +13,16 @@
                                 $index === count($messages) - 1 || $messages[$index + 1]->user_id !== $message->user_id;
                             $isFirstInBlock = $index === 0 || $messages[$index - 1]->user_id !== $message->user_id;
                         @endphp
-
+                        
                         <x-message-bubble :chat="$chat" :message="$message" :isLastInBlock="$isLastInBlock" :isFirstInBlock="$isFirstInBlock"
                             :isCurrentUser="$isCurrentUser" />
                     @empty
                         <p>No messages found</p>
                     @endforelse
-                @else
-                    <div class="absolute inset-0 flex flex-col items-center justify-center">
-                        <x-application-logo class="block w-auto text-gray-300 fill-current size-32 dark:text-gray-200" />
-                        <p class="mt-2 text-xl text-gray-700">Welcome to Chat App</p>
-                        <p class="mt-2 text-sm text-gray-400">Connect with people all around the globe, or just chat a
-                            friend!</p>
-                    </div>
-                @endif
+                </div>
             </div>
         </div>
-    </div>
 
-
-    @if ($chat)
         <!-- Message input -->
         <div class="flex items-center px-4 py-2 bg-white border-t border-gray-300">
             <button href="">
@@ -55,6 +44,10 @@
                 </button>
             </form>
         </div>
+    @else
+        <div class="relative h-full">
+            <x-lobby />
+        </div>
     @endif
 </div>
 
@@ -75,3 +68,4 @@
         scrollToBottom(container);
     });
 </script>
+

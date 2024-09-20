@@ -15,7 +15,7 @@ class Message extends Model
         'chat_id',
         'user_id',
         'body',
-        'status',
+        // 'status',
     ];
 
     public function chat()
@@ -26,5 +26,10 @@ class Message extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function seenBy()
+    {
+        return $this->belongsToMany(User::class, 'message_user');
     }
 }

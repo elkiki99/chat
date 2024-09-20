@@ -31,7 +31,6 @@ class ShowChat extends Component
     {
         $this->chat = Chat::find($chatId);
         $this->updateChatInRealTime();
-        $this->dispatch('scrollDown');
     }
 
     public function sendMessage()

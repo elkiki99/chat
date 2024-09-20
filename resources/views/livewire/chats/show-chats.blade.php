@@ -21,8 +21,16 @@
 
                             <div class="flex-1">
                                 <div class="flex items-center justify-between">
-                                    <x-chat-name :chat="$chat" :user="$user" />
-
+                                    <!-- Chat name -->
+                                    <p class="text-sm font-medium">
+                                        @if ($chat->is_group)
+                                            {{ $chat->name }}
+                                        @else
+                                            {{ $user->name }}
+                                        @endif
+                                    </p>
+                                    
+                                    <!-- Last message -->
                                     <p class="text-xs text-gray-500">
                                         {{ $chat->messages->last()->created_at->format('H:i') }}
                                     </p>
@@ -31,7 +39,8 @@
                                 <div class="flex items-center gap-1 mt-1">
                                     <x-chat-check :message="$chat->messages->last()" />
 
-                                    <p class="text-sm text-gray-500">{{ Str::limit($chat->messages->last()->body, 25) }}</p>
+                                    <p class="text-sm text-gray-500">{{ Str::limit($chat->messages->last()->body, 25) }}
+                                    </p>
                                 </div>
                             </div>
                         </div>
