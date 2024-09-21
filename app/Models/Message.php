@@ -15,7 +15,6 @@ class Message extends Model
         'chat_id',
         'user_id',
         'body',
-        // 'status',
     ];
 
     public function chat()
@@ -30,6 +29,13 @@ class Message extends Model
 
     public function seenBy()
     {
-        return $this->belongsToMany(User::class, 'message_user');
+        return $this->belongsToMany(User::class, 'message_user', 'message_id', 'user_id');
+    }
+
+    public function seenByAll()
+    {
+        $chatUsers = $this->chat->users()->where('user_id', '!=', $this->user_id)->pluck('users.id');
+        $seenByUsers = $this->seenBy()->pluck('users.id');
+        return $chatUsers->diff($seenByUsers)->isEmpty();
     }
 }

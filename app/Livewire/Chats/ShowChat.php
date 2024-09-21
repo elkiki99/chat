@@ -5,7 +5,8 @@ namespace App\Livewire\Chats;
 use App\Models\Chat;
 use Livewire\Component;
 use Livewire\Attributes\On;
-use App\Events\MessengerEvent;
+use App\Events\MessageSent;
+use App\Events\UserEnteredChat;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
@@ -15,16 +16,27 @@ class ShowChat extends Component
     public $body;
     public $messages;
 
-    protected $listeners = ['chatSelected' => 'changeToSelectedChat'];
+    protected $listeners = [
+        'chatSelected' => 'changeToSelectedChat',
+        // 'userEnteredChat' => 'updateSeenMessages', // Escuchar el evento aquí
+    ];
 
     public function mount()
     {
         $this->loadChat(Session::get('selected_chat'));
     }
 
+    #[On('echo:user-entered-chat,UserEnteredChat')]
     public function changeToSelectedChat($chatId)
     {
         $this->loadChat($chatId);
+        $this->userEnteredChat($chatId, Auth::id());
+    }
+
+    public function userEnteredChat($chatId, $userId)
+    {
+        UserEnteredChat::dispatch($chatId, $userId);
+        $this->updateChatInRealTime();
     }
 
     private function loadChat($chatId)
@@ -41,14 +53,14 @@ class ShowChat extends Component
             'body' => $this->body,
             'status' => 'sent',
         ]);
-        
+
         $this->body = '';
         $this->updateChatInRealTime();
         $this->dispatch('scrollDown');
-        MessengerEvent::dispatch($this->chat->id);
+        MessageSent::dispatch();
     }
 
-    #[On('echo:message-sent,MessengerEvent')]
+    #[On('echo:message-sent,MessageSent')]
     public function updateChatInRealTime()
     {
         $this->messages = $this->chat ? $this->chat->messages : [];
@@ -56,6 +68,7 @@ class ShowChat extends Component
 
     public function render()
     {
-        return view('livewire.chats.show-chat');
+        return view('livewire.chats.show-chat', [
+        ]);
     }
 }

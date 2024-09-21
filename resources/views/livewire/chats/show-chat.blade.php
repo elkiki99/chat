@@ -1,5 +1,4 @@
 <div class="flex flex-col w-full h-screen bg-gray-100">
-
     @if ($chat)
         <x-chat-header :chat="$chat" />
 

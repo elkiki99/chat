@@ -2,9 +2,9 @@
 
 namespace App\Events;
 
-use App\Models\Message;
+use App\Models\Chat;
+use App\Models\User;
 use Illuminate\Broadcasting\Channel;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -13,15 +13,20 @@ use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 
-class MessengerEvent implements ShouldBroadcastNow
+class UserEnteredChat implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
+
+    public $chatId;
+    public $userId;
 
     /**
      * Create a new event instance.
      */
-    public function __construct()
+    public function __construct($chatId, $userId)
     {
+        $this->chatId = $chatId;
+        $this->userId = $userId;
     }
 
     /**
@@ -31,6 +36,6 @@ class MessengerEvent implements ShouldBroadcastNow
      */
     public function broadcastOn(): Channel
     {
-        return new Channel('message-sent');
+        return new Channel('user-entered-chat');
     }
 }

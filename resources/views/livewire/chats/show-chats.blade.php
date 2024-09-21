@@ -4,6 +4,11 @@
     <div class="">
         <ul>
             @forelse ($chats as $chat)
+                @php
+                    $lastMessage = $chat->messages->last();
+                    $isCurrentUser = $lastMessage && $lastMessage->user_id === Auth::id();
+                    $user = $chat->users->where('id', '!=', Auth::id())->first();
+                @endphp
                 <li>
                     <a wire:click="selectChat({{ $chat->id }})"
                         class="block p-3 rounded cursor-pointer hover:bg-gray-50">
@@ -12,14 +17,10 @@
                             @if ($chat->is_group)
                                 <x-chat-image :chat="$chat" class="size-12" />
                             @else
-                                @php
-                                    $user = $chat->users->where('id', '!=', Auth::id())->first();
-                                @endphp
-
                                 <x-profile-picture :user="$user" class="size-12" />
                             @endif
 
-                            <div class="flex-1">
+                            <div class="flex-1 mx-2">
                                 <div class="flex items-center justify-between">
                                     <!-- Chat name -->
                                     <p class="text-sm font-medium">
@@ -29,18 +30,28 @@
                                             {{ $user->name }}
                                         @endif
                                     </p>
-                                    
+
                                     <!-- Last message -->
                                     <p class="text-xs text-gray-500">
-                                        {{ $chat->messages->last()->created_at->format('H:i') }}
+                                        {{ $lastMessage->created_at->format('H:i') }}
                                     </p>
                                 </div>
 
                                 <div class="flex items-center gap-1 mt-1">
-                                    <x-chat-check :message="$chat->messages->last()" />
+                                    @if ($isCurrentUser)
+                                        <x-chat-check :message="$lastMessage" />
+                                    @endif
 
-                                    <p class="text-sm text-gray-500">{{ Str::limit($chat->messages->last()->body, 25) }}
-                                    </p>
+                                    @if ($chat->is_group && !$isCurrentUser)
+                                        <div class="flex items-center gap-2">
+                                            <p class="text-sm text-gray-500">{{ $lastMessage->user->name }}: </p>
+                                            <p class="text-sm text-gray-500">{{ Str::limit($lastMessage->body, 25) }}
+                                            </p>
+                                        </div>
+                                    @else
+                                        <p class="text-sm text-gray-500">{{ Str::limit($lastMessage->body, 25) }}
+                                        </p>
+                                    @endif
                                 </div>
                             </div>
                         </div>

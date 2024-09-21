@@ -24,7 +24,7 @@ class ShowChats extends Component
         $this->dispatch('chatSelected', $chatId);
     }
 
-    #[On('echo:message-sent,MessengerEvent')]
+    #[On('echo:message-sent,MessageSent', 'echo:user-entered-chat,UserEnteredChat')]
     public function render()
     {
         $this->chats = Auth::user()->chats()
