@@ -17,16 +17,16 @@ class UserEnteredChat implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $chatId;
-    public $userId;
+    public $user;
+    public $chat;
 
     /**
      * Create a new event instance.
      */
-    public function __construct($chatId, $userId)
+    public function __construct(User $user, Chat $chat)
     {
-        $this->chatId = $chatId;
-        $this->userId = $userId;
+        $this->user = $user;
+        $this->chat = $chat;
     }
 
     /**
@@ -37,5 +37,13 @@ class UserEnteredChat implements ShouldBroadcastNow
     public function broadcastOn(): Channel
     {
         return new Channel('user-entered-chat');
+    }
+
+    public function broadcastWith()
+    {
+        return [
+            'chat_id' => $this->chat->id,
+            'user_id' => $this->user->id,
+        ];
     }
 }

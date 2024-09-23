@@ -14,7 +14,7 @@ class MarkMessagesAsSeen
      */
     public function __construct()
     {
-        //
+
     }
 
     /**
@@ -22,12 +22,12 @@ class MarkMessagesAsSeen
      */
     public function handle(UserEnteredChat $event): void
     {
-        $messages = Message::where('chat_id', $event->chatId)
-            ->where('user_id', '!=', $event->userId)
+        $messages = Message::where('chat_id', $event->chat->id)
+            ->where('user_id', '!=', $event->user->id)
             ->get();
 
         foreach ($messages as $message) {
-            $message->seenBy()->syncWithoutDetaching([$event->userId]);
+            $message->seenBy()->syncWithoutDetaching([$event->user->id]);
         }
     }
 }

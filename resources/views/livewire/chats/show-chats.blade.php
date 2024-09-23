@@ -44,7 +44,7 @@
 
                                     @if ($chat->is_group && !$isCurrentUser)
                                         <div class="flex items-center gap-2">
-                                            <p class="text-sm text-gray-500">{{ $lastMessage->user->name }}: </p>
+                                            <p class="text-sm text-gray-600">{{ Str::limit($lastMessage->user->name, 12, '') }}: </p>
                                             <p class="text-sm text-gray-500">{{ Str::limit($lastMessage->body, 25) }}
                                             </p>
                                         </div>

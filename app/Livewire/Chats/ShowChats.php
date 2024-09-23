@@ -17,6 +17,19 @@ class ShowChats extends Component
         $this->selectedChat = Session::get('selected_chat') ?? null;
     }
 
+    #[On('echo:message-sent,MessageSent')]
+    public function bubbleUpLastMessage()
+    {
+        $this->chats = Auth::user()->chats()
+            ->with(['users', 'messages' => function ($query) {
+                $query->latest()->limit(1);
+            }])
+            ->get()
+            ->sortByDesc(function ($chat) {
+                return optional($chat->messages->first())->created_at;
+            });
+    }
+
     public function selectChat($chatId)
     {
         $this->selectedChat = $chatId;
@@ -24,17 +37,10 @@ class ShowChats extends Component
         $this->dispatch('chatSelected', $chatId);
     }
 
-    #[On('echo:message-sent,MessageSent', 'echo:user-entered-chat,UserEnteredChat')]
+    #[On('echo:user-entered-chat,UserEnteredChat')]
     public function render()
     {
-        $this->chats = Auth::user()->chats()
-        ->with(['users', 'messages' => function ($query) {
-            $query->latest()->limit(1);
-        }])
-        ->get()
-        ->sortByDesc(function ($chat) {
-            return optional($chat->messages->first())->created_at;
-        });
+        $this->bubbleUpLastMessage();
 
         return view('livewire.chats.show-chats', [
             'chats' => $this->chats,

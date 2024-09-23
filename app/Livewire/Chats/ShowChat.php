@@ -3,9 +3,10 @@
 namespace App\Livewire\Chats;
 
 use App\Models\Chat;
+use App\Models\User;
 use Livewire\Component;
-use Livewire\Attributes\On;
 use App\Events\MessageSent;
+use Livewire\Attributes\On;
 use App\Events\UserEnteredChat;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -14,11 +15,12 @@ class ShowChat extends Component
 {
     public $chat;
     public $body;
+    public $message;
     public $messages;
+
 
     protected $listeners = [
         'chatSelected' => 'changeToSelectedChat',
-        // 'userEnteredChat' => 'updateSeenMessages', // Escuchar el evento aquí
     ];
 
     public function mount()
@@ -26,49 +28,52 @@ class ShowChat extends Component
         $this->loadChat(Session::get('selected_chat'));
     }
 
-    #[On('echo:user-entered-chat,UserEnteredChat')]
     public function changeToSelectedChat($chatId)
     {
         $this->loadChat($chatId);
-        $this->userEnteredChat($chatId, Auth::id());
+        $this->dispatch('scrollDown');
+        $this->userEnteredChat(Auth::user(), $this->chat);
     }
 
-    public function userEnteredChat($chatId, $userId)
+    public function userEnteredChat(User $user, Chat $chat)
     {
-        UserEnteredChat::dispatch($chatId, $userId);
+        UserEnteredChat::dispatch($user, $chat);
         $this->updateChatInRealTime();
     }
 
     private function loadChat($chatId)
     {
-        $this->chat = Chat::find($chatId);
+        $this->chat = Chat::with('users', 'messages')->find($chatId);
         $this->updateChatInRealTime();
     }
 
     public function sendMessage()
     {
-        $this->chat->messages()->create([
+        if (empty(trim($this->body))) {
+            return;
+        }
+
+        $message = $this->chat->messages()->create([
             'chat_id' => $this->chat->id,
             'user_id' => Auth::id(),
             'body' => $this->body,
-            'status' => 'sent',
         ]);
 
         $this->body = '';
         $this->updateChatInRealTime();
         $this->dispatch('scrollDown');
-        MessageSent::dispatch();
+        MessageSent::dispatch($message);
     }
 
     #[On('echo:message-sent,MessageSent')]
     public function updateChatInRealTime()
     {
-        $this->messages = $this->chat ? $this->chat->messages : [];
+        $this->messages = $this->chat ? $this->chat->messages : collect();
     }
 
+    // #[On('echo:user-entered-chat,UserEnteredChat')]
     public function render()
     {
-        return view('livewire.chats.show-chat', [
-        ]);
+        return view('livewire.chats.show-chat');
     }
 }
