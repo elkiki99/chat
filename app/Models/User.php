@@ -23,6 +23,7 @@ class User extends Authenticatable
         'username',
         'profile_image',
         'password',
+        'is_active_in_chat',
     ];
 
     /**

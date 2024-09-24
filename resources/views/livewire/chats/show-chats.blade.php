@@ -10,6 +10,7 @@
                     $user = $chat->users->where('id', '!=', Auth::id())->first();
                     $unreadMessages = $chat
                         ->messages()
+                        ->where('user_id', '!=', Auth::id())
                         ->whereDoesntHave('seenBy', function ($query) {
                             $query->where('user_id', Auth::id());
                         })

@@ -30,7 +30,9 @@ class Message extends Model
 
     public function seenBy()
     {
-        return $this->belongsToMany(User::class, 'message_user', 'message_id', 'user_id');
+        return $this->belongsToMany(User::class, 'message_user', 'message_id', 'user_id')
+        // ->withTimestamps()
+        ;
     }
 
     public function seenByAll()

@@ -13,26 +13,26 @@ use Illuminate\Support\Facades\Session;
 
 class ShowChat extends Component
 {
-    public $chat;
+    public Chat $chat;
     public $body;
     public $message;
     public $messages;
 
-
     protected $listeners = [
         'chatSelected' => 'changeToSelectedChat',
-        'userIsActiveInChat' => 'markMessagesAsSeen'
     ];
 
     public function mount()
     {
         $this->loadChat(Session::get('selected_chat'));
+        $this->dispatch('scrollDown');
     }
 
     private function loadChat($chatId)
     {
         $this->chat = Chat::with('users', 'messages')->find($chatId);
         $this->updateChatInRealTime();
+        $this->dispatch('scrollDown');
     }
 
     public function changeToSelectedChat($chatId)
@@ -50,7 +50,7 @@ class ShowChat extends Component
                 $query->where('user_id', $user->id);
             })
             ->get();
-
+    
         foreach ($messages as $message) {
             $message->seenBy()->syncWithoutDetaching([$user->id]);
             MessageRead::dispatch($message, $user);
@@ -73,9 +73,24 @@ class ShowChat extends Component
         $this->body = '';
         $this->updateChatInRealTime();
         $this->dispatch('scrollDown');
-        MessageSent::dispatch($message);
+        MessageSent::dispatch(
+            // $message->chat, 
+            $message
+        );
+
+        $activeUsers = $this->chat->users()
+            ->where('users.id', '!=', Auth::id())
+            ->get();
+
+        foreach ($activeUsers as $user) {
+            if ($user->is_active_in_chat === $this->chat->id) {
+                $this->markMessagesAsSeen($this->chat->id);
+                break;
+            }
+        }
     }
 
+    // #[On('echo-private:message-sent.' . $this->chat->id, MessageSent::class)]
     #[On('echo:message-sent,MessageSent')]
     #[On('echo:message-read,MessageRead')]
     public function updateChatInRealTime()
@@ -83,10 +98,9 @@ class ShowChat extends Component
         $this->messages = $this->chat ? $this->chat->messages : collect();
     }
 
+    // #[On('echo:message-read,MessageRead')]
     public function render()
     {
-        return view('livewire.chats.show-chat', [
-
-        ]);
+        return view('livewire.chats.show-chat');
     }
 }
