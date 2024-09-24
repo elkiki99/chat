@@ -8,7 +8,14 @@
                     $lastMessage = $chat->messages->last();
                     $isCurrentUser = $lastMessage && $lastMessage->user_id === Auth::id();
                     $user = $chat->users->where('id', '!=', Auth::id())->first();
+                    $unreadMessages = $chat
+                        ->messages()
+                        ->whereDoesntHave('seenBy', function ($query) {
+                            $query->where('user_id', Auth::id());
+                        })
+                        ->count();
                 @endphp
+
                 <li>
                     <a wire:click="selectChat({{ $chat->id }})"
                         class="block p-3 rounded cursor-pointer hover:bg-gray-50">
@@ -37,20 +44,31 @@
                                     </p>
                                 </div>
 
-                                <div class="flex items-center gap-1 mt-1">
-                                    @if ($isCurrentUser)
-                                        <x-chat-check :message="$lastMessage" />
-                                    @endif
+                                <div class="flex items-center justify-between">
 
-                                    @if ($chat->is_group && !$isCurrentUser)
-                                        <div class="flex items-center gap-2">
-                                            <p class="text-sm text-gray-600">{{ Str::limit($lastMessage->user->name, 12, '') }}: </p>
-                                            <p class="text-sm text-gray-500">{{ Str::limit($lastMessage->body, 25) }}
-                                            </p>
+                                    <div class="flex items-center gap-1 mt-1">
+                                        @if ($isCurrentUser)
+                                            <x-chat-check :message="$lastMessage" />
+                                        @endif
+
+                                        @if ($chat->is_group && !$isCurrentUser)
+                                            <div class="flex items-center gap-2">
+                                                <p class="text-sm text-gray-600">
+                                                    {{ Str::limit($lastMessage->user->name, 12, '') }}: </p>
+                                                <p class="text-sm text-gray-500">
+                                                    {{ Str::limit($lastMessage->body, 25) }}
+                                                </p>
+                                            </div>
+                                        @else
+                                            <p class="text-sm text-gray-500">{{ Str::limit($lastMessage->body, 25) }}</p>
+                                        @endif
+                                    </div>
+
+                                    @if (!$isCurrentUser && $unreadMessages)
+                                        <div
+                                            class="flex items-center justify-center text-sm text-white bg-green-500 rounded-full size-4">
+                                            <p>{{ $unreadMessages }}</p>
                                         </div>
-                                    @else
-                                        <p class="text-sm text-gray-500">{{ Str::limit($lastMessage->body, 25) }}
-                                        </p>
                                     @endif
                                 </div>
                             </div>

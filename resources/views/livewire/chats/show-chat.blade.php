@@ -1,4 +1,7 @@
-<div class="flex flex-col w-full h-screen bg-gray-100">
+<div class="flex flex-col w-full h-screen bg-gray-100" 
+    {{-- x-data @mousemove.window="Livewire.dispatch('userIsActiveInChat')"
+    @scroll.window="Livewire.dispatch('userIsActiveInChat')" --}}
+    >
     @if ($chat)
         <x-chat-header :chat="$chat" />
 
@@ -12,7 +15,7 @@
                                 $index === count($messages) - 1 || $messages[$index + 1]->user_id !== $message->user_id;
                             $isFirstInBlock = $index === 0 || $messages[$index - 1]->user_id !== $message->user_id;
                         @endphp
-                        
+
                         <x-message-bubble :chat="$chat" :message="$message" :isLastInBlock="$isLastInBlock" :isFirstInBlock="$isFirstInBlock"
                             :isCurrentUser="$isCurrentUser" />
                     @empty
@@ -67,4 +70,3 @@
         scrollToBottom(container);
     });
 </script>
-

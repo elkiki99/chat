@@ -37,14 +37,14 @@ class ShowChats extends Component
         $this->dispatch('chatSelected', $chatId);
     }
 
-    #[On('echo:user-entered-chat,UserEnteredChat')]
+    #[On('echo:message-read,MessageRead')]
     public function render()
     {
         $this->bubbleUpLastMessage();
 
         return view('livewire.chats.show-chats', [
             'chats' => $this->chats,
-            'selectedChat' => $this->selectedChat
+            'selectedChat' => $this->selectedChat,
         ]);
     }
 }
