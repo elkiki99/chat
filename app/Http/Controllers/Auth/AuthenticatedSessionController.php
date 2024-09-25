@@ -36,6 +36,10 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
+        if (Auth::check()) {
+            Auth::user()->update(['is_active_in_chat' => null]);
+        }
+
         Auth::guard('web')->logout();
 
         $request->session()->invalidate();

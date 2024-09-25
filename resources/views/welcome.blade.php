@@ -6,7 +6,7 @@
                 <x-application-logo class="w-auto h-16 text-green-800 animate-bounce" />
                 <a wire:navigate href="{{ route('dashboard') }}"
                     class="inline-flex items-center px-4 py-2 text-xs font-semibold tracking-widest text-green-700 uppercase transition duration-150 ease-in-out bg-white border border-green-300 rounded-md shadow-sm dark:bg-green-800 dark:border-green-500 dark:text-green-300 hover:bg-green-50 dark:hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 dark:focus:ring-offset-green-800 disabled:opacity-25">
-                    Get started
+                    Login
                 </a>
             </div>
 
@@ -28,7 +28,7 @@
 
                 @guest
                     <a wire:navigate href="{{ route('register') }}" class="flex items-center gap-2">
-                        <p class="text-green-600 text-xm">Register</p>
+                        <p class="text-green-600 text-xm">Get started</p>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                             stroke="currentColor" class="text-green-600 size-4">
                             <path stroke-linecap="round" stroke-linejoin="round"

@@ -16,7 +16,7 @@ class ShowChats extends Component
 
     public function mount()
     {
-        $this->selectedChat = Session::get('selected_chat') ?? null;
+        $this->selectedChat = Auth::user()->is_active_in_chat;
     }
 
     // #[On('echo-private:message-sent.' . $this->chat->id, MessageSent::class)]

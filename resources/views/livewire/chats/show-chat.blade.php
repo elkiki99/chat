@@ -1,8 +1,5 @@
-<div class="flex flex-col w-full h-screen bg-gray-100" 
-    {{-- x-data @mousemove.window="Livewire.dispatch('userIsActiveInChat')"
-    @scroll.window="Livewire.dispatch('userIsActiveInChat')" --}}
-    >
-    @if ($chat)
+<div class="flex flex-col w-full h-screen bg-gray-100">
+    @if($chat)
         <x-chat-header :chat="$chat" />
 
         <div id="chat-container" class="relative flex-1 overflow-auto">
