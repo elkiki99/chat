@@ -10,20 +10,20 @@ use Illuminate\Support\Facades\Session;
 
 class ShowChats extends Component
 {
-    public $chats;
-    public $selectedChat;
-    // public Chat $chat;
+    public $search = '';
+    public $selectedChat = null;
+    public $chats = [];
+    public $allChats = [];
 
     public function mount()
     {
         $this->selectedChat = Auth::user()->is_active_in_chat;
+        $this->fetchChats();
     }
 
-    // #[On('echo-private:message-sent.' . $this->chat->id, MessageSent::class)]
-    #[On('echo:message-sent,MessageSent')]
-    public function bubbleUpLastMessage()
+    public function fetchChats()
     {
-        $this->chats = Auth::user()->chats()
+        $this->allChats = Auth::user()->chats()
             ->with(['users', 'messages' => function ($query) {
                 $query->latest()->limit(1);
             }])
@@ -31,24 +31,40 @@ class ShowChats extends Component
             ->sortByDesc(function ($chat) {
                 return optional($chat->messages->first())->created_at;
             });
+        
+        $this->chats = $this->allChats;
+    }
+
+    #[On('echo:message-sent,MessageSent')]
+    public function bubbleUpLastMessage()
+    {
+        $this->fetchChats();
     }
 
     public function selectChat($chatId)
     {
         $this->selectedChat = $chatId;
-        Session::put('selected_chat', $chatId);
         $this->dispatch('chatSelected', $chatId);
         Auth::user()->update(['is_active_in_chat' => $chatId]);
+    }
+
+    public function updatedSearch($value)
+    {
+        $this->chats = $this->allChats->filter(function ($chat) use ($value) {
+            if ($chat->is_group) {
+                return stripos($chat->name, $value) !== false;
+            } else {
+                $otherUser = $chat->users->where('id', '!=', Auth::id())->first();
+                return $otherUser && stripos($otherUser->name, $value) !== false;
+            }
+        });
     }
 
     #[On('echo:message-read,MessageRead')]
     public function render()
     {
-        $this->bubbleUpLastMessage();
-
         return view('livewire.chats.show-chats', [
             'chats' => $this->chats,
-            'selectedChat' => $this->selectedChat,
         ]);
     }
 }

@@ -15,6 +15,7 @@ class ShowChat extends Component
     public Chat $chat;
     public $body = '';
     public $messages;
+    
 
     protected $listeners = [
         'chatSelected' => 'changeToSelectedChat',
@@ -71,7 +72,6 @@ class ShowChat extends Component
             'user_id' => Auth::id(),
             'body' => $trimmedBody,
         ]);
-
         $this->body = ''; 
         
         $this->updateChatInRealTime();
