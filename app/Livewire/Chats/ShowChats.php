@@ -2,11 +2,9 @@
 
 namespace App\Livewire\Chats;
 
-use App\Models\Chat;
 use Livewire\Component;
 use Livewire\Attributes\On;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Session;
 
 class ShowChats extends Component
 {
@@ -18,6 +16,11 @@ class ShowChats extends Component
     public function mount()
     {
         $this->selectedChat = Auth::user()->is_active_in_chat;
+        $this->fetchChats();
+    }
+
+    public function loadChats()
+    {
         $this->fetchChats();
     }
 

@@ -1,9 +1,11 @@
 <div class="flex flex-col w-full h-screen bg-gray-100">
-    @if($chat)
+    @if ($chat)
         <x-chat-header :chat="$chat" />
 
         <div id="chat-container" class="relative flex-1 overflow-auto">
             <div class="p-6">
+                <div x-intersect="$wire.loadMoreMessages()"></div>
+
                 <div class="h-full" x-cloak>
                     @forelse($messages as $index => $message)
                         @php
@@ -57,13 +59,27 @@
         });
     }
 
+    // function maintainScrollPosition(container) {
+    //     const currentScrollHeight = container.scrollHeight;
+    //     const currentScrollTop = container.scrollTop;
+
+    //     requestAnimationFrame(() => {
+    //         const newScrollHeight = container.scrollHeight;
+    //         const newMessagesHeight = newScrollHeight - currentScrollHeight;
+    //         container.scrollTop = currentScrollTop + newMessagesHeight;
+    //     });
+    // }
+
     document.addEventListener('DOMContentLoaded', () => {
         let container = document.querySelector('#chat-container');
         scrollToBottom(container);
-    });
 
-    window.addEventListener('scrollDown', () => {
-        let container = document.querySelector('#chat-container');
-        scrollToBottom(container);
+        // window.addEventListener('loadMoreMessages', () => {
+        //     maintainScrollPosition(container);
+        // });
+
+        window.addEventListener('scrollDown', () => {
+            scrollToBottom(container);
+        });
     });
 </script>

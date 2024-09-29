@@ -1,10 +1,17 @@
 <x-app-layout>
     <div class="flex h-screen">
         <!-- Sidebar -->
-        <x-sidebar />
+        <livewire:layouts.sidebar />
 
         <!-- Chats -->
-        <livewire:chats.show-chats />
+        <livewire:layouts.chat-layout />
+        {{-- <div class="flex">
+            @if($activeComponent === 'contacts')
+                <livewire:contacts.show-contacts />
+            @else
+                <livewire:chats.show-chats />
+            @endif
+        </div> --}}
 
         <!-- Chat -->
         <livewire:chats.show-chat />
