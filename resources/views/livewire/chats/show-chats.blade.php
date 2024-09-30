@@ -19,6 +19,7 @@
             </div>
         </div>
 
+        <!-- Dropdown -->
         <x-dropdown align="right" width="48">
             <x-slot name="trigger">
                 <button>
@@ -52,9 +53,24 @@
                     </x-secondary-button>
                 </div>
             </div>
-        </x-modal>  
+        </x-modal>
 
+        <!-- Create new group modal -->
+        <x-modal maxWidth="sm" name="create-group" focusable>
+            <div class="p-6">
+                <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
+                    {{ __('New group') }}
+                </h2>
 
+                <livewire:chats.create-group />
+
+                <div class="flex justify-end mt-6">
+                    <x-secondary-button x-on:click="$dispatch('close')">
+                        {{ __('Cancel') }}
+                    </x-secondary-button>
+                </div>
+            </div>
+        </x-modal>
     </div>
 
     <!-- Chats list -->
@@ -132,7 +148,7 @@
                                                 <p>{{ $unreadMessages }}</p>
                                             </div>
                                         @endif
-                                    @else 
+                                    @else
                                         <p class="text-sm text-gray-400">No messages yet</p>
                                     @endif
                                 </div>

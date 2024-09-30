@@ -65,6 +65,8 @@ class ShowChat extends Component
             'body' => $trimmedBody,
         ]);
 
+        // $this->body = '';
+
         MessageSent::dispatch($message);
         $this->checkForActiveUsersAndMarkSeen();
     }

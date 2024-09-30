@@ -11,13 +11,17 @@ class ShowContacts extends Component
     public $contacts = [];
 
     protected $listeners = [
-        'selectContacts' => 'loadContacts',
         'contactCreated' => 'loadContacts',
     ];
 
     public function mount()
     {
         $this->loadContacts();
+    }
+
+    public function contactSelected($userId)
+    {
+        $this->dispatch('contactSelected', $userId);
     }
 
     public function loadContacts()

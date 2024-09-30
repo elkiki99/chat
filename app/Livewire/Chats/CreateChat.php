@@ -3,16 +3,23 @@
 namespace App\Livewire\Chats;
 
 use App\Models\Chat;
+use App\Models\User;
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
 
 class CreateChat extends Component
 {
+    public $search = '';
     public $contacts = [];
 
     public function mount()
     {
         $this->loadContacts();
+    }
+    
+    public function loadContacts()
+    {
+        $this->contacts = Auth::user()->contacts;
     }
 
     public function createChat($contactId)
@@ -49,13 +56,24 @@ class CreateChat extends Component
         }
     }
 
-    public function loadContacts()
+    public function updatedSearch($search)
     {
-        $this->contacts = Auth::user()->contacts;
+        if (empty($search)) {
+            $this->contacts = Auth::user()->contacts;
+        } else {
+            $contactIds = Auth::user()->contacts()->pluck('contact_user_id')->toArray();
+    
+            $this->contacts = User::where('name', 'like', '%' . $search . '%')
+                ->whereIn('id', $contactIds)
+                ->take(5)
+                ->get();
+        }
     }
 
     public function render()
     {
-        return view('livewire.chats.create-chat');
+        return view('livewire.chats.create-chat', [
+            'contacts' => $this->contacts,
+        ]);
     }
 }

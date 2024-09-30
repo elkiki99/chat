@@ -15,6 +15,7 @@ class ShowChats extends Component
 
     protected $listeners = [
         'chatCreated' => 'loadChats',
+        'contactSelected' => 'selectChat',
     ];
     
     public function mount()

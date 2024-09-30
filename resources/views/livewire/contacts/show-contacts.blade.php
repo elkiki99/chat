@@ -60,7 +60,7 @@
         <ul>
             @forelse ($contacts as $user)
                 <li>
-                    <a wire:click="selectUser({{ $user->id }})"
+                    <a wire:click="contactSelected({{ $user->id }})"
                         class="block p-3 rounded cursor-pointer hover:bg-gray-50">
                         <div class="flex items-center gap-2">
                             <!-- Contact image -->
