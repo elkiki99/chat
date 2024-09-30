@@ -18,14 +18,41 @@
                     placeholder="Search a contact...">
             </div>
         </div>
-        {{-- <x-dropdown> --}}
-            <button x-data="" x-on:click.prevent="$dispatch('open-modal', 'create-new-contact')">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="mr-3 text-gray-700 size-5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-            </svg>
-        </button>
-    {{-- </x-dropdown> --}}
+        
+        <x-dropdown align="right" width="48">
+            <x-slot name="trigger">
+                <button>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="mr-3 text-gray-700 size-5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                    </svg>
+                </button>
+            </x-slot>
+
+            <x-slot name="content">
+                <x-dropdown-link class="hover:cursor-pointer" x-data=""
+                    x-on:click.prevent="$dispatch('open-modal', 'create-contact')">New contact</x-dropdown-link>
+                <x-dropdown-link class="hover:cursor-pointer" x-data=""
+                    x-on:click.prevent="$dispatch('open-modal', 'all-contacts')">All contacts</x-dropdown-link>
+            </x-slot>   
+        </x-dropdown>
+        
+        <!-- Create new contact modal -->
+        <x-modal maxWidth="sm" name="create-contact" focusable>
+            <div class="p-6">
+                <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
+                    {{ __('New contact') }}
+                </h2>
+
+                <livewire:contacts.create-contact />
+
+                <div class="flex justify-end mt-6">
+                    <x-secondary-button x-on:click="$dispatch('close')">
+                        {{ __('Cancel') }}
+                    </x-secondary-button>
+                </div>
+            </div>
+        </x-modal>
     </div>
 
     <!-- Chats list -->

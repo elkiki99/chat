@@ -52,7 +52,9 @@
                     </x-secondary-button>
                 </div>
             </div>
-        </x-modal>
+        </x-modal>  
+
+
     </div>
 
     <!-- Chats list -->

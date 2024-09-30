@@ -12,6 +12,7 @@ class ShowContacts extends Component
 
     protected $listeners = [
         'selectContacts' => 'loadContacts',
+        'contactCreated' => 'loadContacts',
     ];
 
     public function mount()
@@ -21,7 +22,7 @@ class ShowContacts extends Component
 
     public function loadContacts()
     {
-        $this->contacts = Auth::user()->contacts;
+        $this->contacts = Auth::user()->contacts->sortBy('name')->values();
     }
 
     public function updatedSearch($value)

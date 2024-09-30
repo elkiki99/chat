@@ -22,7 +22,6 @@ class ShowChat extends Component
 
     protected $listeners = [
         'chatSelected' => 'changeToSelectedChat',
-        // 'createChat' => 'loadChat',
     ];
 
     public function mount()

@@ -18,7 +18,7 @@
                         <x-message-bubble :chat="$chat" :message="$message" :isLastInBlock="$isLastInBlock" :isFirstInBlock="$isFirstInBlock"
                             :isCurrentUser="$isCurrentUser" />
                     @empty
-                        <p>No messages found</p>
+                        <x-lobby />
                     @endforelse
                 </div>
             </div>
