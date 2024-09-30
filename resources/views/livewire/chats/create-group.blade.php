@@ -7,30 +7,6 @@
             class="text-sm text-red-500">{{ $message }}</span>
     @enderror
 
-    <div class="py-2">
-        <x-text-input 
-            id="chat_image" 
-            type="file" 
-            wire:model="chat_image" 
-            class="block w-full mt-1 border-gray-300 rounded-md shadow-sm"
-        />
-        
-        {{-- <livewire:dropzone wire:model="chat_image" :rules="['image', 'mimes:png,jpeg,jpg,webp', 'max:2048']" :multiple="false" /> --}}
-
-        @if($chat_image)
-            <div class="mt-4">
-                <x-input-label :value="__('Image preview')" />
-                <img src="{{ $chat_image->temporaryUrl() }}" alt="Image Preview" class="object-cover p-1 mr-2 rounded-full shadow size-32"/>
-            </div>
-        @endif
-
-        @error('chat_image')
-            <span x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = false, 2000)" class="text-sm text-red-500">
-                {{ $message }}
-            </span>
-        @enderror
-    </div>
-
     <div class="mt-4">
         <!-- Search users -->
         <div class="relative flex items-center">
@@ -92,7 +68,29 @@
             </ul>
         </div>
     </div>
+    
+    <div class="px-2 py-6">
+        <label class="block text-sm font-medium text-gray-600 dark:text-gray-300">Group image</label>
 
+        <x-text-input id="chat_image" type="file" wire:model="chat_image"
+            class="block w-full mt-1 border-gray-300 rounded-md shadow-sm" />
+
+        {{-- <livewire:dropzone wire:model="chat_image" :rules="['image', 'mimes:png,jpeg,jpg,webp', 'max:2048']" :multiple="false" /> --}}
+
+        @if ($chat_image)
+            <div class="mt-4">
+                <img src="{{ $chat_image->temporaryUrl() }}" alt="Image Preview"
+                    class="object-cover p-1 mr-2 rounded-full shadow size-32" />
+            </div>
+        @endif
+
+        @error('chat_image')
+            <span x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = false, 2000)" class="text-sm text-red-500">
+                {{ $message }}
+            </span>
+        @enderror
+    </div>
+    
     <div class="flex justify-between mt-6">
         <x-danger-button type="button" x-on:click="$dispatch('close')">
             {{ __('Cancel') }}

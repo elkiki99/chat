@@ -19,6 +19,7 @@ class ShowChat extends Component
     public $body = '';
     public $messages;
     public $messageAmount = 100;
+    
 
     protected $listeners = [
         'chatSelected' => 'changeToSelectedChat',
@@ -44,6 +45,9 @@ class ShowChat extends Component
     private function loadChat($chatId)
     {
         $this->chat = Chat::with('users', 'messages')->find($chatId);
+        if (!$this->chat) {
+            return;
+        }
         $this->updateChatInRealTime();
     }
 
@@ -65,7 +69,7 @@ class ShowChat extends Component
             'body' => $trimmedBody,
         ]);
 
-        // $this->body = '';
+        $this->body = '';
 
         MessageSent::dispatch($message);
         $this->checkForActiveUsersAndMarkSeen();
@@ -92,6 +96,10 @@ class ShowChat extends Component
 
     private function checkForActiveUsersAndMarkSeen()
     {
+        if (!$this->chat) {
+            return;
+        }
+
         $activeUsers = $this->chat->users()
             ->where('users.id', '!=', Auth::id())
             ->get();
@@ -105,7 +113,6 @@ class ShowChat extends Component
     }
 
     #[On('echo:message-sent,MessageSent')]
-    #[On('echo:message-read,MessageRead')]
     public function updateChatInRealTime()
     {
         $this->messages = $this->chat->messages()
@@ -118,6 +125,7 @@ class ShowChat extends Component
         $this->scrollDown();
     }
 
+    #[On('echo:message-read,MessageRead')]
     public function render()
     {
         if (Auth::user()->is_active_in_chat) {
