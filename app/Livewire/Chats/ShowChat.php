@@ -22,6 +22,7 @@ class ShowChat extends Component
 
     protected $listeners = [
         'chatSelected' => 'changeToSelectedChat',
+        // 'createChat' => 'loadChat',
     ];
 
     public function mount()
@@ -44,7 +45,6 @@ class ShowChat extends Component
     private function loadChat($chatId)
     {
         $this->chat = Chat::with('users', 'messages')->find($chatId);
-        // $this->scrollDown(); 
         $this->updateChatInRealTime();
     }
 
@@ -66,7 +66,6 @@ class ShowChat extends Component
             'body' => $trimmedBody,
         ]);
 
-        // $this->scrollDown();
         MessageSent::dispatch($message);
         $this->checkForActiveUsersAndMarkSeen();
     }

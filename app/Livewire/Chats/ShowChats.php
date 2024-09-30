@@ -13,6 +13,10 @@ class ShowChats extends Component
     public $chats = [];
     public $allChats = [];
 
+    protected $listeners = [
+        'chatCreated' => 'loadChats',
+    ];
+    
     public function mount()
     {
         $this->selectedChat = Auth::user()->is_active_in_chat;
@@ -35,6 +39,11 @@ class ShowChats extends Component
                 return optional($chat->messages->first())->created_at;
             });
         
+        $this->updateChatsInRealTime();
+    }
+
+    public function updateChatsInRealTime()
+    {
         $this->chats = $this->allChats;
     }
 

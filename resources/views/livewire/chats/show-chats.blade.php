@@ -2,16 +2,57 @@
     <h2 class="px-4 py-4 text-xl font-semibold">Chats</h2>
 
     <!-- Search bar for chats -->
-    <div class="px-4">
-        <div class="relative flex items-center">
-            <span class="absolute left-3">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="text-gray-500 size-4">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-                </svg>
-            </span>
-            
-            <input wire:model.live='search' class="w-full pl-10 text-sm border-gray-300 rounded-md shadow-sm dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-green-500 dark:focus:border-green-600 focus:ring-green-500 dark:focus:ring-green-600" placeholder="Search a chat...">
+    <div class="flex items-center justify-between">
+        <div class="w-full px-4">
+            <div class="relative flex items-center">
+                <span class="absolute left-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="text-gray-500 size-4">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+                    </svg>
+                </span>
+
+                <input wire:model.live='search'
+                    class="w-full pl-10 text-sm border-gray-300 rounded-md shadow-sm dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-green-500 dark:focus:border-green-600 focus:ring-green-500 dark:focus:ring-green-600"
+                    placeholder="Search a chat...">
+            </div>
         </div>
+
+        <x-dropdown align="right" width="48">
+            <x-slot name="trigger">
+                <button>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="mr-3 text-gray-700 size-5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                    </svg>
+                </button>
+            </x-slot>
+
+            <x-slot name="content">
+                <x-dropdown-link class="hover:cursor-pointer" x-data=""
+                    x-on:click.prevent="$dispatch('open-modal', 'create-chat')">New chat</x-dropdown-link>
+                <x-dropdown-link class="hover:cursor-pointer" x-data=""
+                    x-on:click.prevent="$dispatch('open-modal', 'create-group')">New group</x-dropdown-link>
+            </x-slot>
+        </x-dropdown>
+
+        <!-- Create new chat modal -->
+        <x-modal maxWidth="sm" name="create-chat" focusable>
+            <div class="p-6">
+                <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
+                    {{ __('New chat') }}
+                </h2>
+
+                <livewire:chats.create-chat />
+
+                <div class="flex justify-end mt-6">
+                    <x-secondary-button x-on:click="$dispatch('close')">
+                        {{ __('Cancel') }}
+                    </x-secondary-button>
+                </div>
+            </div>
+        </x-modal>
     </div>
 
     <!-- Chats list -->
@@ -54,36 +95,43 @@
                                     </p>
 
                                     <!-- Last message -->
-                                    <p class="text-xs text-gray-500">
-                                        {{ $lastMessage->created_at->format('H:i') }}
-                                    </p>
+                                    @if ($lastMessage)
+                                        <p class="text-xs text-gray-500">
+                                            {{ $lastMessage->created_at->format('H:i') }}
+                                        </p>
+                                    @endif
                                 </div>
 
                                 <div class="flex items-center justify-between">
+                                    @if ($lastMessage)
+                                        <div class="flex items-center gap-1 mt-1">
+                                            @if ($isCurrentUser)
+                                                <x-chat-check :message="$lastMessage" />
+                                            @endif
 
-                                    <div class="flex items-center gap-1 mt-1">
-                                        @if ($isCurrentUser)
-                                            <x-chat-check :message="$lastMessage" />
-                                        @endif
-
-                                        @if ($chat->is_group && !$isCurrentUser)
-                                            <div class="flex items-center gap-2">
-                                                <p class="text-sm text-gray-600">
-                                                    {{ Str::limit($lastMessage->user->name, 12, '') }}: </p>
+                                            @if ($chat->is_group && !$isCurrentUser)
+                                                <div class="flex items-center gap-2">
+                                                    <p class="text-sm text-gray-600">
+                                                        {{ Str::limit($lastMessage->user->name, 12, '') }}: </p>
+                                                    <p class="text-sm text-gray-500">
+                                                        {{ Str::limit($lastMessage->body, 25) }}
+                                                    </p>
+                                                </div>
+                                            @else
                                                 <p class="text-sm text-gray-500">
                                                     {{ Str::limit($lastMessage->body, 25) }}
                                                 </p>
-                                            </div>
-                                        @else
-                                            <p class="text-sm text-gray-500">{{ Str::limit($lastMessage->body, 25) }}</p>
-                                        @endif
-                                    </div>
-
-                                    @if (!$isCurrentUser && $unreadMessages)
-                                        <div
-                                            class="flex items-center justify-center text-sm text-white bg-green-500 rounded-full size-4">
-                                            <p>{{ $unreadMessages }}</p>
+                                            @endif
                                         </div>
+
+                                        @if (!$isCurrentUser && $unreadMessages)
+                                            <div
+                                                class="flex items-center justify-center text-sm text-white bg-green-500 rounded-full size-4">
+                                                <p>{{ $unreadMessages }}</p>
+                                            </div>
+                                        @endif
+                                    @else 
+                                        <p class="text-sm text-gray-400">No messages yet</p>
                                     @endif
                                 </div>
                             </div>

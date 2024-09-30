@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 
 class ShowContacts extends Component
 {
+    public $search = '';
     public $contacts = [];
 
     protected $listeners = [
@@ -21,6 +22,19 @@ class ShowContacts extends Component
     public function loadContacts()
     {
         $this->contacts = Auth::user()->contacts;
+    }
+
+    public function updatedSearch($value)
+    {
+        $allContacts = Auth::user()->contacts;
+
+        if (empty($value)) {
+            $this->contacts = $allContacts;
+        } else {
+            $this->contacts = $allContacts->filter(function ($contact) use ($value) {
+                return stripos($contact->name, $value) !== false;
+            });
+        }
     }
 
     public function render()
