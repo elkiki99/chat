@@ -4,7 +4,7 @@
     <div class="space-y-1">
         <a wire:click="selectChats()" class="flex flex-col items-center hover:cursor-pointer">
             <div
-                class="p-2 hover:bg-gray-300 hover:rounded-lg {{ $activeComponent == 'chats' ? 'bg-gray-200 hover:rounded-lg rounded-lg' : '' }}">
+                class="p-2 hover:bg-gray-150 hover:rounded-lg {{ $activeComponent == 'chats' ? 'bg-gray-200 hover:rounded-lg rounded-lg' : '' }}">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1"
                     stroke="currentColor" class="text-gray-800 size-6 ">
                     <path stroke-linecap="round" stroke-linejoin="round"
@@ -16,7 +16,7 @@
         <!-- Contacts -->
         <a wire:click="selectContacts()" class="flex flex-col items-center hover:cursor-pointer ">
             <div
-                class="p-2 hover:bg-gray-300 hover:rounded-lg {{ $activeComponent == 'contacts' ? 'bg-gray-200 hover:rounded-lg rounded-lg' : '' }}">
+                class="p-2 hover:bg-gray-150 hover:rounded-lg {{ $activeComponent == 'contacts' ? 'bg-gray-200 hover:rounded-lg rounded-lg' : '' }}">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1"
                     stroke="currentColor" class="text-gray-800 size-6">
                     <path stroke-linecap="round" stroke-linejoin="round"
@@ -29,8 +29,8 @@
     <!-- Bottom actions -->
     <div class="flex flex-col items-center mt-auto hover:cursor-pointer">
         <!-- Archived -->
-        <a class="p-2 border-b border-gray-300">
-            <div class="p-2 my-0.5 hover:bg-gray-200 hover:rounded-lg">
+        <a class="p-2 border-b border-gray-200">
+            <div class="p-2 my-0.5 hover:bg-gray-150 hover:rounded-lg">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1"
                     stroke="currentColor" class="text-gray-800 size-6 ">
                     <path stroke-linecap="round" stroke-linejoin="round"
@@ -39,7 +39,7 @@
             </div>
 
             <!-- Logout -->
-            <div class="p-2 hover:bg-gray-200 hover:rounded-lg">
+            <div class="p-2 hover:bg-gray-150 hover:rounded-lg">
                 <form method="POST" action="{{ route('logout') }}" class="flex items-center justify-center">
                     @csrf
                     <button type="submit" class="flex items-center justify-center">
@@ -55,7 +55,7 @@
 
         <div class="p-2 space-y-1">
             <!-- Settings -->
-            <div class="p-2 hover:bg-gray-200 hover:rounded-lg">
+            <div class="p-2 hover:bg-gray-150 hover:rounded-lg">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1"
                     stroke="currentColor" class="text-gray-800 size-6">
                     <path stroke-linecap="round" stroke-linejoin="round"
@@ -65,9 +65,9 @@
             </div>
 
             <!-- Profile -->
-            <div class="px-2 pt-2 hover:bg-gray-200 hover:rounded-lg">
+            <div class="px-2 pt-2 hover:bg-gray-150 hover:rounded-lg">
                 <a wire:navigate href="{{ route('profile.edit') }}">
-                    <div class="inline-block bg-gray-200 rounded-full">
+                    <div class="inline-block rounded-full bg-gray-150">
                         <x-profile-picture :user="Auth::user()" class="size-6" />
                     </div>
                 </a>

@@ -21,7 +21,7 @@
                     <div class="flex items-center gap-2 p-3 hover:bg-gray-100">
                         <!-- User image -->
                         <x-profile-picture :user="$user" class="size-10" />
-        
+
                         <div class="flex-1 mx-2">
                             <div class="flex items-center justify-between">
                                 <!-- User name -->
@@ -30,12 +30,13 @@
                                 </p>
                             </div>
                         </div>
-                        
+
                         <button x-on:click="$dispatch('close')" wire:click="createContact({{ $user->id }})"
                             class="block rounded cursor-pointer">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                stroke-width="1.5" stroke="currentColor" class="text-gray-700 size-5">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                                stroke-width="1.5" stroke="currentColor" class="text-green-500 size-6">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                             </svg>
                         </button>
                     </div>

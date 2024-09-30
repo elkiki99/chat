@@ -1,4 +1,4 @@
-<aside class="p-1 bg-white border-gray-300 min-w-96 border-x">
+<aside class="p-1 overflow-auto bg-white border-gray-300 min-w-96 border-x">
     <h2 class="px-4 py-4 text-xl font-semibold">Chats</h2>
 
     <!-- Search bar for chats -->
@@ -22,9 +22,9 @@
         <!-- Dropdown -->
         <x-dropdown align="right" width="48">
             <x-slot name="trigger">
-                <button>
+                <button class="p-2 mr-3 hover:bg-gray-100 hover:rounded-lg">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                        stroke="currentColor" class="mr-3 text-gray-700 size-5">
+                        stroke="currentColor" class="text-gray-700 size-5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                     </svg>
                 </button>
@@ -40,36 +40,12 @@
 
         <!-- Create new chat modal -->
         <x-modal maxWidth="sm" name="create-chat" focusable>
-            <div class="p-6">
-                <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
-                    {{ __('New chat') }}
-                </h2>
-
-                <livewire:chats.create-chat />
-
-                <div class="flex justify-end mt-6">
-                    <x-secondary-button x-on:click="$dispatch('close')">
-                        {{ __('Cancel') }}
-                    </x-secondary-button>
-                </div>
-            </div>
+            <livewire:chats.create-chat />
         </x-modal>
 
         <!-- Create new group modal -->
         <x-modal maxWidth="sm" name="create-group" focusable>
-            <div class="p-6">
-                <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
-                    {{ __('New group') }}
-                </h2>
-
-                <livewire:chats.create-group />
-
-                <div class="flex justify-end mt-6">
-                    <x-secondary-button x-on:click="$dispatch('close')">
-                        {{ __('Cancel') }}
-                    </x-secondary-button>
-                </div>
-            </div>
+            <livewire:chats.create-group />
         </x-modal>
     </div>
 
