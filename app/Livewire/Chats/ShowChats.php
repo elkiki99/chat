@@ -17,12 +17,13 @@ class ShowChats extends Component
     {
         $listeners = [
             'chatCreated' => 'loadChats',
-            'contactSelected' => 'selectChat',
         ];
 
-        foreach (Auth::user()->chats as $chat) {
-            $listeners["echo-private:App.Models.Chat.{$chat->id},MessageSent"] = 'bubbleUpLastMessage';
-            // $listeners["echo-private:App.Models.Chat.{$chat->id},MessageRead"] = 'updateChatsInRealTime';
+        foreach ($this->chats as $chat) {
+            if ($chat) {
+                $listeners['echo-private:App.Models.Chat.' . $chat->id . ',MessageSent'] = 'bubbleUpLastMessage';
+                $listeners['echo-private:App.Models.Chat.' . $chat->id . ',MessageRead'] = 'updateChatInRealTime';
+            }
         }
 
         return $listeners;
@@ -84,8 +85,6 @@ class ShowChats extends Component
 
     public function render()
     {
-        return view('livewire.chats.show-chats', [
-            'chats' => $this->chats,
-        ]);
+        return view('livewire.chats.show-chats');
     }
 }

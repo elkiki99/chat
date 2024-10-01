@@ -25,7 +25,7 @@ class MessageRead implements ShouldBroadcastNow
     public function __construct(Message $message, User $user)
     {
         $this->message = $message;
-        $this->user = $user; // Asegúrate de almacenar el usuario
+        $this->user = $user;
     }
 
     /**

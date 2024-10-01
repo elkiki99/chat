@@ -23,10 +23,8 @@ class MessageSent implements ShouldBroadcastNow
     /**
      * Create a new event instance.
      */
-    public function __construct(
-        Chat $chat,
-        Message $message
-    ) {
+    public function __construct(Chat $chat, Message $message)
+    {
         $this->chat = $chat;
         $this->message = $message;
     }
