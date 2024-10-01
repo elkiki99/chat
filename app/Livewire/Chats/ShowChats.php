@@ -13,18 +13,28 @@ class ShowChats extends Component
     public $chats = [];
     public $allChats = [];
 
-    protected $listeners = [
-        'chatCreated' => 'loadChats',
-        'contactSelected' => 'selectChat',
-    ];
-    
-    public function mount()
+    public function getListeners(): array
+    {
+        $listeners = [
+            'chatCreated' => 'loadChats',
+            'contactSelected' => 'selectChat',
+        ];
+
+        foreach (Auth::user()->chats as $chat) {
+            $listeners["echo-private:App.Models.Chat.{$chat->id},MessageSent"] = 'bubbleUpLastMessage';
+            // $listeners["echo-private:App.Models.Chat.{$chat->id},MessageRead"] = 'updateChatsInRealTime';
+        }
+
+        return $listeners;
+    }
+
+    public function mount(): void
     {
         $this->selectedChat = Auth::user()->is_active_in_chat;
         $this->fetchChats();
     }
 
-    public function loadChats()
+    public function loadChats(): void
     {
         $this->fetchChats();
     }
@@ -39,7 +49,7 @@ class ShowChats extends Component
             ->sortByDesc(function ($chat) {
                 return optional($chat->messages->first())->created_at;
             });
-        
+
         $this->updateChatsInRealTime();
     }
 
@@ -48,7 +58,6 @@ class ShowChats extends Component
         $this->chats = $this->allChats;
     }
 
-    #[On('echo:message-sent,MessageSent')]
     public function bubbleUpLastMessage()
     {
         $this->fetchChats();
@@ -73,7 +82,6 @@ class ShowChats extends Component
         });
     }
 
-    #[On('echo:message-read,MessageRead')]
     public function render()
     {
         return view('livewire.chats.show-chats', [

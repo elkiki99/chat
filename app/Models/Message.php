@@ -6,10 +6,12 @@ use App\Models\Chat;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\BroadcastsEvents;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Message extends Model
 {
+    use BroadcastsEvents; 
     use HasFactory;
 
     protected $fillable = [
@@ -17,6 +19,11 @@ class Message extends Model
         'user_id',
         'body',
     ];
+
+    public function broadcastOn(string $event): array 
+    {
+        return [$this->chat, $this->user];
+    }
 
     public function chat()
     {

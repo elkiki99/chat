@@ -7,7 +7,6 @@ use App\Models\Message;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Broadcasting\PrivateChannel;
-use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
@@ -15,10 +14,10 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 
 class MessageRead implements ShouldBroadcastNow
 {
-    public $message;
-    public $user;
-
     use Dispatchable, InteractsWithSockets, SerializesModels;
+
+    public $message;
+    public $user;    
 
     /**
      * Create a new event instance.
@@ -26,7 +25,7 @@ class MessageRead implements ShouldBroadcastNow
     public function __construct(Message $message, User $user)
     {
         $this->message = $message;
-        $this->user = $user;
+        $this->user = $user; // Asegúrate de almacenar el usuario
     }
 
     /**
@@ -34,8 +33,11 @@ class MessageRead implements ShouldBroadcastNow
      *
      * @return array<int, \Illuminate\Broadcasting\Channel>
      */
-    public function broadcastOn(): Channel
+    public function broadcastOn(): array
     {
-        return new Channel('message-read');
+        return [
+            new PrivateChannel('App.Models.Chat.' . $this->message->chat_id),
+            new PrivateChannel('App.Models.User.' . $this->user->id),
+        ];
     }
 }

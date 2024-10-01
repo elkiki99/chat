@@ -7,7 +7,6 @@ use App\Models\Message;
 use Livewire\Component;
 use App\Events\MessageRead;
 use App\Events\MessageSent;
-use Livewire\Attributes\On;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\Auth;
 
@@ -15,21 +14,32 @@ class ShowChat extends Component
 {
     use WithPagination;
 
-    public Chat $chat;
+    public ?Chat $chat = null;
     public $body = '';
     public $messages;
     public $messageAmount = 100;
-    
-
-    protected $listeners = [
-        'chatSelected' => 'changeToSelectedChat',
-    ];
 
     public function mount()
     {
         if (Auth::user()->is_active_in_chat) {
             $this->loadChat(Auth::user()->is_active_in_chat);
+        } else {
+            $this->chat = null;
         }
+    }
+
+    public function getListeners(): array
+    {
+        $listeners = [
+            'chatSelected' => 'changeToSelectedChat',
+        ];
+
+        if ($this->chat) {
+            $listeners["echo-private:App.Models.Chat.{$this->chat->id},MessageSent"] = 'updateChatInRealTime';
+            // $listeners["echo-private:App.Models.Chat.{$this->chat->id},MessageRead"] = 'handleMessageRead';
+        }
+
+        return $listeners;
     }
 
     public function loadMoreMessages()
@@ -45,9 +55,7 @@ class ShowChat extends Component
     private function loadChat($chatId)
     {
         $this->chat = Chat::with('users', 'messages')->find($chatId);
-        if (!$this->chat) {
-            return;
-        }
+        // $this->markMessagesAsSeen($this->chat->id);
         $this->updateChatInRealTime();
     }
 
@@ -71,7 +79,7 @@ class ShowChat extends Component
 
         $this->body = '';
 
-        MessageSent::dispatch($message);
+        MessageSent::dispatch($this->chat, $message);
         $this->checkForActiveUsersAndMarkSeen();
     }
 
@@ -112,10 +120,16 @@ class ShowChat extends Component
         }
     }
 
-    #[On('echo:message-sent,MessageSent')]
+    // public function handleMessageRead($messageId)
+    // {
+    //     $this->markMessagesAsSeen($this->chat->id);
+    //     $this->updateChatInRealTime();
+    // }
+
     public function updateChatInRealTime()
     {
         $this->messages = $this->chat->messages()
+            ->with('seenBy')
             ->orderBy('created_at', 'desc')
             ->take($this->messageAmount)
             ->get()
@@ -125,14 +139,8 @@ class ShowChat extends Component
         $this->scrollDown();
     }
 
-    #[On('echo:message-read,MessageRead')]
     public function render()
     {
-        if (Auth::user()->is_active_in_chat) {
-            $this->markMessagesAsSeen($this->chat->id);
-        }
-        $this->body = '';
-
         return view('livewire.chats.show-chat', [
             'messages' => $this->messages,
         ]);
