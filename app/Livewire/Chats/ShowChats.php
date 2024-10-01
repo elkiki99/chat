@@ -3,7 +3,6 @@
 namespace App\Livewire\Chats;
 
 use Livewire\Component;
-use Livewire\Attributes\On;
 use Illuminate\Support\Facades\Auth;
 
 class ShowChats extends Component
@@ -16,12 +15,12 @@ class ShowChats extends Component
     public function getListeners(): array
     {
         $listeners = [
-            'chatCreated' => 'loadChats',
+            'chatCreated' => 'fetchChats',
         ];
 
         foreach ($this->chats as $chat) {
             if ($chat) {
-                $listeners['echo-private:App.Models.Chat.' . $chat->id . ',MessageSent'] = 'bubbleUpLastMessage';
+                $listeners['echo-private:App.Models.Chat.' . $chat->id . ',MessageSent'] = 'fetchChats';
                 $listeners['echo-private:App.Models.Chat.' . $chat->id . ',MessageRead'] = 'updateChatInRealTime';
             }
         }
@@ -32,11 +31,6 @@ class ShowChats extends Component
     public function mount(): void
     {
         $this->selectedChat = Auth::user()->is_active_in_chat;
-        $this->fetchChats();
-    }
-
-    public function loadChats(): void
-    {
         $this->fetchChats();
     }
 
@@ -57,11 +51,6 @@ class ShowChats extends Component
     public function updateChatsInRealTime()
     {
         $this->chats = $this->allChats;
-    }
-
-    public function bubbleUpLastMessage()
-    {
-        $this->fetchChats();
     }
 
     public function selectChat($chatId)

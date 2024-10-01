@@ -4,8 +4,7 @@
     @if ($chat->chat_image)
         <img class="absolute inset-0 object-cover w-full h-full rounded-full"
             src="{{ Str::startsWith($chat->chat_image, ['http://', 'https://']) ? $chat->chat_image : url('/storage/chat-images/' . $chat->chat_image) }}"
-            alt="{{ $chat->name }}" 
-            {{-- src="{{ Str::startsWith($chat->chat_image, ['http://', 'https://']) ? $chat->chat_image : Storage::disk('s3')->url($chat->chat_image) }}" --}}
+            alt="{{ $chat->name }}"
         >
     @else
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-8 h-8 text-gray-300">

@@ -40,4 +40,12 @@ class MessageRead implements ShouldBroadcastNow
             new PrivateChannel('App.Models.User.' . $this->user->id),
         ];
     }
+
+    public function broadcastWith(): array
+    {
+        return [
+            'message' => $this->message, 
+            'user' => $this->user
+        ];
+    }
 }

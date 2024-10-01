@@ -7,7 +7,6 @@ use App\Models\Message;
 use Livewire\Component;
 use App\Events\MessageRead;
 use App\Events\MessageSent;
-use Livewire\Attributes\On;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\Auth;
 
@@ -79,8 +78,9 @@ class ShowChat extends Component
 
         $this->body = '';
 
-        MessageSent::dispatch($this->chat, $message);
+        broadcast(new MessageSent($this->chat, $message));
         $this->checkForActiveUsersAndMarkSeen();
+        $this->updateChatInRealTime();
     }
 
     public function markMessagesAsSeen($chatId)
@@ -96,7 +96,7 @@ class ShowChat extends Component
             $messageIds = $messages->pluck('id')->toArray();
             Message::whereIn('id', $messageIds)->each(function ($message) use ($user) {
                 $message->seenBy()->syncWithoutDetaching([$user->id]);
-                MessageRead::dispatch($message, $user);
+                broadcast(new MessageRead($message, $user));
             });
         }
         $this->updateChatInRealTime();
@@ -134,6 +134,8 @@ class ShowChat extends Component
             ->get()
             ->sortBy('created_at')
             ->values();
+            
+            $this->body = '';
 
         $this->scrollDown();
     }

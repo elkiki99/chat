@@ -42,4 +42,12 @@ class MessageSent implements ShouldBroadcastNow
             new PrivateChannel('App.Models.User.' . $this->message->user_id),
         ];
     }
+
+    public function broadcastWith(): array
+    {
+        return [
+            'message' => $this->message,
+            'chat' => $this->chat,
+        ];
+    }
 }

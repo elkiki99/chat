@@ -1,4 +1,4 @@
-<aside class="p-1 bg-white border-gray-300 min-w-96 border-x">
+<aside class="p-1 overflow-auto bg-white border-gray-300 min-w-96 border-x">
     <h2 class="px-4 py-4 text-xl font-semibold">Contacts</h2>
 
     <!-- Search bar for contacts -->
@@ -18,7 +18,7 @@
                     placeholder="Search a contact...">
             </div>
         </div>
-        
+
         <x-dropdown align="right" width="48">
             <x-slot name="trigger">
                 <button class="p-2 mr-3 hover:bg-gray-100 hover:rounded-lg">
@@ -34,9 +34,9 @@
                     x-on:click.prevent="$dispatch('open-modal', 'create-contact')">New contact</x-dropdown-link>
                 <x-dropdown-link class="hover:cursor-pointer" x-data=""
                     x-on:click.prevent="$dispatch('open-modal', 'all-contacts')">All contacts</x-dropdown-link>
-            </x-slot>   
+            </x-slot>
         </x-dropdown>
-        
+
         <!-- Create new contact modal -->
         <x-modal maxWidth="sm" name="create-contact" focusable>
             <div class="p-6">
@@ -58,9 +58,9 @@
     <!-- Chats list -->
     <div class="mt-4">
         <ul>
-            @forelse ($contacts as $user)
+            @forelse ($contacts as $index => $user)
                 <li>
-                    <a wire:click="contactSelected({{ $user->id }})"
+                    <a x-on:click.prevent="$dispatch('open-modal', 'show-contact-info-{{ $user->id }}')"
                         class="block p-3 rounded cursor-pointer hover:bg-gray-50">
                         <div class="flex items-center gap-2">
                             <!-- Contact image -->
@@ -74,9 +74,21 @@
                                     </p>
                                 </div>
                             </div>
+
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                stroke-width="1.5" stroke="currentColor" class="text-gray-700 size-5">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M12 6.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 12.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 18.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5Z" />
+                            </svg>
+
                         </div>
                     </a>
                 </li>
+
+                <x-modal maxWidth="md" name="show-contact-info-{{ $user->id }}" focusable>
+                    <livewire:contacts.show-contact-info :user="$user" />
+                    
+                </x-modal>
             @empty
                 <li class="p-4 text-gray-500">No contacts found</li>
             @endforelse
