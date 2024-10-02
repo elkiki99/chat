@@ -61,7 +61,6 @@ class ShowContactInfo extends Component
     {
         Auth::user()->contacts()->detach($userId);
         $this->dispatch('contactRemoved', $userId);
-
     }
     
     public function render()

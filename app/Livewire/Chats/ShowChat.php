@@ -18,11 +18,13 @@ class ShowChat extends Component
     public $body = '';
     public $messages;
     public $messageAmount = 100;
+    public $user;
 
     public function mount()
     {
         if (Auth::user()->is_active_in_chat) {
             $this->loadChat(Auth::user()->is_active_in_chat);
+            $this->user = $this->chat->users->where('id', '!==', Auth::id())->first();
         } else {
             $this->chat = null;
         }
@@ -146,6 +148,7 @@ class ShowChat extends Component
 
     public function render()
     {
-        return view('livewire.chats.show-chat');
+        return view('livewire.chats.show-chat', [
+        ]);
     }
 }

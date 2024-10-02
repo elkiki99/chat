@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Chats;
 
+use App\Models\Chat;
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
 
@@ -11,6 +12,8 @@ class ShowChats extends Component
     public $selectedChat = null;
     public $chats = [];
     public $allChats = [];
+    public $chat;
+    public $user;
 
     public function getListeners(): array
     {
@@ -50,7 +53,9 @@ class ShowChats extends Component
 
     public function selectChat($chatId)
     {
-        $this->selectedChat = $chatId;
+        $this->chat = Chat::find($chatId);
+        $this->user = $this->chats->where('id', $chatId)->first()->users->where('id', '!=', Auth::id())->first();
+        $this->selectedChat = $chatId;  
         $this->dispatch('chatSelected', $chatId);
         Auth::user()->update(['is_active_in_chat' => $chatId]);
     }

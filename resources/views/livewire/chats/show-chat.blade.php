@@ -1,6 +1,6 @@
 <div class="flex flex-col w-full h-screen bg-gray-100">
     @if ($chat)
-        <x-chat-header :chat="$chat" />
+        <livewire:components.chats.chat-header :chat="$chat" :user="$user" />
 
         <div id="chat-container" class="relative flex-1 overflow-auto">
             <div class="p-6">

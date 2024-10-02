@@ -37,9 +37,13 @@ class ShowContacts extends Component
 
     public function updatedSearch($value)
     {
-        $this->contacts = $this->allContacts->filter(function ($contact) use ($value) {
-            return stripos($contact->name, $value);
-        });
+        if (empty($value)) {
+            $this->contacts = $this->allContacts;
+        } else {
+            $this->contacts = $this->allContacts->filter(function ($contact) use ($value) {
+                return stripos($contact->name, $value);
+            });
+        }
     }
 
     public function render()
