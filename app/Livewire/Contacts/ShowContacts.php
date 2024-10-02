@@ -23,7 +23,7 @@ class ShowContacts extends Component
     {
         $this->dispatch('contactSelected', $userId);
     }
-
+    
     public function loadContacts()
     {
         $this->contacts = Auth::user()->contacts->sortBy('name')->values();

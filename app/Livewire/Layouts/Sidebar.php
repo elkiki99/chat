@@ -8,16 +8,18 @@ class Sidebar extends Component
 {
     public $activeComponent = 'chats';
 
+    protected $listeners = ['groupSelected' => 'selectChats'];
+
     public function selectChats()
     {
-        $this->activeComponent = 'chats';
         $this->dispatch('componentChanged', 'chats');
+        $this->activeComponent = 'chats';
     }
 
     public function selectContacts()
     {
-        $this->activeComponent = 'contacts';
         $this->dispatch('componentChanged', 'contacts');
+        $this->activeComponent = 'contacts';
     }
 
     public function render()
