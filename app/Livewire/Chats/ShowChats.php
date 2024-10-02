@@ -35,7 +35,7 @@ class ShowChats extends Component
     }
 
     public function fetchChats()
-    {
+    {   
         $this->allChats = Auth::user()->chats()
             ->with(['users', 'messages' => function ($query) {
                 $query->latest()->limit(1);
@@ -45,12 +45,7 @@ class ShowChats extends Component
                 return optional($chat->messages->first())->created_at;
             });
 
-        $this->updateChatsInRealTime();
-    }
-
-    public function updateChatsInRealTime()
-    {
-        $this->chats = $this->allChats;
+        $this->chats = $this->allChats->sortBy('name')->values();
     }
 
     public function selectChat($chatId)

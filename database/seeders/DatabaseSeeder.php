@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\Chat;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\User;
 use App\Models\Message;
 use Illuminate\Database\Seeder;
@@ -15,36 +14,25 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Crear usuarios
-        $users = User::factory(20)->create();
+        $users = User::factory(40)->create();
 
-        // Crear chats
-        $chats = Chat::factory(10)->create();
+        $chats = Chat::factory(20)->create();
 
         foreach ($chats as $chat) {
-            // Determinar si el chat es un grupo o no
             $isGroup = $chat->is_group;
 
             if ($isGroup) {
-                // Para chats de grupo, asignar un título
                 $chat->update(['name' => 'Grupo ' . fake()->word()]);
-
-                // Asignar más de 2 usuarios
-                $usersForChat = $users->random(rand(3, 5))->pluck('id')->toArray();
+                $usersForChat = $users->random(rand(2, 10))->pluck('id');
             } else {
-                // Para chats no grupales, no asignar título
                 $chat->update(['name' => null]);
-
-                // Asignar exactamente 2 usuarios
-                $usersForChat = $users->random(2)->pluck('id')->toArray();
+                $usersForChat = $users->random(2)->pluck('id');
             }
 
-            // Adjuntar usuarios al chat
             $chat->users()->attach($usersForChat, ['joined_at' => now()]);
 
-            // Crear mensajes para el chat, asignando mensajes a usuarios del chat
-            foreach (range(1, 10) as $index) {
-                $messageUserId = $usersForChat[array_rand($usersForChat)];
+            foreach (range(1, 100) as $index) {
+                $messageUserId = $usersForChat->random();
 
                 Message::factory()->create([
                     'chat_id' => $chat->id,
@@ -53,10 +41,9 @@ class DatabaseSeeder extends Seeder
             }
         }
 
-        // Crear contactos para cada usuario
         foreach ($users as $user) {
-            $contacts = $users->where('id', '!=', $user->id)->random(3);
-            $user->contacts()->attach($contacts->pluck('id')->toArray());
+            $contacts = $users->where('id', '!=', $user->id)->random(10);
+            $user->contacts()->attach($contacts->pluck('id'));
         }
     }
 }

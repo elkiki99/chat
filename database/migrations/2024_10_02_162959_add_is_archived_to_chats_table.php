@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->boolean('is_active_in_chat')->nullable()->after('last_login_at');
+        Schema::table('chats', function (Blueprint $table) {
+            $table->boolean('is_archived')->default(false);
         });
     }
 
@@ -21,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropIfExists('is_active_in_chat');
+        Schema::table('chats', function (Blueprint $table) {
+            $table->dropIfExists()->column('is_archived');
         });
     }
 };

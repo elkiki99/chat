@@ -1,6 +1,6 @@
 <div class="flex min-h-[50vh] w-full">
     <aside class="w-1/3 p-6 bg-gray-200">
-        <a class="flex flex-col hover:cursor-pointer">
+        {{-- <a class="flex flex-col hover:cursor-pointer">
             <div class="p-2 hover:bg-gray-150 hover:rounded-lg">
                 Summary
             </div>
@@ -19,16 +19,54 @@
             <div class="p-2 hover:bg-gray-150 hover:rounded-lg">
                 Groups
             </div>
-        </a>
+        </a> --}}
     </aside>
 
     <div class="flex flex-col w-3/4 gap-4 p-6">
         <div class="flex flex-col items-center space-y-2">
             <x-profile-picture :user="$user" class="size-24" />
 
-            <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
-                {{ $user->name }}
-            </h2>
+            <div class="flex items-center justify-between">
+                <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
+                    {{ $user->name }}
+                </h2>
+
+                @php
+                    $chatExists = Auth::user()
+                        ->chats()
+                        ->where('is_group', false)
+                        ->whereHas('users', function ($query) use ($user) {
+                            $query->where('users.id', $user->id);
+                        })
+                        ->exists();
+
+                    $chat = $user
+                        ->chats()
+                        ->where('is_group', false)
+                        ->whereHas('users', function ($query) {
+                            $query->where('users.id', Auth::id());
+                        })
+                        ->first();
+                @endphp
+
+                @if ($chatExists)
+                    <button x-on:click="$dispatch('close')" wire:click='selectChat({{ $chat->id }})' class="ml-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" class="size-6">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M17.25 8.25 21 12m0 0-3.75 3.75M21 12H3" />
+                        </svg>
+                    </button>
+                @else
+                    <button x-on:click="$dispatch('close')" wire:click='createChat({{ $user->id }})' class="ml-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" class="size-6">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M17.25 8.25 21 12m0 0-3.75 3.75M21 12H3" />
+                        </svg>
+                    </button>
+                @endif
+            </div>
 
             <h3 class="text-gray-900 text-md dark:text-gray-100">
                 {{ $user->username }}
@@ -79,13 +117,13 @@
         </div>
 
         <div class="flex justify-between pt-10 mt-auto">
-            <x-secondary-button x-on:click="$dispatch('close')">
+            <x-secondary-button wire:click='removeContact({{ $user->id }})' x-on:click="$dispatch('close')">
                 {{ __('Remove') }}
             </x-secondary-button>
 
-            <x-danger-button x-on:click="$dispatch('close')">
+            {{-- <x-danger-button x-on:click="$dispatch('close')">
                 {{ __('Block') }}
-            </x-danger-button>
+            </x-danger-button> --}}
         </div>
     </div>
 </div>

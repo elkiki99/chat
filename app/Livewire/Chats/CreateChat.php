@@ -12,11 +12,15 @@ class CreateChat extends Component
     public $search = '';
     public $contacts = [];
 
+    protected $listeners = [
+        // 'createChat' => 'createChat',
+    ];
+
     public function mount()
     {
         $this->loadContacts();
     }
-    
+
     public function loadContacts()
     {
         $this->contacts = Auth::user()->contacts;
@@ -27,14 +31,14 @@ class CreateChat extends Component
         $userId = Auth::id();
 
         $chatExists = Chat::where('is_group', false)
-        ->whereHas('users', function ($query) use ($userId, $contactId) {
-            $query->whereIn('users.id', [$userId, $contactId]);
-        })
-        ->withCount(['users' => function ($query) use ($userId, $contactId) {
-            $query->whereIn('users.id', [$userId, $contactId]);
-        }])
-        ->where('users_count', 2)
-        ->first();
+            ->whereHas('users', function ($query) use ($userId, $contactId) {
+                $query->whereIn('users.id', [$userId, $contactId]);
+            })
+            ->withCount(['users' => function ($query) use ($userId, $contactId) {
+                $query->whereIn('users.id', [$userId, $contactId]);
+            }])
+            ->where('users_count', 2)
+            ->first();
 
         if (!$chatExists) {
             $chat = Chat::create([
@@ -46,7 +50,7 @@ class CreateChat extends Component
             ]);
 
             $chat->users()->attach([Auth::id(), $contactId]);
-            
+
             Auth::user()->update(['is_active_in_chat' => $chat->id]);
             $this->dispatch('chatCreated', $chat->id);
             $this->dispatch('chatSelected', $chat->id);
@@ -62,10 +66,10 @@ class CreateChat extends Component
             $this->contacts = Auth::user()->contacts;
         } else {
             $contactIds = Auth::user()->contacts()->pluck('contact_user_id')->toArray();
-    
+
             $this->contacts = User::where('name', 'like', '%' . $search . '%')
                 ->whereIn('id', $contactIds)
-                ->take(5)
+                ->take(10)
                 ->get();
         }
     }

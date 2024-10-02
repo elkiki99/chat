@@ -38,21 +38,21 @@
         </x-dropdown>
 
         <!-- Create new contact modal -->
-        <x-modal maxWidth="sm" name="create-contact" focusable>
-            <div class="p-6">
-                <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
-                    {{ __('New contact') }}
-                </h2>
-
-                <livewire:contacts.create-contact />
-
-                <div class="flex justify-end mt-6">
-                    <x-secondary-button x-on:click="$dispatch('close')">
-                        {{ __('Cancel') }}
-                    </x-secondary-button>
-                </div>
-            </div>
-        </x-modal>
+            <x-modal maxWidth="sm" name="create-contact" focusable>
+                <div class="p-6">
+                    <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
+                        {{ __('New contact') }}
+                    </h2>
+                    
+                    <livewire:contacts.create-contact />
+                    
+                    <div class="flex justify-end mt-6">
+                        <x-secondary-button x-on:click="$dispatch('close')">
+                            {{ __('Cancel') }}
+                        </x-secondary-button>
+                    </div>
+            </x-modal>
+        </div>
     </div>
 
     <!-- Chats list -->

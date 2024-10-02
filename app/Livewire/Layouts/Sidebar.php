@@ -8,7 +8,7 @@ class Sidebar extends Component
 {
     public $activeComponent = 'chats';
 
-    protected $listeners = ['groupSelected' => 'selectChats'];
+    protected $listeners = ['chatSelected' => 'selectChats'];
 
     public function selectChats()
     {

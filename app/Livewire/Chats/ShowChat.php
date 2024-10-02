@@ -127,6 +127,10 @@ class ShowChat extends Component
 
     public function updateChatInRealTime()
     {
+        if (!$this->chat) {
+            return;
+        }
+        
         $this->messages = $this->chat->messages()
             ->with('seenBy')
             ->orderBy('created_at', 'desc')

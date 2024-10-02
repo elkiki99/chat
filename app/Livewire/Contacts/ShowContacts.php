@@ -9,10 +9,15 @@ class ShowContacts extends Component
 {
     public $search = '';
     public $contacts = [];
+    public $allContacts = [];
 
-    protected $listeners = [
-        'contactCreated' => 'loadContacts',
-    ];
+    public function getListeners(): array
+    {
+        return [
+            'contactCreated' => 'loadContacts',
+            'contactRemoved' => 'loadContacts',
+        ];
+    }
 
     public function mount()
     {
@@ -23,29 +28,22 @@ class ShowContacts extends Component
     {
         $this->dispatch('contactSelected', $userId);
     }
-    
+
     public function loadContacts()
     {
-        $this->contacts = Auth::user()->contacts->sortBy('name')->values();
+        $this->allContacts = Auth::user()->contacts()->orderBy('name')->get();
+        $this->contacts = $this->allContacts->sortBy('name')->values();
     }
 
     public function updatedSearch($value)
     {
-        $allContacts = Auth::user()->contacts;
-
-        if (empty($value)) {
-            $this->contacts = $allContacts;
-        } else {
-            $this->contacts = $allContacts->filter(function ($contact) use ($value) {
-                return stripos($contact->name, $value) !== false;
-            });
-        }
+        $this->contacts = $this->allContacts->filter(function ($contact) use ($value) {
+            return stripos($contact->name, $value);
+        });
     }
 
     public function render()
     {
-        return view('livewire.contacts.show-contacts', [
-            'contacts' => $this->contacts,
-        ]);
+        return view('livewire.contacts.show-contacts');
     }
 }

@@ -87,7 +87,7 @@ class CreateGroup extends Component
 
             $this->contacts = User::where('name', 'like', '%' . $search . '%')
                 ->whereIn('id', $contactIds)
-                ->take(5)
+                ->take(10)
                 ->get();
         }
     }
