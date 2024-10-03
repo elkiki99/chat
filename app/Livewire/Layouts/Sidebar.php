@@ -22,6 +22,12 @@ class Sidebar extends Component
         $this->activeComponent = 'contacts';
     }
 
+    public function selectArchived()
+    {
+        $this->dispatch('componentChanged', 'archived');
+        $this->activeComponent = 'archived';
+    }
+
     public function render()
     {
         return view('livewire.layouts.sidebar');

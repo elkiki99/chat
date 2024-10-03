@@ -29,14 +29,15 @@
     <!-- Bottom actions -->
     <div class="flex flex-col items-center mt-auto hover:cursor-pointer">
         <!-- Archived -->
-        <a class="p-2 border-b border-gray-200">
-            <div class="p-2 my-0.5 hover:bg-gray-150 hover:rounded-lg">
+        <a wire:click="selectArchived()" class="p-2 border-b border-gray-200 ">
+            <div class="p-2 my-0.5 hover:bg-gray-150 hover:rounded-lg {{ $activeComponent == 'archived' ? 'bg-gray-200 hover:rounded-lg rounded-lg' : '' }}">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1"
                     stroke="currentColor" class="text-gray-800 size-6 ">
                     <path stroke-linecap="round" stroke-linejoin="round"
                         d="m20.25 7.5-.625 10.632a2.25 2.25 0 0 1-2.247 2.118H6.622a2.25 2.25 0 0 1-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z" />
                 </svg>
             </div>
+        </a>
 
             <!-- Logout -->
             <div class="p-2 hover:bg-gray-150 hover:rounded-lg">
@@ -51,7 +52,7 @@
                     </button>
                 </form>
             </div>
-        </a>
+        {{-- </a> --}}
 
         <div class="p-2 space-y-1">
             <!-- Settings -->

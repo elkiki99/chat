@@ -13,6 +13,7 @@ class ChatHeader extends Component
 
     protected $listeners = [
         'chatSelected' => 'changeToSelectedChat',
+        'archivedSelected' => 'changeToSelectedChat',
     ];
 
     public function changeToSelectedChat($chatId)
@@ -36,6 +37,13 @@ class ChatHeader extends Component
         $chat = Chat::find($chatId);
         $chat->users()->updateExistingPivot(Auth::id(), ['is_archived' => true]);
         $this->dispatch('chatArchived', $chatId);
+    }
+
+    public function unarchiveChat($chatId)
+    {
+        $chat = Chat::find($chatId);
+        $chat->users()->updateExistingPivot(Auth::id(), ['is_archived' => false]);
+        $this->dispatch('chatUnarchived', $chatId);
     }
 
     public function removeContact($userId)

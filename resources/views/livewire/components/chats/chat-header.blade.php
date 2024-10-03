@@ -30,12 +30,25 @@
                         </x-slot>
 
                         <x-slot name="content">
-                            <x-dropdown-link class="hover:cursor-pointer" x-data="" wire:click="archiveChat({{ $chat->id }})">
-                                Archive chat
-                            </x-dropdown-link>
+                            @php
+                                $isArchived = Auth::user()
+                                        ->chats()
+                                        ->where('chats.id', $chat->id)
+                                        ->first()->pivot->is_archived ?? false;
+                            @endphp
+                            @if (!$isArchived)
+                                <x-dropdown-link class="hover:cursor-pointer" x-data=""
+                                    wire:click="archiveChat({{ $chat->id }})">
+                                    Archive chat
+                                </x-dropdown-link>
+                            @else
+                                <x-dropdown-link class="hover:cursor-pointer" x-data=""
+                                    wire:click="unarchiveChat({{ $chat->id }})">
+                                    Unarchive
+                                </x-dropdown-link>
+                            @endif
                         </x-slot>
                     </x-dropdown>
-
                 </div>
             </div>
 

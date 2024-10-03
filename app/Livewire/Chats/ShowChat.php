@@ -34,6 +34,7 @@ class ShowChat extends Component
     {
         $listeners = [
             'chatSelected' => 'changeToSelectedChat',
+            'archivedSelected' => 'changeToSelectedChat',
             'chatArchived' => 'setChatToNull',
         ];
 
@@ -141,7 +142,7 @@ class ShowChat extends Component
         
         $this->messages = $this->chat->messages()
             ->with('seenBy')
-            ->orderBy('created_at', 'desc')
+            ->latest()
             ->take($this->messageAmount)
             ->get()
             ->sortBy('created_at')

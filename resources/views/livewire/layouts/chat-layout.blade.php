@@ -1,7 +1,9 @@
 <div class="flex">
     @if($activeComponent === 'contacts')
         <livewire:contacts.show-contacts />
-    @else
+    @elseif($activeComponent === 'chats')
         <livewire:chats.show-chats />
+    @elseif($activeComponent === 'archived')
+        <livewire:chats.show-archived />
     @endif
 </div>

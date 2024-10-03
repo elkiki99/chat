@@ -6,7 +6,7 @@ use App\Models\Chat;
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
 
-class ShowChats extends Component
+class ShowArchived extends Component
 {
     public $search = '';
     public $selectedChat = null;
@@ -18,8 +18,8 @@ class ShowChats extends Component
     public function getListeners(): array
     {
         $listeners = [
-            'chatCreated' => 'pushLastMessage',
-            'chatArchived' => 'archiveChatAndUpdate',
+            // 'chatCreated' => 'pushLastMessage',
+            'chatUnarchived' => 'unarchiveChatAndUpdate',
         ];
 
         foreach ($this->chats as $chat) {
@@ -34,16 +34,16 @@ class ShowChats extends Component
 
     public function mount(): void
     {
-        $this->selectedChat = Auth::user()->is_active_in_chat;
+        // $this->selectedChat = Auth::user()->is_active_in_chat;
         $this->fetchChats();
     }
 
-    public function pushLastMessage()
-    {
-        $this->fetchChats();
-    }
+    // public function pushLastMessage()
+    // {
+    //     $this->fetchChats();
+    // }
 
-    public function archiveChatAndUpdate()
+    public function unarchiveChatAndUpdate()
     {
         $this->selectedChat = null;
         $this->fetchChats();
@@ -53,7 +53,7 @@ class ShowChats extends Component
     {
         $this->allChats = Auth::user()->chats()
             // ->withPivot('is_archived')
-            ->where('is_archived', false)
+            ->where('is_archived', true)
             ->with(['users', 'messages' => function ($query) {
                 $query->latest()->limit(1);
             }])
@@ -65,12 +65,12 @@ class ShowChats extends Component
         $this->chats = $this->allChats->values();
     }
 
-    public function selectChat($chatId)
+    public function selectArchived($chatId)
     {
         $this->chat = Chat::find($chatId);
         $this->user = $this->chats->where('id', $chatId)->first()->users->where('id', '!=', Auth::id())->first();
         $this->selectedChat = $chatId;
-        $this->dispatch('chatSelected', $chatId);
+        $this->dispatch('archivedSelected', $chatId);
         Auth::user()->update(['is_active_in_chat' => $chatId]);
     }
 
@@ -88,6 +88,6 @@ class ShowChats extends Component
 
     public function render()
     {
-        return view('livewire.chats.show-chats');
+        return view('livewire.chats.show-archived');
     }
 }
