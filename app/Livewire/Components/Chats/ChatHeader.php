@@ -31,10 +31,18 @@ class ChatHeader extends Component
         $this->loadChat($chat->id);
     }
 
+    public function archiveChat($chatId)
+    {
+        $chat = Chat::find($chatId);
+        $chat->users()->updateExistingPivot(Auth::id(), ['is_archived' => true]);
+        $this->dispatch('chatArchived', $chatId);
+    }
+
     public function removeContact($userId)
     {
         Auth::user()->contacts()->detach($userId);
-        $this->dispatch('contactRemoved', $userId);
+        Auth::user()->update(['is_active_in_chat' => null]);
+        $this->dispatch('chatArchived');
     }
 
     public function render()

@@ -19,6 +19,7 @@ class ShowChats extends Component
     {
         $listeners = [
             'chatCreated' => 'fetchChats',
+            'chatArchived' => 'fetchChats',
         ];
 
         foreach ($this->chats as $chat) {
@@ -40,6 +41,7 @@ class ShowChats extends Component
     public function fetchChats()
     {   
         $this->allChats = Auth::user()->chats()
+            ->where('is_archived', false)
             ->with(['users', 'messages' => function ($query) {
                 $query->latest()->limit(1);
             }])

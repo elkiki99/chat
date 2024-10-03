@@ -34,6 +34,7 @@ class ShowChat extends Component
     {
         $listeners = [
             'chatSelected' => 'changeToSelectedChat',
+            'chatArchived' => 'setChatToNull',
         ];
 
         if ($this->chat) {
@@ -47,6 +48,11 @@ class ShowChat extends Component
     public function loadMoreMessages()
     {
         $this->messageAmount += 100;
+    }
+
+    public function setChatToNull()
+    {
+        $this->chat = null;
     }
 
     public function scrollDown()

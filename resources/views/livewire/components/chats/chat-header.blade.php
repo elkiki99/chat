@@ -17,13 +17,25 @@
                         </svg>
                     </a>
 
-                    <a href="#">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1"
-                            stroke="currentColor" class="size-5">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M12 6.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 12.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 18.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5Z" />
-                        </svg>
-                    </a>
+                    <!-- Dropdown -->
+                    <x-dropdown align="right" width="48">
+                        <x-slot name="trigger">
+                            <button class="p-2 mr-3 hover:bg-gray-100 hover:rounded-lg">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="1" stroke="currentColor" class="size-5">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M12 6.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 12.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 18.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5Z" />
+                                </svg>
+                            </button>
+                        </x-slot>
+
+                        <x-slot name="content">
+                            <x-dropdown-link class="hover:cursor-pointer" x-data="" wire:click="archiveChat({{ $chat->id }})">
+                                Archive chat
+                            </x-dropdown-link>
+                        </x-slot>
+                    </x-dropdown>
+
                 </div>
             </div>
 
@@ -155,8 +167,8 @@
                             </x-secondary-button>
 
                             {{-- <x-danger-button x-on:click="$dispatch('close')">
-                            {{ __('Block') }}
-                        </x-danger-button> --}}
+                        {{ __('Block') }}
+                    </x-danger-button> --}}
                         </div>
                     </div>
                 </div>

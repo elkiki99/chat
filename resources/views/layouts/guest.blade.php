@@ -23,7 +23,7 @@
 
         <div>
             <a wire:navigate href="/">
-                <x-application-logo class="w-20 h-20 text-green-800 fill-current" />
+                <x-application-logo class="w-20 h-20 text-green-800 fill-current animate-bounce" />
             </a>
         </div>
 
