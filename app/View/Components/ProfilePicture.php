@@ -14,7 +14,7 @@ class ProfilePicture extends Component
     /**
      * Create a new component instance.
      */
-    public function __construct(User $user)
+    public function __construct(?User $user = null)
     {
         $this->user = $user;
     }

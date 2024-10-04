@@ -69,7 +69,10 @@
             <div class="px-2 pt-2 hover:bg-gray-150 hover:rounded-lg">
                 <a wire:navigate href="{{ route('profile.edit') }}">
                     <div class="inline-block rounded-full bg-gray-150">
-                        <x-profile-picture :user="Auth::user()" class="size-6" />
+                        @php 
+                            $user = Auth::user();
+                        @endphp
+                        <x-profile-picture :user="$user" class="size-6" />
                     </div>
                 </a>
             </div>

@@ -7,6 +7,7 @@ use Livewire\Component;
 class Sidebar extends Component
 {
     public $activeComponent = 'chats';
+    // public $user;
 
     protected $listeners = ['chatSelected' => 'selectChats'];
 
