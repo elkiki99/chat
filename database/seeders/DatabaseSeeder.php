@@ -31,7 +31,7 @@ class DatabaseSeeder extends Seeder
 
             $chat->users()->attach($usersForChat, ['joined_at' => now()]);
 
-            foreach (range(1, 100) as $index) {
+            foreach (range(1, 10) as $index) {
                 $messageUserId = $usersForChat->random();
 
                 Message::factory()->create([

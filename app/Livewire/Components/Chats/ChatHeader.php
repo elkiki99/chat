@@ -34,20 +34,16 @@ class ChatHeader extends Component
         $this->user = $this->chat->users->where('id', '!==', Auth::id())->first();
     }
 
-    public function selectChatOnGroupMembers($chatId)
+    public function selectChat($chatId)
     {
         $this->dispatch('chatSelected', $chatId);
-        // $this->dispatch('groupSelected');
 
         $this->selectedChat = $chatId;
         Auth::user()->update(['is_active_in_chat' => $chatId]);
     }
 
-    public function createChatOnGroupMembers($contactId)
+    public function createChat($contactId)
     {
-        // $this->dispatch('chatSelected', $chatId);
-        // $this->dispatch('groupSelected');
-
         $userId = Auth::id();
 
         $chatExists = Chat::where('is_group', false)
@@ -99,6 +95,13 @@ class ChatHeader extends Component
         Auth::user()->contacts()->detach($userId);
         Auth::user()->update(['is_active_in_chat' => null]);
         $this->dispatch('chatArchived');
+    }
+
+    public function addContact($userId)
+    {
+        Auth::user()->contacts()->attach($userId);
+        Auth::user()->update(['is_active_in_chat' => $userId]);
+        $this->dispatch('chatSelected', $userId);
     }
 
     public function render()
