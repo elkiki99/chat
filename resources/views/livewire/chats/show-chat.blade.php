@@ -26,13 +26,31 @@
 
         <!-- Message input -->
         <div class="flex items-center px-4 py-2 bg-white border-t border-gray-300">
-            <button class="p-2 hover:bg-gray-100 hover:rounded-lg">
+            <button x-on:click="$dispatch('open-modal', 'send-file')" class="p-2 hover:bg-gray-100 hover:rounded-lg">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1"
                     stroke="currentColor" class="size-5">
                     <path stroke-linecap="round" stroke-linejoin="round"
                         d="m18.375 12.739-7.693 7.693a4.5 4.5 0 0 1-6.364-6.364l10.94-10.94A3 3 0 1 1 19.5 7.372L8.552 18.32m.009-.01-.01.01m5.699-9.941-7.81 7.81a1.5 1.5 0 0 0 2.112 2.13" />
                 </svg>
             </button>
+
+            {{-- <livewire:chats.send-file /> --}}
+
+            <x-modal maxWidth="sm" name="send-file" focusable>
+                <div class="p-6 space-y-2">
+                    <livewire:dropzone wire:model="files" :multiple="true" />
+                    <x-primary-button wire:click="sendFile" class="mt-4">Send</x-primary-button>
+                    
+                    @if ($errors->has('files.*'))
+                        <div class="text-red-500">
+                            @foreach ($errors->all() as $error)
+                                <p>{{ $error }}</p>
+                            @endforeach
+                        </div>
+                    @endif
+                </div>
+            </x-modal>
+            
 
             <form wire:submit.prevent="sendMessage" class="flex w-full">
                 <input type="text" wire:model="body" placeholder="Type a message here..."

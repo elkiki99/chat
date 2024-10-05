@@ -7,8 +7,10 @@ use App\Models\Message;
 use Livewire\Component;
 use App\Events\MessageRead;
 use App\Events\MessageSent;
+use Illuminate\Support\Str;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 
 class ShowChat extends Component
 {
@@ -19,6 +21,8 @@ class ShowChat extends Component
     public $messages;
     public $messageAmount = 100;
     public $user;
+    public $files = [];
+    public $file;
 
     public function mount()
     {
@@ -38,12 +42,48 @@ class ShowChat extends Component
             'chatArchived' => 'setChatToNull',
         ];
 
+        // This if this->chat line interferes with the updateChatInRealTime event when there's a new messgae being processed
         if ($this->chat) {
             $listeners["echo-private:App.Models.Chat.{$this->chat->id},MessageSent"] = 'updateChatInRealTime';
             $listeners["echo-private:App.Models.Chat.{$this->chat->id},MessageRead"] = 'handleMessageRead';
         }
 
         return $listeners;
+    }
+
+    public function sendFile()
+    {
+        foreach ($this->files as $file) {
+            // Get the original file path from the array
+            $tempPath = $file['path'];
+
+            // Define where to store the file and the new file name
+            $destinationPath = storage_path('app/public/uploads');
+            $newFileName = Str::random(10) . '.' . $file['extension'];
+
+            // Ensure the destination directory exists
+            File::ensureDirectoryExists($destinationPath);
+
+            // Move the file to the desired location
+            if (File::exists($tempPath)) {
+                File::move($tempPath, $destinationPath . '/' . $newFileName);
+            } else {
+                // Handle the case where the temporary file does not exist
+                session()->flash('error', 'Temporary file not found.');
+                return;
+            }
+
+            // Save the message in the chat with the new file name
+            $this->chat->messages()->create([
+                'chat_id' => $this->chat->id,
+                'user_id' => Auth::id(),
+                'body' => $newFileName, // Store the new file name
+            ]);
+        }
+
+        // Clear the file array and update the chat
+        $this->files = [];
+        $this->updateChatInRealTime();
     }
 
     public function loadMoreMessages()
@@ -139,7 +179,7 @@ class ShowChat extends Component
         if (!$this->chat) {
             return;
         }
-        
+
         $this->messages = $this->chat->messages()
             ->with('seenBy')
             ->latest()
@@ -147,8 +187,8 @@ class ShowChat extends Component
             ->get()
             ->sortBy('created_at')
             ->values();
-            
-            $this->body = '';
+
+        $this->body = '';
 
         $this->scrollDown();
     }
