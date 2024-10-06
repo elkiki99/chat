@@ -24,8 +24,9 @@
             </div>
         </div>
 
-        <!-- Message input -->
+        <!-- Chat actions -->
         <div class="flex items-center px-4 py-2 bg-white border-t border-gray-300">
+            <!-- Send file clip button -->
             <button x-on:click="$dispatch('open-modal', 'send-file')" class="p-2 hover:bg-gray-100 hover:rounded-lg">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1"
                     stroke="currentColor" class="size-5">
@@ -34,12 +35,11 @@
                 </svg>
             </button>
 
-            {{-- <livewire:chats.send-file /> --}}
-
+            <!-- Send file modal -->
             <x-modal maxWidth="sm" name="send-file" focusable>
                 <div class="p-6 space-y-2">
                     <livewire:dropzone wire:model="files" :multiple="true" />
-                    <x-primary-button wire:click="sendFile" class="mt-4">Send</x-primary-button>
+                    <x-primary-button x-on:click="$dispatch('close')" wire:click="sendFile" class="mt-4">Send</x-primary-button>
                     
                     @if ($errors->has('files.*'))
                         <div class="text-red-500">
@@ -50,8 +50,8 @@
                     @endif
                 </div>
             </x-modal>
-            
 
+            <!-- Message input -->
             <form wire:submit.prevent="sendMessage" class="flex w-full">
                 <input type="text" wire:model="body" placeholder="Type a message here..."
                     class="w-full mx-2 border-none focus:outline-none focus:ring-0" />

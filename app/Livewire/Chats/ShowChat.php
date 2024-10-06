@@ -54,34 +54,22 @@ class ShowChat extends Component
     public function sendFile()
     {
         foreach ($this->files as $file) {
-            // Get the original file path from the array
             $tempPath = $file['path'];
-
-            // Define where to store the file and the new file name
             $destinationPath = storage_path('app/public/uploads');
-            $newFileName = Str::random(10) . '.' . $file['extension'];
+            $newFileName = Str::random(20) . '.' . $file['extension'];
 
-            // Ensure the destination directory exists
             File::ensureDirectoryExists($destinationPath);
 
-            // Move the file to the desired location
             if (File::exists($tempPath)) {
                 File::move($tempPath, $destinationPath . '/' . $newFileName);
-            } else {
-                // Handle the case where the temporary file does not exist
-                session()->flash('error', 'Temporary file not found.');
-                return;
             }
-
-            // Save the message in the chat with the new file name
             $this->chat->messages()->create([
                 'chat_id' => $this->chat->id,
                 'user_id' => Auth::id(),
-                'body' => $newFileName, // Store the new file name
+                'body' => $newFileName,
+                'is_file' => true,
             ]);
         }
-
-        // Clear the file array and update the chat
         $this->files = [];
         $this->updateChatInRealTime();
     }
@@ -123,6 +111,7 @@ class ShowChat extends Component
             'chat_id' => $this->chat->id,
             'user_id' => Auth::id(),
             'body' => $trimmedBody,
+            'is_file' => false,
         ]);
 
         $this->body = '';
