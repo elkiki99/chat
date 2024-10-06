@@ -18,6 +18,7 @@ class Message extends Model
         'chat_id',
         'user_id',
         'body',
+        'is_file',
     ];
 
     public function broadcastOn(string $event): array 

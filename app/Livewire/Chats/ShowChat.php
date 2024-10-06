@@ -43,10 +43,10 @@ class ShowChat extends Component
         ];
 
         // This if this->chat line interferes with the updateChatInRealTime event when there's a new messgae being processed
-        if ($this->chat) {
+        // if ($this->chat) {
             $listeners["echo-private:App.Models.Chat.{$this->chat->id},MessageSent"] = 'updateChatInRealTime';
             $listeners["echo-private:App.Models.Chat.{$this->chat->id},MessageRead"] = 'handleMessageRead';
-        }
+        // }
 
         return $listeners;
     }
@@ -63,12 +63,13 @@ class ShowChat extends Component
             if (File::exists($tempPath)) {
                 File::move($tempPath, $destinationPath . '/' . $newFileName);
             }
-            $this->chat->messages()->create([
+            $newMessage = $this->chat->messages()->create([
                 'chat_id' => $this->chat->id,
                 'user_id' => Auth::id(),
-                'body' => $newFileName,
+                'body' => $newFileName, 
                 'is_file' => true,
             ]);
+            // dd($newMessage);
         }
         $this->files = [];
         $this->updateChatInRealTime();
