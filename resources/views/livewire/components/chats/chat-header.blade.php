@@ -10,13 +10,13 @@
 
                 <!-- Chat actions -->
                 <div class="flex gap-4 ml-auto">
-                    <a href="#">
+                    {{-- <a href="#">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1"
                             stroke="currentColor" class="size-5">
                             <path stroke-linecap="round" stroke-linejoin="round"
                                 d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
                         </svg>
-                    </a>
+                    </a> --}}
 
                     <!-- Archive chat dropdown -->
                     <x-dropdown align="right" width="48">
@@ -65,33 +65,10 @@
                     </x-dropdown>
                 </div>
 
-                <x-modal maxWidth="lg" name="show-contact-info-on-header-{{ $user->id }}" focusable
+                <x-modal maxWidth="sm" name="show-contact-info-on-header-{{ $user->id }}" focusable
                     wire:key="show-contact-info-on-header-{{ $user->id }}">
-                    <div class="flex min-h-[50vh] w-full">
-                        <aside class="w-1/3 p-6 bg-gray-200">
-                            {{-- <a class="flex flex-col hover:cursor-pointer">
-                            <div class="p-2 hover:bg-gray-150 hover:rounded-lg">
-                                Summary
-                            </div>
-                        </a>
-                        <a class="flex flex-col hover:cursor-pointer">
-                            <div class="p-2 hover:bg-gray-150 hover:rounded-lg">
-                                Multimedia
-                            </div>
-                        </a>
-                        <a class="flex flex-col hover:cursor-pointer">
-                            <div class="p-2 hover:bg-gray-150 hover:rounded-lg">
-                                Files
-                            </div>
-                        </a>
-                        <a class="flex flex-col hover:cursor-pointer">
-                            <div class="p-2 hover:bg-gray-150 hover:rounded-lg">
-                                Groups
-                            </div>
-                        </a> --}}
-                        </aside>
-
-                        <div class="flex flex-col w-3/4 gap-4 p-6">
+                    <div class="flex min-h-[50vh]">
+                        <div class="flex flex-col w-full gap-4 p-6">
                             <div class="flex flex-col items-center space-y-2">
                                 <x-profile-picture :user="$user" class="size-24" />
 
@@ -209,13 +186,13 @@
 
                 <!-- Chat actions -->
                 <div class="flex gap-4 ml-auto">
-                    <a href="#">
+                    {{-- <a href="#">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1"
                             stroke="currentColor" class="size-5">
                             <path stroke-linecap="round" stroke-linejoin="round"
                                 d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
                         </svg>
-                    </a>
+                    </a> --}}
 
                     <!-- Archive chat dropdown -->
                     <x-dropdown align="right" width="48">
@@ -265,34 +242,10 @@
                 </div>
 
                 <!-- Group info modal -->
-                <x-modal maxWidth="lg" name="show-group-info-on-header-{{ $chat->id }}" focusable
+                <x-modal maxWidth="sm" name="show-group-info-on-header-{{ $chat->id }}" focusable
                     wire:key="show-group-info-on-header-{{ $chat->id }}">
-                    <div class="flex min-h-[50vh] w-full">
-                        <!-- Aside -->
-                        <aside class="w-1/3 p-6 bg-gray-200">
-                            {{-- <a class="flex flex-col hover:cursor-pointer">
-                                <div class="p-2 hover:bg-gray-150 hover:rounded-lg">
-                                    Summary
-                                </div>
-                            </a>
-                            <a class="flex flex-col hover:cursor-pointer">
-                                <div class="p-2 hover:bg-gray-150 hover:rounded-lg">
-                                    Multimedia
-                                </div>
-                            </a>
-                            <a class="flex flex-col hover:cursor-pointer">
-                                <div class="p-2 hover:bg-gray-150 hover:rounded-lg">
-                                    Files
-                                </div>
-                            </a>
-                            <a class="flex flex-col hover:cursor-pointer">
-                                <div class="p-2 hover:bg-gray-150 hover:rounded-lg">
-                                    Groups
-                                </div>
-                            </a> --}}
-                        </aside>
-
-                        <div class="flex flex-col w-3/4 gap-4 p-6">
+                    <div class="flex min-h-[50vh]">
+                        <div class="flex flex-col w-full gap-4 p-6">
                             <div class="flex flex-col items-center space-y-2">
                                 <x-chat-image :chat="$chat" class="size-24" />
 
@@ -313,7 +266,7 @@
 
                                 @foreach ($chat->users as $user)
                                     @php
-                                        $chat = $user
+                                        $userChat = $user
                                             ->chats()
                                             ->where('is_group', false)
                                             ->whereHas('users', function ($query) {
@@ -338,35 +291,11 @@
                                         </div>
                                     </a>
 
-                                    <x-modal maxWidth="lg"
+                                    <x-modal maxWidth="sm"
                                         name="show-contact-info-on-group-modal-{{ $user->id }}" focusable
                                         wire:key="show-contact-info-on-header-{{ $user->id }}">
-                                        <div class="flex min-h-[50vh] w-full">
-                                            <!-- Aside -->
-                                            <aside class="w-1/3 p-6 bg-gray-200">
-                                                {{-- <a class="flex flex-col hover:cursor-pointer">
-                                                    <div class="p-2 hover:bg-gray-150 hover:rounded-lg">
-                                                        Summary
-                                                    </div>
-                                                </a>
-                                                <a class="flex flex-col hover:cursor-pointer">
-                                                    <div class="p-2 hover:bg-gray-150 hover:rounded-lg">
-                                                        Multimedia
-                                                    </div>
-                                                </a>
-                                                <a class="flex flex-col hover:cursor-pointer">
-                                                    <div class="p-2 hover:bg-gray-150 hover:rounded-lg">
-                                                        Files
-                                                    </div>
-                                                </a>
-                                                <a class="flex flex-col hover:cursor-pointer">
-                                                    <div class="p-2 hover:bg-gray-150 hover:rounded-lg">
-                                                        Groups
-                                                    </div>
-                                                </a> --}}
-                                            </aside>
-
-                                            <div class="flex flex-col w-3/4 gap-4 p-6">
+                                        <div class="flex min-h-[50vh]">
+                                            <div class="flex flex-col w-full gap-4 p-6">
                                                 <div class="flex flex-col items-center space-y-2">
                                                     <x-profile-picture :user="$user" class="size-24" />
 
@@ -385,7 +314,7 @@
                                                                 })
                                                                 ->exists();
 
-                                                            $chat = $user
+                                                            $userChat = $user
                                                                 ->chats()
                                                                 ->where('is_group', false)
                                                                 ->whereHas('users', function ($query) {
@@ -396,7 +325,7 @@
 
                                                         @if ($chatExists)
                                                             <button x-on:click="$dispatch('close')"
-                                                                wire:click='selectChat({{ $chat->id }})'
+                                                                wire:click='selectChat({{ $userChat->id }})'
                                                                 class="ml-2">
                                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none"
                                                                     viewBox="0 0 24 24" stroke-width="1.5"
@@ -489,10 +418,10 @@
                             </div>
 
                             <div class="flex justify-between pt-10 mt-auto">
-                                {{-- <x-danger-button wire:click='leaveGroup({{ $chat->id }})'
+                                <x-danger-button wire:click='leaveGroup({{ $chat->id }})'
                                     x-on:click="$dispatch('close')">
                                     {{ __('Leave group') }}
-                                </x-danger-button> --}}
+                                </x-danger-button>
                             </div>
                         </div>
                     </div>

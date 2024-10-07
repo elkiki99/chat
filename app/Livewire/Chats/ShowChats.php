@@ -20,6 +20,7 @@ class ShowChats extends Component
         $listeners = [
             'chatCreated' => 'pushLastMessage',
             'chatArchived' => 'archiveChatAndUpdate',
+            'userLeftGroup' => 'archiveChatAndUpdate',
         ];
 
         foreach ($this->chats as $chat) {

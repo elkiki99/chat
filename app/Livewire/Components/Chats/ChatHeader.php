@@ -27,11 +27,20 @@ class ChatHeader extends Component
     {
         $this->loadChat($chatId);
     }
-    
+
     private function loadChat($chatId)
     {
         $this->chat = Chat::find($chatId);
         $this->user = $this->chat->users->where('id', '!==', Auth::id())->first();
+    }
+
+    public function leaveGroup()
+    {
+        $user = Auth::user();
+        $this->chat->users()->detach($user->id);
+        $user->is_active_in_chat = null;
+        $user->save();
+        $this->dispatch('userLeftGroup');
     }
 
     public function selectChat($chatId)

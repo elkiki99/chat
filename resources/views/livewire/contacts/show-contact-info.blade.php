@@ -1,29 +1,6 @@
-<x-modal maxWidth="lg" name="show-contact-info-{{ $user->id }}" focusable wire:key="show-contact-info-{{ $user->id }}">
-    <div class="flex min-h-[50vh] w-full">
-        <aside class="w-1/3 p-6 bg-gray-200">
-            {{-- <a class="flex flex-col hover:cursor-pointer">
-            <div class="p-2 hover:bg-gray-150 hover:rounded-lg">
-                Summary
-            </div>
-        </a>
-        <a class="flex flex-col hover:cursor-pointer">
-            <div class="p-2 hover:bg-gray-150 hover:rounded-lg">
-                Multimedia
-            </div>
-        </a>
-        <a class="flex flex-col hover:cursor-pointer">
-            <div class="p-2 hover:bg-gray-150 hover:rounded-lg">
-                Files
-            </div>
-        </a>
-        <a class="flex flex-col hover:cursor-pointer">
-            <div class="p-2 hover:bg-gray-150 hover:rounded-lg">
-                Groups
-            </div>
-        </a> --}}
-        </aside>
-
-        <div class="flex flex-col w-3/4 gap-4 p-6">
+<x-modal maxWidth="sm" name="show-contact-info-{{ $user->id }}" focusable wire:key="show-contact-info-{{ $user->id }}">
+    <div class="flex min-h-[50vh]">
+        <div class="flex flex-col w-full gap-4 p-6">
             <div class="flex flex-col items-center space-y-2">
                 <x-profile-picture :user="$user" class="size-24" />
 
