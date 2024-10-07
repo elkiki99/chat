@@ -21,6 +21,7 @@ class ShowChats extends Component
             'chatCreated' => 'pushLastMessage',
             'chatArchived' => 'archiveChatAndUpdate',
             'userLeftGroup' => 'archiveChatAndUpdate',
+            'chatDeleted' => 'archiveChatAndUpdate',
         ];
 
         foreach ($this->chats as $chat) {
@@ -54,6 +55,7 @@ class ShowChats extends Component
     {
         $this->allChats = Auth::user()->chats()
             // ->withPivot('is_archived')
+            ->where('chat_user.is_active', true)
             ->where('is_archived', false)
             ->with(['users', 'messages' => function ($query) {
                 $query->latest()->limit(1);
@@ -89,9 +91,6 @@ class ShowChats extends Component
 
     public function render()
     {
-        return view('livewire.chats.show-chats', [
-            // 'chats' => $this->chats,
-            // 'user' => $this->user,
-        ]);
+        return view('livewire.chats.show-chats');
     }
 }

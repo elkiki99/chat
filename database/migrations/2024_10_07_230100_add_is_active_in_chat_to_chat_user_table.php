@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('messages', function (Blueprint $table) {
-            $table->boolean('is_file')->default(false);
+        Schema::table('chat_user', function (Blueprint $table) {
+            $table->boolean('is_active')->default(true);
         });
     }
 
@@ -21,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('messages', function (Blueprint $table) {
-            $table->dropColumn('is_file');
+        Schema::table('chat_user', function (Blueprint $table) {
+            $table->dropColumn('is_active');
         });
     }
 };

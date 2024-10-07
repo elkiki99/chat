@@ -40,14 +40,14 @@ class ShowChat extends Component
             'chatSelected' => 'changeToSelectedChat',
             'archivedSelected' => 'changeToSelectedChat',
             'chatArchived' => 'setChatToNull',
-            'userLeftGroup' => 'setChatToNull'
+            'userLeftGroup' => 'setChatToNull',
+            'chatDeleted' => 'setChatToNull',
         ];
 
         if ($this->chat) {
             $listeners["echo-private:App.Models.Chat.{$this->chat->id},MessageSent"] = 'updateChatInRealTime';
             $listeners["echo-private:App.Models.Chat.{$this->chat->id},MessageRead"] = 'handleMessageRead';
         }
-
         return $listeners;
     }
 
@@ -56,17 +56,25 @@ class ShowChat extends Component
         foreach ($this->files as $file) {
             $tempPath = $file['path'];
             $destinationPath = storage_path('app/public/uploads');
-            $newFileName = Str::random(20) . '.' . $file['extension'];
-
+    
+            $extension = $file['extension'];
+    
+            $imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'svg'];
+    
+            if (!in_array(strtolower($extension), $imageExtensions)) {
+                $newFileName = $file['name'];
+            } else {
+                $newFileName = Str::random(20) . '.' . $extension;
+            }
             File::ensureDirectoryExists($destinationPath);
-
+    
             if (File::exists($tempPath)) {
                 File::move($tempPath, $destinationPath . '/' . $newFileName);
             }
             $this->chat->messages()->create([
                 'chat_id' => $this->chat->id,
                 'user_id' => Auth::id(),
-                'body' => $newFileName, 
+                'body' => $newFileName,
                 'is_file' => true,
             ]);
         }
@@ -113,7 +121,6 @@ class ShowChat extends Component
             'body' => $trimmedBody,
             'is_file' => false,
         ]);
-
         $this->body = '';
 
         broadcast(new MessageSent($this->chat, $message));
@@ -145,7 +152,6 @@ class ShowChat extends Component
         if (!$this->chat) {
             return;
         }
-
         $activeUsers = $this->chat->users()
             ->where('users.id', '!=', Auth::id())
             ->get();
@@ -168,7 +174,6 @@ class ShowChat extends Component
         if (!$this->chat) {
             return;
         }
-
         $this->messages = $this->chat->messages()
             ->with('seenBy')
             ->latest()
@@ -178,7 +183,6 @@ class ShowChat extends Component
             ->values();
 
         $this->body = '';
-
         $this->scrollDown();
     }
 

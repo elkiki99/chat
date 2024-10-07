@@ -46,7 +46,6 @@ class ChatHeader extends Component
     public function selectChat($chatId)
     {
         $this->dispatch('chatSelected', $chatId);
-
         $this->selectedChat = $chatId;
         Auth::user()->update(['is_active_in_chat' => $chatId]);
     }
@@ -91,6 +90,14 @@ class ChatHeader extends Component
         $chat->users()->updateExistingPivot(Auth::id(), ['is_archived' => true]);
         $this->dispatch('chatArchived', $chatId);
     }
+
+    public function deleteChat($chatId)
+    {
+        $chat = Chat::find($chatId);
+        $chat->users()->updateExistingPivot(Auth::id(), ['is_active' => false]);
+        $this->dispatch('chatDeleted', $chatId);
+    }
+
 
     public function unarchiveChat($chatId)
     {
