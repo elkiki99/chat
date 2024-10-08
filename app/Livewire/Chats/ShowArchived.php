@@ -45,13 +45,14 @@ class ShowArchived extends Component
 
     public function unarchiveChatAndUpdate()
     {
-        $this->selectedChat = null;
+        // $this->selectedChat = null;
         $this->fetchChats();
     }
 
     public function fetchChats()
     {
         $this->allChats = Auth::user()->chats()
+            ->where('chat_user.is_active', true)
             // ->withPivot('is_archived')
             ->where('is_archived', true)
             ->with(['users', 'messages' => function ($query) {

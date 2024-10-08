@@ -21,7 +21,7 @@ class User extends Authenticatable
         'name',
         'email',
         'username',
-        'profile_image',
+        'profile_picture',
         'password',
         'is_active_in_chat',
     ];

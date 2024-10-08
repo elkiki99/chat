@@ -88,6 +88,7 @@ class ChatHeader extends Component
     {
         $chat = Chat::find($chatId);
         $chat->users()->updateExistingPivot(Auth::id(), ['is_archived' => true]);
+        Auth::user()->update(['is_active_in_chat' => null]);
         $this->dispatch('chatArchived', $chatId);
     }
 
@@ -95,9 +96,9 @@ class ChatHeader extends Component
     {
         $chat = Chat::find($chatId);
         $chat->users()->updateExistingPivot(Auth::id(), ['is_active' => false]);
-        $this->dispatch('chatDeleted', $chatId);
+        Auth::user()->update(['is_active_in_chat' => null]);
+        $this->dispatch('chatDeleted', $chatId);    
     }
-
 
     public function unarchiveChat($chatId)
     {

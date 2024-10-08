@@ -90,6 +90,7 @@ class ShowChat extends Component
     public function setChatToNull()
     {
         $this->chat = null;
+        $this->updateChatInRealTime();
     }
 
     public function scrollDown()

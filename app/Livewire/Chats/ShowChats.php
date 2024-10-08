@@ -19,9 +19,9 @@ class ShowChats extends Component
     {
         $listeners = [
             'chatCreated' => 'pushLastMessage',
-            'chatArchived' => 'archiveChatAndUpdate',
-            'userLeftGroup' => 'archiveChatAndUpdate',
-            'chatDeleted' => 'archiveChatAndUpdate',
+            'chatArchived' => 'userActionOnChat',
+            'userLeftGroup' => 'userActionOnChat',
+            'chatDeleted' => 'userActionOnChat',
         ];
 
         foreach ($this->chats as $chat) {
@@ -30,7 +30,6 @@ class ShowChats extends Component
                 $listeners['echo-private:App.Models.Chat.' . $chat->id . ',MessageRead'] = 'updateChatInRealTime';
             }
         }
-
         return $listeners;
     }
 
@@ -39,15 +38,15 @@ class ShowChats extends Component
         $this->selectedChat = Auth::user()->is_active_in_chat;
         $this->fetchChats();
     }
-
-    public function pushLastMessage()
+    
+    public function userActionOnChat()
     {
+        $this->selectedChat = null;
         $this->fetchChats();
     }
 
-    public function archiveChatAndUpdate()
+    public function pushLastMessage()
     {
-        $this->selectedChat = null;
         $this->fetchChats();
     }
 
