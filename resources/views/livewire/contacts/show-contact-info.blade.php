@@ -99,10 +99,6 @@
                 <x-secondary-button wire:click='removeContact({{ $user->id }})' x-on:click="$dispatch('close')">
                     {{ __('Remove contact') }}
                 </x-secondary-button>
-
-                {{-- <x-danger-button x-on:click="$dispatch('close')">
-                {{ __('Block') }}
-            </x-danger-button> --}}
             </div>
         </div>
     </div>

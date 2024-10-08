@@ -31,7 +31,12 @@ class ShowContacts extends Component
 
     public function loadContacts()
     {
-        $this->allContacts = Auth::user()->contacts()->orderBy('name')->get();
+        $this->allContacts = Auth::user()
+            ->contacts()
+            ->orderBy('name')
+            ->where('contact_user_id', '!=', Auth::id())
+            ->get();
+    
         $this->contacts = $this->allContacts->sortBy('name')->values();
     }
 
@@ -41,7 +46,7 @@ class ShowContacts extends Component
             $this->contacts = $this->allContacts;
         } else {
             $this->contacts = $this->allContacts->filter(function ($contact) use ($value) {
-                return stripos($contact->name, $value);
+                return stripos(strtolower($contact->name), $value) !== false;
             });
         }
     }

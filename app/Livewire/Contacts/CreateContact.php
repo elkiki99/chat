@@ -19,6 +19,7 @@ class CreateContact extends Component
         if ($existingUser) {
             $existingContact = Contact::where('user_id', Auth::id())
                 ->where('contact_user_id', $userId)
+                ->where('contact_user_id', '!==', Auth::id())
                 ->first();
 
             if (!$existingContact) {
@@ -43,6 +44,7 @@ class CreateContact extends Component
     
             $this->contacts = User::where('name', 'like', '%' . $search . '%')
                 ->whereNotIn('id', $contactIds)
+                ->where('id', '!=', Auth::id())
                 ->take(10)
                 ->get();
         }

@@ -6,7 +6,7 @@ use Livewire\Component;
 
 class ChatLayout extends Component
 {
-    public $activeComponent = 'chats';
+    public $activeComponent = 'chats'; 
 
     protected $listeners = [
         'componentChanged' => 'setActiveComponent',

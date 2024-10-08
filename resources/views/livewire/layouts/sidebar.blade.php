@@ -2,9 +2,8 @@
 <aside class="flex flex-col w-12 p-2 text-white bg-gray-100">
     <!-- Chats -->
     <div class="space-y-1">
-        <a wire:click="selectChats()" class="flex flex-col items-center hover:cursor-pointer">
-            <div
-                class="p-2 hover:bg-gray-150 hover:rounded-lg {{ $activeComponent == 'chats' ? 'bg-gray-200 hover:rounded-lg rounded-lg' : '' }}">
+        <a wire:click="selectChats" class="flex flex-col items-center hover:cursor-pointer">
+            <div class="p-2 hover:bg-gray-150 hover:rounded-lg {{ $activeComponent === 'chats' ? 'bg-gray-200 rounded-lg' : '' }}">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1"
                     stroke="currentColor" class="text-gray-800 size-6 ">
                     <path stroke-linecap="round" stroke-linejoin="round"
@@ -14,9 +13,8 @@
         </a>
 
         <!-- Contacts -->
-        <a wire:click="selectContacts()" class="flex flex-col items-center hover:cursor-pointer ">
-            <div
-                class="p-2 hover:bg-gray-150 hover:rounded-lg {{ $activeComponent == 'contacts' ? 'bg-gray-200 hover:rounded-lg rounded-lg' : '' }}">
+        <a wire:click="selectContacts" class="flex flex-col items-center hover:cursor-pointer ">
+            <div class="p-2 hover:bg-gray-150 hover:rounded-lg {{ $activeComponent === 'contacts' ? 'bg-gray-200 hover:rounded-lg rounded-lg' : '' }}">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1"
                     stroke="currentColor" class="text-gray-800 size-6">
                     <path stroke-linecap="round" stroke-linejoin="round"
@@ -29,9 +27,8 @@
     <!-- Bottom actions -->
     <div class="flex flex-col items-center mt-auto hover:cursor-pointer">
         <!-- Archived -->
-        <a wire:click="selectArchived()" class="p-1">
-            <div
-                class="p-2 my-0.5 hover:bg-gray-150 hover:rounded-lg {{ $activeComponent == 'archived' ? 'bg-gray-200 hover:rounded-lg rounded-lg' : '' }}">
+        <a wire:click="selectArchived" class="p-1">
+            <div class="p-2 my-0.5 hover:bg-gray-150 hover:rounded-lg {{ $activeComponent === 'archived' ? 'bg-gray-200 hover:rounded-lg rounded-lg' : '' }}">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1"
                     stroke="currentColor" class="text-gray-800 size-6 ">
                     <path stroke-linecap="round" stroke-linejoin="round"
@@ -57,10 +54,7 @@
         <div class="p-2 space-y-1">
             <!-- Profile -->
             <div class="px-2 pt-2 hover:bg-gray-150 hover:rounded-lg">
-                <a 
-                    {{-- x-on:click="$dispatch('open-modal', 'profile')" --}}
-                    wire:navigate href="{{ route('profile.edit') }}"
-                >
+                <a wire:navigate href="{{ route('profile.edit') }}">
                     <div class="inline-block rounded-full bg-gray-150">
                         @php
                             $user = Auth::user();
@@ -68,39 +62,6 @@
                         <x-profile-picture :user="$user" class="size-6" />
                     </div>
                 </a>
-
-                <x-modal name="profile" maxWidth="md" focusable>
-                    <x-app-layout>
-                        <x-slot name="header">
-                            <h2 class="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
-                                {{ __('Profile') }}
-                            </h2>
-                        </x-slot>
-                    
-                        <div class="py-12">
-                            <div class="mx-auto space-y-6 max-w-7xl sm:px-6 lg:px-8">
-                                <div class="p-4 bg-white shadow sm:p-8 dark:bg-gray-800 sm:rounded-lg">
-                                    <div class="max-w-xl">
-                                        @include('profile.partials.update-profile-information-form')
-                                    </div>
-                                </div>
-                    
-                                <div class="p-4 bg-white shadow sm:p-8 dark:bg-gray-800 sm:rounded-lg">
-                                    <div class="max-w-xl">
-                                        @include('profile.partials.update-password-form')
-                                    </div>
-                                </div>
-                    
-                                <div class="p-4 bg-white shadow sm:p-8 dark:bg-gray-800 sm:rounded-lg">
-                                    <div class="max-w-xl">
-                                        @include('profile.partials.delete-user-form')
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </x-app-layout>
-                    
-                </x-modal>
             </div>
         </div>
     </div>

@@ -59,7 +59,7 @@ class ShowChat extends Component
     
             $extension = $file['extension'];
     
-            $imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'svg'];
+            $imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'svg'];
     
             if (!in_array(strtolower($extension), $imageExtensions)) {
                 $newFileName = $file['name'];
@@ -122,7 +122,7 @@ class ShowChat extends Component
             'body' => $trimmedBody,
             'is_file' => false,
         ]);
-        $this->body = '';
+        $this->reset('body');
 
         broadcast(new MessageSent($this->chat, $message));
         $this->checkForActiveUsersAndMarkSeen();
