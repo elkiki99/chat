@@ -1,4 +1,4 @@
-<aside class="p-1 overflow-auto bg-white border-gray-300 min-w-96 border-x">
+<aside class="p-1 ml-0 overflow-auto bg-white border-gray-300 min-w-96 border-x sm:ml-12">
     <h2 class="px-4 py-4 text-xl font-semibold">Archived</h2>
 
     <!-- Search bar for chats -->

@@ -38,7 +38,7 @@
             <!-- Send file modal -->
             <x-modal maxWidth="sm" name="send-file" focusable>
                 <div class="p-6 space-y-2">
-                    {{-- <livewire:dropzone wire:model="files" :multiple="true" /> --}}
+                    <livewire:dropzone wire:model="files" :multiple="true" />
                     <x-primary-button x-on:click="$dispatch('close')" wire:click="sendFile" class="mt-4">Send</x-primary-button>
                     
                     @if ($errors->has('files.*'))
