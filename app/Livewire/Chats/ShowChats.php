@@ -14,6 +14,7 @@ class ShowChats extends Component
     public $allChats = [];
     public $chat;
     public $user;
+    // public $screenSize;
 
     public function getListeners(): array
     {
@@ -32,6 +33,11 @@ class ShowChats extends Component
         }
         return $listeners;
     }
+
+    // public function setScreenSize($size)
+    // {
+    //     $this->screenSize = $size;
+    // }
 
     public function mount(): void
     {

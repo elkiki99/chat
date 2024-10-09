@@ -1,6 +1,10 @@
-<aside class="p-1 ml-0 overflow-auto bg-white border-gray-300 min-w-96 border-x sm:ml-12">
-    <h2 class="px-4 py-4 text-xl font-semibold">Chats</h2>
 
+@php
+    $showAside = Auth::user()->is_active_in_chat === null;
+@endphp
+
+<aside class="p-1 h-screen ml-0 overflow-auto bg-white border-gray-300 min-w-96 border-r sm:ml-12 {{ $showAside ? 'w-full sm:w-96' : 'hidden sm:block' }}">
+    <h2 class="px-4 py-4 text-xl font-semibold">Chats</h2>
     <!-- Search bar for chats -->
     <div class="flex items-center justify-between">
         <div class="w-full px-4">
@@ -141,7 +145,7 @@
                                                         {{ Str::limit($lastMessage->body, 25) }}
                                                     </p>
                                                 @endif
-                                            @endif  
+                                            @endif
                                         </div>
 
                                         @if (!$isCurrentUser && $unreadMessages)

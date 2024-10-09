@@ -1,5 +1,5 @@
 <!-- Sidebar -->
-<aside class="fixed bottom-0 left-0 right-0 flex justify-around w-full h-12 p-1 text-white bg-gray-100 sm:justify-start sm:flex-col sm:h-full sm:w-12">
+<aside class="fixed bottom-0 left-0 right-0 z-50 flex justify-around w-full h-12 p-1 text-white bg-gray-100 border-t border-gray-300 sm:border-r sm:border-t-0 sm:justify-start sm:flex-col sm:h-full sm:w-12">
     <!-- Chats -->
     <div class="flex items-center justify-center p-2 my-1 rounded-lg hover:cursor-pointer hover:bg-gray-150 {{ $activeComponent === 'chats' ? 'bg-gray-200' : '' }}">
         <a wire:click="selectChats">

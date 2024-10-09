@@ -28,6 +28,12 @@ class ChatHeader extends Component
         $this->loadChat($chatId);
     }
 
+    public function backToChats()
+    {
+        Auth::user()->update(['is_active_in_chat' => null]);
+        $this->dispatch('chatArchived');
+    }
+
     private function loadChat($chatId)
     {
         $this->chat = Chat::find($chatId);

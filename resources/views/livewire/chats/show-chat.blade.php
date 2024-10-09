@@ -25,7 +25,7 @@
         </div>
 
         <!-- Chat actions -->
-        <div class="flex items-center px-4 py-2 bg-white border-t border-gray-300">
+        <div class="flex items-center px-4 py-2 mb-12 bg-white border-t border-gray-300 sm:mb-0">
             <!-- Send file clip button -->
             <button x-on:click="$dispatch('open-modal', 'send-file')" class="p-2 hover:bg-gray-100 hover:rounded-lg">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1"
@@ -39,8 +39,9 @@
             <x-modal maxWidth="sm" name="send-file" focusable>
                 <div class="p-6 space-y-2">
                     <livewire:dropzone wire:model="files" :multiple="true" />
-                    <x-primary-button x-on:click="$dispatch('close')" wire:click="sendFile" class="mt-4">Send</x-primary-button>
-                    
+                    <x-primary-button x-on:click="$dispatch('close')" wire:click="sendFile"
+                        class="mt-4">Send</x-primary-button>
+
                     @if ($errors->has('files.*'))
                         <div class="text-red-500">
                             @foreach ($errors->all() as $error)
@@ -64,7 +65,7 @@
             </form>
         </div>
     @else
-        <div class="relative h-full">
+        <div class="relative hidden h-full md:flex">
             <x-lobby />
         </div>
     @endif

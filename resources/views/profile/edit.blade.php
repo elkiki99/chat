@@ -1,5 +1,5 @@
 <x-app-layout>
-    <div class="py-12">
+    <div class="py-4">
         <div class="p-2 mx-auto space-y-6 max-w-7xl sm:px-6 lg:px-8">
             <a class="inline-flex text-gray-500 hover:text-gray-600" wire:navigate href="{{ route('dashboard') }}">
                 <div class="flex items-center gap-2">

@@ -2,6 +2,14 @@
     <div class="flex items-center justify-start w-full h-auto p-4">
         @if (!$chat->is_group)
             <div class="flex items-center w-full gap-4 text-sm font-medium">
+                <!-- Back to chats -->
+                <a class="hover:cursor-pointer" wire:click='backToChats'>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1"
+                        stroke="currentColor" class="text-gray-700 size-5">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M6.75 15.75 3 12m0 0 3.75-3.75M3 12h18" />
+                    </svg>
+                </a>
                 <a x-on:click.prevent="$dispatch('open-modal', 'show-contact-info-on-header-{{ $user->id }}')"
                     href="#">
                     <x-profile-picture :user="$user" class="size-10" />
@@ -185,6 +193,14 @@
             </div>
         @else
             <div class="flex items-center w-full gap-4 text-sm font-medium">
+                <!-- Back to chats -->
+                <a class="hover:cursor-pointer" wire:click='backToChats'>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1"
+                        stroke="currentColor" class="text-gray-700 size-5">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M6.75 15.75 3 12m0 0 3.75-3.75M3 12h18" />
+                    </svg>
+                </a>
                 <a x-on:click.prevent="$dispatch('open-modal', 'show-group-info-on-header-{{ $chat->id }}')"
                     href="#">
                     <x-chat-image :chat="$chat" class="size-10" />
@@ -192,7 +208,7 @@
                 <p>{{ $chat->name }}</p>
 
                 <!-- Chat actions -->
-                <div class="flex gap-4 ml-auto">¿
+                <div class="flex gap-4 ml-auto">
                     <!-- Archive chat dropdown -->
                     <x-dropdown align="right" width="48">
                         <x-slot name="trigger">
@@ -237,7 +253,7 @@
                                     </div>
                                 </x-dropdown-link>
                             @endif
-                            
+
                             <!-- Delete chat -->
                             <x-dropdown-link class="hover:cursor-pointer" x-data=""
                                 wire:click="deleteChat({{ $chat->id }})">
@@ -278,31 +294,34 @@
                                 </p>
 
                                 @foreach ($chat->users as $user)
-                                    @php
-                                        $userChat = $user
-                                            ->chats()
-                                            ->where('is_group', false)
-                                            ->whereHas('users', function ($query) {
-                                                $query->where('users.id', Auth::id());
-                                            })
-                                            ->first();
-                                    @endphp
+                                    @if ($user->id !== Auth::id())
+                                        @php
+                                            $userChat = $user
+                                                ->chats()
+                                                ->where('is_group', false)
+                                                ->whereHas('users', function ($query) {
+                                                    $query->where('users.id', Auth::id());
+                                                })
+                                                ->first();
+                                        @endphp
 
-                                    <a x-on:click.prevent="$dispatch('open-modal', 'show-contact-info-on-group-modal-{{ $user->id }}')"
-                                        class="p-3 cursor-pointer">
-                                        <div class="flex items-center gap-2">
-                                            <x-profile-picture :user="$user" class="size-12" />
+                                        <a x-on:click.prevent="$dispatch('open-modal', 'show-contact-info-on-group-modal-{{ $user->id }}')"
+                                            class="p-3 cursor-pointer">
+                                            <div class="flex items-center gap-2">
+                                                <x-profile-picture :user="$user" class="size-12" />
 
-                                            <div class="flex-1 mx-2">
-                                                <div class="flex items-center justify-between">
-                                                    <!-- User name -->
-                                                    <p class="text-sm font-medium">
-                                                        {{ $user->name }}
-                                                    </p>
+                                                <div class="flex-1 mx-2">
+                                                    <div class="flex items-center justify-between">
+                                                        <!-- User name -->
+                                                        <p class="text-sm font-medium">
+                                                            {{ $user->name }}
+                                                        </p>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </a>
+                                        </a>
+                                    @endif
+
 
                                     <x-modal maxWidth="sm"
                                         name="show-contact-info-on-group-modal-{{ $user->id }}" focusable
