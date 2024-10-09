@@ -1,7 +1,9 @@
+@props(['width' => '', 'height' => ''])
+
 <div>
     <?xml version="1.0" encoding="iso-8859-1"?>
     <!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
-    <svg width="2rem" height="2rem" viewBox="0 0 303.188 303.188" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve">
+    <svg width="{{ $width }}" height="{{ $height }}" viewBox="0 0 303.188 303.188" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve">
         <g>
         <polygon style="fill:#E8E8E8;" points="219.821,0 32.842,0 32.842,303.188 270.346,303.188 270.346,50.525 	"/>
         <path style="fill:#FB3449;" d="M230.013,149.935c-3.643-6.493-16.231-8.533-22.006-9.451c-4.552-0.724-9.199-0.94-13.803-0.936

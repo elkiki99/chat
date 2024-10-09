@@ -3,8 +3,8 @@
 @endphp
 
 <aside
-    class="p-1 h-screen ml-0 overflow-auto bg-white border-gray-300 min-w-96 border-r sm:ml-12 {{ $showAside ? 'w-full sm:w-96' : 'hidden sm:block' }}">
-    <h2 class="px-4 py-4 text-xl font-semibold">Contacts</h2>
+    class="p-1 h-screen ml-0 overflow-auto dark:bg-gray-800 dark:border-gray-900 bg-white border-gray-300 min-w-96 border-r sm:ml-12 {{ $showAside ? 'w-full sm:w-96' : 'hidden sm:block' }}">
+    <h2 class="px-4 py-4 text-xl font-semibold dark:text-gray-200">Contacts</h2>
 
     <!-- Search bar for contacts -->
     <div>
@@ -26,9 +26,9 @@
             </div>
 
             <button x-on:click.prevent="$dispatch('open-modal', 'create-contact')"
-                class="p-2 mr-3 hover:bg-gray-100 hover:rounded-lg">
+                class="p-2 mr-3 dark:hover:bg-gray-750 hover:bg-gray-100 hover:rounded-lg">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                    stroke="currentColor" class="text-gray-700 size-5">
+                    stroke="currentColor" class="text-gray-700 dark:text-gray-200 size-5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                 </svg>
             </button>
@@ -57,7 +57,7 @@
             @forelse ($contacts as $index => $user)
                 <li>
                     <a x-on:click.prevent="$dispatch('open-modal', 'show-contact-info-{{ $user->id }}')"
-                        class="block p-3 rounded cursor-pointer hover:bg-gray-50">
+                        class="block p-3 rounded cursor-pointer dark:hover:bg-gray-750 hover:bg-gray-50">
                         <div class="flex items-center gap-2">
                             <!-- Contact image -->
                             <x-profile-picture :user="$user" class="size-12" />
@@ -65,7 +65,7 @@
                             <div class="flex-1 mx-2">
                                 <div class="flex items-center justify-between">
                                     <!-- Contact name -->
-                                    <p class="text-sm font-medium">
+                                    <p class="text-sm font-medium dark:text-gray-200">
                                         {{ $user->name }}
                                     </p>
                                 </div>

@@ -5,6 +5,7 @@
 <aside
     class="p-1 h-screen ml-0 overflow-auto bg-white dark:bg-gray-800 dark:border-gray-900 border-gray-300 min-w-96 border-r sm:ml-12 {{ $showAside ? 'w-full sm:w-96' : 'hidden sm:block' }}">
     <h2 class="px-4 py-4 text-xl font-semibold dark:text-gray-200">Chats</h2>
+    
     <!-- Search bar for chats -->
     <div class="flex items-center justify-between">
         <div class="w-full px-4">
@@ -26,9 +27,9 @@
         <!-- Dropdown -->
         <x-dropdown align="right" width="48">
             <x-slot name="trigger">
-                <button class="p-2 mr-3 hover:bg-gray-100 hover:rounded-lg">
+                <button class="p-2 mr-3 dark:hover:bg-gray-750 hover:bg-gray-100 hover:rounded-lg">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                        stroke="currentColor" class="text-gray-700 size-5">
+                        stroke="currentColor" class="text-gray-700 dark:text-gray-200 size-5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                     </svg>
                 </button>
@@ -103,14 +104,14 @@
                                     @if ($lastMessage)
                                         <div class="flex items-center gap-1 mt-1">
                                             @if ($isCurrentUser)
-                                                <x-chat-check class="dark:text-gray-100" :message="$lastMessage" />
+                                                <x-chat-check class="dark:text-gray-200" :message="$lastMessage" />
                                             @endif
 
                                             @if ($chat->is_group && !$isCurrentUser)
                                                 <div class="flex items-center gap-2">
-                                                    <p class="text-sm text-gray-600 dark:text-gray-300">
+                                                    <p class="text-sm text-gray-600 dark:text-gray-400">
                                                         {{ Str::limit($lastMessage->user->name, 15, '') }}: </p>
-                                                    <p class="text-sm text-gray-500 dark:text-gray-300">
+                                                    <p class="text-sm text-gray-500 dark:text-gray-400">
                                                         {{ Str::limit($lastMessage->body, 15) }}
                                                     </p>
                                                 </div>
@@ -120,27 +121,27 @@
                                                         <!-- Display image link -->
                                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none"
                                                             viewBox="0 0 24 24" stroke-width="1" stroke="currentColor"
-                                                            class="size-5">
+                                                            class="size-5 dark:text-gray-400">
                                                             <path stroke-linecap="round" stroke-linejoin="round"
                                                                 d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
                                                         </svg>
                                                     @elseif (Str::endsWith($lastMessage->body, ['pdf']))
                                                         <!-- Display pdf link -->
-                                                        <x-pdf-svg />
+                                                        <x-pdf-svg width="16px" height="16px" />
                                                     @elseif(Str::endsWith($lastMessage->body, ['docx', 'doc']))
                                                         <!-- Display Word link -->
-                                                        <x-word-svg />
+                                                        <x-word-svg width="24px" height="24px" />
                                                     @else
-                                                        {{-- <!-- Display global file link -->
+                                                        <!-- Display global file link -->
                                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none"
                                                             viewBox="0 0 24 24" stroke-width="1" stroke="currentColor"
-                                                            class="size-5">
+                                                            class="size-4 dark:text-white">
                                                             <path stroke-linecap="round" stroke-linejoin="round"
                                                                 d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
-                                                        </svg> --}}
+                                                        </svg>
                                                     @endif
                                                 @else
-                                                    <p class="text-sm text-gray-500">
+                                                    <p class="text-sm text-gray-500 dark:text-gray-400">
                                                         {{ Str::limit($lastMessage->body, 25) }}
                                                     </p>
                                                 @endif

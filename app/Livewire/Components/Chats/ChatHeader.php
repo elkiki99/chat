@@ -16,6 +16,7 @@ class ChatHeader extends Component
     protected $listeners = [
         'chatSelected' => 'changeToSelectedChat',
         'archivedSelected' => 'changeToSelectedChat',
+        // 'contactRemoved' => 'handleContactRemoved',
     ];
 
     public function mount(Chat $chat)
@@ -34,9 +35,17 @@ class ChatHeader extends Component
         $this->dispatch('chatArchived');
     }
 
+    // public function handleContactRemoved()
+    // {
+    //     $this->loadChat($this->selectedChat);
+    // }
+
     private function loadChat($chatId)
     {
         $this->chat = Chat::find($chatId);
+        if (!$this->chat) {
+            return;
+        }
         $this->user = $this->chat->users->where('id', '!==', Auth::id())->first();
     }
 
@@ -117,21 +126,18 @@ class ChatHeader extends Component
     {
         Auth::user()->contacts()->detach($userId);
         Auth::user()->update(['is_active_in_chat' => null]);
-        $this->dispatch('chatArchived');
+        $this->dispatch('contactRemoved');
     }
 
     public function addContact($userId)
     {
         Auth::user()->contacts()->attach($userId);
         Auth::user()->update(['is_active_in_chat' => $userId]);
-        $this->dispatch('chatSelected', $userId);
+        $this->dispatch('contactAdded', $userId);
     }
 
     public function render()
     {
-        return view('livewire.components.chats.chat-header', [
-            // 'user' => $this->user,
-            // 'chat' => $this->chat,
-        ]);
+        return view('livewire.components.chats.chat-header');
     }
 }

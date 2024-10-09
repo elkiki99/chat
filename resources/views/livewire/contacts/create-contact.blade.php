@@ -18,14 +18,14 @@
         <ul>
             @forelse ($contacts as $user)
                 <li>
-                    <div class="flex items-center gap-2 p-3 hover:bg-gray-100">
+                    <div class="flex items-center gap-2 p-3 dark:hover:bg-gray-750 hover:bg-gray-100">
                         <!-- User image -->
                         <x-profile-picture :user="$user" class="size-10" />
 
                         <div class="flex-1 mx-2">
                             <div class="flex items-center justify-between">
                                 <!-- User name -->
-                                <p class="text-sm font-medium">
+                                <p class="text-sm font-medium dark:text-gray-200">
                                     {{ $user->name }}
                                 </p>
                             </div>

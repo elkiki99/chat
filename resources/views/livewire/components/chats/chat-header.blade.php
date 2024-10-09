@@ -5,7 +5,7 @@
                 <!-- Back to chats -->
                 <a class="hover:cursor-pointer" wire:click='backToChats'>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1"
-                        stroke="currentColor" class="text-gray-700 size-5">
+                        stroke="currentColor" class="text-gray-700 dark:text-gray-200 size-6">
                         <path stroke-linecap="round" stroke-linejoin="round"
                             d="M6.75 15.75 3 12m0 0 3.75-3.75M3 12h18" />
                     </svg>
@@ -14,16 +14,16 @@
                     href="#">
                     <x-profile-picture :user="$user" class="size-10" />
                 </a>
-                <p>{{ $user->name }}</p>
+                <p class="dark:text-gray-200">{{ $user->name }}</p>
 
                 <!-- Chat actions -->
                 <div class="flex gap-4 ml-auto">
                     <!-- Archive chat dropdown -->
                     <x-dropdown align="right" width="48">
                         <x-slot name="trigger">
-                            <button class="p-2 mr-3 hover:bg-gray-100 hover:rounded-lg">
+                            <button class="p-2 mr-3 dark:hover:bg-gray-750 hover:bg-gray-100 hover:rounded-lg">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                    stroke-width="1" stroke="currentColor" class="size-5">
+                                    stroke-width="1" stroke="currentColor" class="size-5 dark:text-gray-200">
                                     <path stroke-linecap="round" stroke-linejoin="round"
                                         d="M12 6.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 12.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 18.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5Z" />
                                 </svg>
@@ -114,7 +114,7 @@
                                         <button x-on:click="$dispatch('close')"
                                             wire:click='selectChat({{ $chat->id }})' class="ml-2">
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                                stroke-width="1.5" stroke="currentColor" class="size-6">
+                                                stroke-width="1.5" stroke="currentColor" class="size-6 dark:text-gray-200">
                                                 <path stroke-linecap="round" stroke-linejoin="round"
                                                     d="M17.25 8.25 21 12m0 0-3.75 3.75M21 12H3" />
                                             </svg>
@@ -123,7 +123,7 @@
                                         <button x-on:click="$dispatch('close')"
                                             wire:click='createChat({{ $user->id }})' class="ml-2">
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                                stroke-width="1.5" stroke="currentColor" class="size-6">
+                                                stroke-width="1.5" stroke="currentColor" class="size-6 dark:text-gray-200">
                                                 <path stroke-linecap="round" stroke-linejoin="round"
                                                     d="M17.25 8.25 21 12m0 0-3.75 3.75M21 12H3" />
                                             </svg>
@@ -148,7 +148,7 @@
 
                                 <div class="">
                                     <p class="text-gray-500">Info:</p>
-                                    <p>Available</p>
+                                    <p class="dark:text-gray-400">Available</p>
                                 </div>
 
                                 <div>
@@ -156,7 +156,7 @@
                                     @if ($sharedGroups->count() > 0)
                                         <p>
                                             {!! $sharedGroups->map(function ($group) {
-                                                    return '<a class="hover:underline" href="javascript:void(0);" wire:click=\'selectChat(' .
+                                                    return '<a class="hover:underline dark:text-gray-400" href="javascript:void(0);" wire:click=\'selectChat(' .
                                                         $group->id .
                                                         ')\'>' .
                                                         e($group->name) .
@@ -164,22 +164,22 @@
                                                 })->implode(', ') !!}
                                         </p>
                                     @else
-                                        <p>No groups in common</p>
+                                        <p class="dark:text-gray-400">No groups in common</p>
                                     @endif
                                 </div>
 
                                 <div class="">
                                     <p class="text-gray-500">Last conection:</p>
-                                    <p>10 min ago</p>
+                                    <p class="dark:text-gray-400">10 min ago</p>
                                 </div>
                             </div>
 
                             <div class="flex justify-between pt-10 mt-auto">
                                 @if (Auth::user()->contacts()->where('contact_user_id', $user->id)->exists())
-                                    <x-secondary-button wire:click='removeContact({{ $user->id }})'
+                                    <x-danger-button wire:click='removeContact({{ $user->id }})'
                                         x-on:click="$dispatch('close')">
                                         {{ __('Remove contact') }}
-                                    </x-secondary-button>
+                                    </x-danger-button>
                                 @else
                                     <x-secondary-button wire:click='addContact({{ $user->id }})'
                                         x-on:click="$dispatch('close')">
@@ -196,7 +196,7 @@
                 <!-- Back to chats -->
                 <a class="hover:cursor-pointer" wire:click='backToChats'>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1"
-                        stroke="currentColor" class="text-gray-700 size-5">
+                        stroke="currentColor" class="text-gray-700 dark:text-gray-200 size-6">
                         <path stroke-linecap="round" stroke-linejoin="round"
                             d="M6.75 15.75 3 12m0 0 3.75-3.75M3 12h18" />
                     </svg>
@@ -205,7 +205,7 @@
                     href="#">
                     <x-chat-image :chat="$chat" class="size-10" />
                 </a>
-                <p>{{ $chat->name }}</p>
+                <p class="dark:text-gray-200">{{ $chat->name }}</p>
 
                 <!-- Chat actions -->
                 <div class="flex gap-4 ml-auto">
@@ -285,7 +285,7 @@
 
                             <div class="items-start">
                                 <p class="text-gray-500">Created:</p>
-                                <p>{{ $chat->created_at->format('d/m/y') }}</p>
+                                <p class="dark:text-gray-400">{{ $chat->created_at->format('d/m/y') }}</p>
                             </div>
 
                             <div class="items-start">
@@ -313,7 +313,7 @@
                                                 <div class="flex-1 mx-2">
                                                     <div class="flex items-center justify-between">
                                                         <!-- User name -->
-                                                        <p class="text-sm font-medium">
+                                                        <p class="text-sm font-medium dark:text-gray-200">
                                                             {{ $user->name }}
                                                         </p>
                                                     </div>
@@ -321,7 +321,6 @@
                                             </div>
                                         </a>
                                     @endif
-
 
                                     <x-modal maxWidth="sm"
                                         name="show-contact-info-on-group-modal-{{ $user->id }}" focusable
@@ -361,7 +360,7 @@
                                                                 class="ml-2">
                                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none"
                                                                     viewBox="0 0 24 24" stroke-width="1.5"
-                                                                    stroke="currentColor" class="size-6">
+                                                                    stroke="currentColor" class="size-6 dark:text-gray-200">
                                                                     <path stroke-linecap="round"
                                                                         stroke-linejoin="round"
                                                                         d="M17.25 8.25 21 12m0 0-3.75 3.75M21 12H3" />
@@ -373,7 +372,7 @@
                                                                 class="ml-2">
                                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none"
                                                                     viewBox="0 0 24 24" stroke-width="1.5"
-                                                                    stroke="currentColor" class="size-6">
+                                                                    stroke="currentColor" class="size-6 dark:text-gray-200">
                                                                     <path stroke-linecap="round"
                                                                         stroke-linejoin="round"
                                                                         d="M17.25 8.25 21 12m0 0-3.75 3.75M21 12H3" />
@@ -400,9 +399,9 @@
                                                             ->get();
                                                     @endphp
 
-                                                    <div class="">
+                                                    <div>
                                                         <p class="text-gray-500">Info:</p>
-                                                        <p>Available</p>
+                                                        <p class="dark:text-gray-400">Available</p>
                                                     </div>
 
                                                     <div>
@@ -410,7 +409,7 @@
                                                         @if ($sharedGroups->count() > 0)
                                                             <p>
                                                                 {!! $sharedGroups->map(function ($group) {
-                                                                        return '<a class="hover:underline" href="javascript:void(0);" wire:click=\'selectChat(' .
+                                                                        return '<a class="hover:underline dark:text-gray-400" href="javascript:void(0);" wire:click=\'selectChat(' .
                                                                             $group->id .
                                                                             ')\'>' .
                                                                             e($group->name) .
@@ -422,19 +421,19 @@
                                                         @endif
                                                     </div>
 
-                                                    <div class="">
+                                                    <div>
                                                         <p class="text-gray-500">Last conection:</p>
-                                                        <p>10 min ago</p>
+                                                        <p class="dark:text-gray-400">10 min ago</p>
                                                     </div>
                                                 </div>
 
                                                 <div class="flex justify-between pt-10 mt-auto">
                                                     @if (Auth::user()->contacts()->where('contact_user_id', $user->id)->exists())
-                                                        <x-secondary-button
+                                                        <x-danger-button
                                                             wire:click='removeContact({{ $user->id }})'
                                                             x-on:click="$dispatch('close')">
                                                             {{ __('Remove contact') }}
-                                                        </x-secondary-button>
+                                                        </x-danger-button>
                                                     @else
                                                         <x-secondary-button
                                                             wire:click='addContact({{ $user->id }})'

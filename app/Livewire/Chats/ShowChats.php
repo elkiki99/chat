@@ -14,15 +14,16 @@ class ShowChats extends Component
     public $allChats = [];
     public $chat;
     public $user;
-    // public $screenSize;
 
     public function getListeners(): array
     {
         $listeners = [
             'chatCreated' => 'pushLastMessage',
-            'chatArchived' => 'userActionOnChat',
-            'userLeftGroup' => 'userActionOnChat',
-            'chatDeleted' => 'userActionOnChat',
+            'chatArchived' => 'userRemoveActionOnChat',
+            'userLeftGroup' => 'userRemoveActionOnChat',
+            'chatDeleted' => 'userRemoveActionOnChat',
+            'contactRemoved' => 'userRemoveActionOnChat',
+            'contactAdded' => 'userAddActionOnChat',
         ];
 
         foreach ($this->chats as $chat) {
@@ -34,20 +35,20 @@ class ShowChats extends Component
         return $listeners;
     }
 
-    // public function setScreenSize($size)
-    // {
-    //     $this->screenSize = $size;
-    // }
-
     public function mount(): void
     {
         $this->selectedChat = Auth::user()->is_active_in_chat;
         $this->fetchChats();
     }
     
-    public function userActionOnChat()
+    public function userRemoveActionOnChat()
     {
         $this->selectedChat = null;
+        $this->fetchChats();
+    }
+    
+    public function userAddActionOnChat()
+    {
         $this->fetchChats();
     }
 

@@ -3,8 +3,8 @@
 @endphp
 
 <aside
-    class="p-1 h-screen ml-0 overflow-auto bg-white border-gray-300 min-w-96 border-r sm:ml-12 {{ $showAside ? 'w-full sm:w-96' : 'hidden sm:block' }}">
-    <h2 class="px-4 py-4 text-xl font-semibold">Archived</h2>
+    class="p-1 h-screen ml-0 overflow-auto dark:bg-gray-800 dark:border-gray-900 bg-white border-gray-300 min-w-96 border-r sm:ml-12 {{ $showAside ? 'w-full sm:w-96' : 'hidden sm:block' }}">
+    <h2 class="px-4 py-4 text-xl font-semibold dark:text-gray-200">Archived</h2>
 
     <!-- Search bar for chats -->
     <div class="flex items-center justify-between">
@@ -44,7 +44,7 @@
 
                 <li>
                     <a wire:click="selectArchived({{ $chat->id }})"
-                        class="block p-3 rounded cursor-pointer hover:bg-gray-50">
+                        class="block p-3 rounded cursor-pointer dark:hover:bg-gray-750 hover:bg-gray-50">
                         <div class="flex items-center gap-2">
                             <!-- Chat image -->
                             @if ($chat->is_group)
@@ -56,7 +56,7 @@
                             <div class="flex-1 mx-2">
                                 <div class="flex items-center justify-between">
                                     <!-- Chat name -->
-                                    <p class="text-sm font-medium">
+                                    <p class="text-sm font-medium dark:text-gray-200">
                                         @if ($chat->is_group)
                                             {{ $chat->name }}
                                         @else
@@ -66,7 +66,7 @@
 
                                     <!-- Last message -->
                                     @if ($lastMessage)
-                                        <p class="text-xs text-gray-500">
+                                        <p class="text-xs text-gray-500 dark:text-gray-400">
                                             {{ $lastMessage->created_at->format('H:i') }}
                                         </p>
                                     @endif
@@ -76,19 +76,19 @@
                                     @if ($lastMessage)
                                         <div class="flex items-center gap-1 mt-1">
                                             @if ($isCurrentUser)
-                                                <x-chat-check :message="$lastMessage" />
+                                                <x-chat-check :message="$lastMessage" class="dark:text-gray-200" />
                                             @endif
 
                                             @if ($chat->is_group && !$isCurrentUser)
                                                 <div class="flex items-center gap-2">
-                                                    <p class="text-sm text-gray-600">
+                                                    <p class="text-sm text-gray-600 dark:text-gray-400">
                                                         {{ Str::limit($lastMessage->user->name, 12, '') }}: </p>
-                                                    <p class="text-sm text-gray-500">
+                                                    <p class="text-sm text-gray-500 dark:text-gray-400">
                                                         {{ Str::limit($lastMessage->body, 25) }}
                                                     </p>
                                                 </div>
                                             @else
-                                                <p class="text-sm text-gray-500">
+                                                <p class="text-sm text-gray-500 dark:text-gray-400">
                                                     {{ Str::limit($lastMessage->body, 25) }}
                                                 </p>
                                             @endif

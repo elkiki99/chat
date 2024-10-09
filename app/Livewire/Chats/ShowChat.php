@@ -24,11 +24,27 @@ class ShowChat extends Component
     public $files = [];
     public $file;
 
+    // public function mount()
+    // {
+    //     if (Auth::user()->is_active_in_chat) {
+    //         $this->loadChat(Auth::user()->is_active_in_chat);
+    //         $this->user = $this->chat->users->where('id', '!==', Auth::id())->first();
+    //     } else {
+    //         $this->chat = null;
+    //     }
+    // }
+
     public function mount()
     {
         if (Auth::user()->is_active_in_chat) {
             $this->loadChat(Auth::user()->is_active_in_chat);
-            $this->user = $this->chat->users->where('id', '!==', Auth::id())->first();
+
+            if ($this->chat && $this->chat->users) {
+                $this->user = $this->chat->users->where('id', '!==', Auth::id())->first();
+            } else {
+                // Handle case when chat is found but there are no users, if necessary
+                $this->user = null;
+            }
         } else {
             $this->chat = null;
         }
@@ -56,18 +72,18 @@ class ShowChat extends Component
         foreach ($this->files as $file) {
             $tempPath = $file['path'];
             $destinationPath = storage_path('app/public/uploads');
-    
+
             $extension = $file['extension'];
-    
+
             $imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'svg'];
-    
+
             if (!in_array(strtolower($extension), $imageExtensions)) {
                 $newFileName = $file['name'];
             } else {
                 $newFileName = Str::random(20) . '.' . $extension;
             }
             File::ensureDirectoryExists($destinationPath);
-    
+
             if (File::exists($tempPath)) {
                 File::move($tempPath, $destinationPath . '/' . $newFileName);
             }
@@ -107,6 +123,7 @@ class ShowChat extends Component
     public function changeToSelectedChat($chatId)
     {
         $this->loadChat($chatId);
+        $this->scrollDown();
     }
 
     public function sendMessage()

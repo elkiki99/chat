@@ -1,6 +1,6 @@
-<form wire:submit.prevent="createGroup" class="p-6">
+<form wire:submit.prevent="createGroup" class="p-6" enctype="multipart/form-data">
     <input type="text" wire:model.live="name" placeholder="New group name..."
-        class="w-full border-none focus:outline-none focus:ring-0" />
+        class="w-full text-gray-100 border-none dark:placeholder:text-gray-400 dark:bg-gray-800 focus:outline-none focus:ring-0" />
 
     @error('name')
         <span x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = false, 2000)"
@@ -28,14 +28,14 @@
             <ul>
                 @forelse ($contacts as $user)
                     <li>
-                        <div class="flex items-center gap-2 p-3 hover:bg-gray-100">
+                        <div class="flex items-center gap-2 p-3 dark:hover:bg-gray-750 hover:bg-gray-100">
                             <!-- User image -->
                             <x-profile-picture :user="$user" class="size-10" />
 
                             <div class="flex-1 mx-2">
                                 <div class="flex items-center justify-between">
                                     <!-- User name -->
-                                    <p class="text-sm font-medium">
+                                    <p class="text-sm font-medium dark:text-gray-200">
                                         {{ $user->name }}
                                     </p>
                                 </div>
@@ -72,17 +72,17 @@
     <div class="px-2 py-6">
         <label class="block text-sm font-medium text-gray-600 dark:text-gray-300">Group image</label>
 
-        <x-text-input id="chat_image" type="file" wire:model="chat_image"
-            class="block w-full mt-1 border-gray-300 rounded-md shadow-sm" />
+        {{-- <x-text-input id="chat_image" type="file" wire:model="chat_image"
+            class="block w-full mt-1 border-gray-300 rounded-md shadow-sm" /> --}}
 
-        {{-- <livewire:dropzone wire:model="chat_image" :rules="['image', 'mimes:png,jpeg,jpg,webp', 'max:2048']" :multiple="false" /> --}}
+        <livewire:dropzone wire:model="chat_image" :multiple="false" />
 
-        @if ($chat_image)
+        {{-- @if ($chat_image)
             <div class="mt-4">
                 <img src="{{ $chat_image->temporaryUrl() }}" alt="Image Preview"
                     class="object-cover p-1 mr-2 rounded-full shadow size-32" />
             </div>
-        @endif
+        @endif --}}
 
         @error('chat_image')
             <span x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = false, 2000)" class="text-sm text-red-500">

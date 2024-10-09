@@ -1,11 +1,12 @@
 <x-app-layout>
-    <div
-        class="flex flex-col items-center justify-center h-screen text-white bg-gradient-to-b from-white via-green-200 to-white">
-        <div class="w-full max-w-4xl p-8 rounded-lg shadow-lg bg-opacity-30 backdrop-blur-lg">
+    <div class="flex flex-col items-center justify-center h-screen text-white bg-gradient-to-b from-white via-green-200 to-white dark:from-gray-900 dark:via-green-600 dark:to-gray-900">
+
+        <div class="w-full max-w-4xl p-8 bg-white rounded-lg shadow-lg dark:bg-gray-800 bg-opacity-30 backdrop-blur-lg dark:bg-opacity-80">
+
             <div class="flex items-center justify-between mb-8">
                 <x-application-logo class="w-auto h-16 text-green-800 animate-bounce" />
                 <a wire:navigate href="{{ route('dashboard') }}"
-                    class="inline-flex items-center px-4 py-2 text-xs font-semibold tracking-widest text-green-700 uppercase transition duration-150 ease-in-out bg-white border border-green-300 rounded-md shadow-sm dark:bg-green-800 dark:border-green-500 dark:text-green-300 hover:bg-green-50 dark:hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 dark:focus:ring-offset-green-800 disabled:opacity-25">
+                    class="inline-flex items-center px-4 py-2 text-xs font-semibold tracking-widest text-green-700 uppercase transition duration-150 ease-in-out bg-white border border-green-300 rounded-md shadow-sm dark:bg-green-800 dark:border-green-700 dark:text-green-300 hover:bg-green-50 dark:hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 dark:focus:ring-offset-green-800 disabled:opacity-25">
                     Login
                 </a>
             </div>
