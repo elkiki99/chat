@@ -1,4 +1,4 @@
-<div class="flex w-full h-16 bg-white border-b border-gray-200">
+<div class="flex w-full h-16 bg-white border-b border-gray-200 dark:border-b-0 dark:bg-gray-800">
     <div class="flex items-center justify-start w-full h-auto p-4">
         @if (!$chat->is_group)
             <div class="flex items-center w-full gap-4 text-sm font-medium">

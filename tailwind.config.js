@@ -13,7 +13,9 @@ export default {
         extend: {
             colors: {
                 gray: {
-                    150: '#e0e0e0',
+                    150: '#f0f2f4',
+                    750: '#2b343e',
+                    850: '#161e29',
                 },
             },
             fontFamily: {

@@ -1,4 +1,5 @@
-<div class="flex flex-col w-full h-screen bg-gray-100">
+<div class="flex flex-col w-full h-screen bg-gray-100 dark:bg-gray-900">
+
     @if ($chat)
         <livewire:components.chats.chat-header :chat="$chat" :user="$user" />
 
@@ -25,7 +26,7 @@
         </div>
 
         <!-- Chat actions -->
-        <div class="flex items-center px-4 py-2 mb-12 bg-white border-t border-gray-300 sm:mb-0">
+        <div class="flex items-center px-4 py-2 mb-12 bg-white border-t border-gray-300 dark:border-t-0 dark:bg-gray-800 sm:mb-0">
             <!-- Send file clip button -->
             <button x-on:click="$dispatch('open-modal', 'send-file')" class="p-2 hover:bg-gray-100 hover:rounded-lg">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1"
@@ -55,7 +56,7 @@
             <!-- Message input -->
             <form wire:submit.prevent="sendMessage" class="flex w-full">
                 <input type="text" wire:model="body" placeholder="Type a message here..."
-                    class="w-full mx-2 border-none focus:outline-none focus:ring-0" />
+                    class="w-full mx-2 border-none focus:outline-none dark:bg-gray-800 focus:ring-0" />
                 <button type="submit" class="text-green-600">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
                         <path
@@ -65,7 +66,7 @@
             </form>
         </div>
     @else
-        <div class="relative hidden h-full md:flex">
+        <div class="relative hidden h-full sm:flex">
             <x-lobby />
         </div>
     @endif

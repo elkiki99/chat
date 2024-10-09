@@ -7,7 +7,7 @@
 
     <div
         class="relative max-w-md p-2 text-sm rounded shadow
-                {{ $isCurrentUser ? 'bg-green-200 text-gray-800' : 'bg-white text-gray-800' }}
+                {{ $isCurrentUser ? 'bg-green-200 text-gray-800 dark:bg-emerald-800 dark:text-white' : 'bg-white text-gray-800 dark:bg-gray-800 dark:text-gray-200' }}
                 {{ !$isFirstInBlock && $chat->is_group ? 'ml-11' : '' }}">
 
         <div class="flex h-full gap-5">
@@ -79,7 +79,7 @@
             <!-- Time and check icons -->
             @if (Str::endsWith($message->body, ['jpg', 'jpeg', 'png', 'gif', 'webp']))
             @else
-                <div class="flex items-center self-end gap-1 mt-1 text-xs text-gray-500">
+                <div class="flex items-center self-end gap-1 mt-1 text-xs text-gray-500 dark:text-gray-400">
                     <span>{{ $message->created_at->format('H:i') }}</span>
                     @if ($isCurrentUser)
                         <x-chat-check :message="$message" />

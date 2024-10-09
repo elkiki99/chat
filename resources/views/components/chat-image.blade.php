@@ -1,13 +1,13 @@
 @props(['class' => ''])
 
-<div class="relative flex items-center justify-center {{ $class }} rounded-full bg-gray-200">
+<div class="relative flex items-center justify-center {{ $class }} rounded-full bg-gray-200 dark:bg-gray-500">
     @if ($chat->chat_image)
         <img class="absolute inset-0 object-cover w-full h-full rounded-full"
             src="{{ Str::startsWith($chat->chat_image, ['http://', 'https://']) ? $chat->chat_image : url('/storage/chat-images/' . $chat->chat_image) }}"
             alt="{{ $chat->name }}"
         >
     @else
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-8 h-8 text-gray-300">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-8 h-8 text-gray-300 dark:text-gray-600">
             <path fill-rule="evenodd"
                 d="M8.25 6.75a3.75 3.75 0 1 1 7.5 0 3.75 3.75 0 0 1-7.5 0ZM15.75 9.75a3 3 0 1 1 6 0 3 3 0 0 1-6 0ZM2.25 9.75a3 3 0 1 1 6 0 3 3 0 0 1-6 0ZM6.31 15.117A6.745 6.745 0 0 1 12 12a6.745 6.745 0 0 1 6.709 7.498.75.75 0 0 1-.372.568A12.696 12.696 0 0 1 12 21.75c-2.305 0-4.47-.612-6.337-1.684a.75.75 0 0 1-.372-.568 6.787 6.787 0 0 1 1.019-4.38Z"
                 clip-rule="evenodd" />
