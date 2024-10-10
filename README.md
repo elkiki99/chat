@@ -45,7 +45,7 @@ To use **Chat App**, follow these steps:
 
 ## Usage
 
-- **Account creation**: Users can create an account and log in to access their chats.
+- **Account Creation**: Users can create an account and log in to access their chats.
 - **User Management**: Users can manage their profiles and contact lists.
 - **Real-Time Chats**: Engage in one-on-one or group chats with instant message delivery.
 - **File Sharing**: Share files easily within chat conversations.
