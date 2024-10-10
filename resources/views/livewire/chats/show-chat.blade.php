@@ -26,9 +26,11 @@
         </div>
 
         <!-- Chat actions -->
-        <div class="flex items-center px-4 py-2 mb-12 bg-white border-t border-gray-300 dark:border-t-0 dark:bg-gray-800 sm:mb-0">
+        <div
+            class="flex items-center px-4 py-2 mb-12 bg-white border-t border-gray-300 dark:border-t-0 dark:bg-gray-800 sm:mb-0">
             <!-- Send file clip button -->
-            <button x-on:click="$dispatch('open-modal', 'send-file')" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-750 hover:rounded-lg">
+            <button x-on:click="$dispatch('open-modal', 'send-file')"
+                class="p-2 hover:bg-gray-100 dark:hover:bg-gray-750 hover:rounded-lg">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1"
                     stroke="currentColor" class="text-gray-700 dark:text-gray-200 size-5">
                     <path stroke-linecap="round" stroke-linejoin="round"
@@ -74,9 +76,11 @@
 
 <script>
     function scrollToBottom(container) {
-        requestAnimationFrame(() => {
-            container.scrollTop = container.scrollHeight;
-        });
+        if (container) {
+            requestAnimationFrame(() => {
+                container.scrollTop = container.scrollHeight;
+            });
+        }
     }
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -84,7 +88,9 @@
         scrollToBottom(container);
 
         window.addEventListener('scrollDown', () => {
-            scrollToBottom(container);
+            if (container) {
+                scrollToBottom(container);
+            }
         });
     });
 </script>

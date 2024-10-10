@@ -74,12 +74,12 @@
                     @if ($sharedGroups->count() > 0)
                         <p>
                             {!! $sharedGroups->map(function ($group) {
-                                    return '<a class="hover:underline dark:text-gray-400" href="javascript:void(0);" wire:click=\'selectChat(' .
+                                    return '<a class="hover:underline hover:cursor-pointer dark:text-gray-400" wire:click=\'selectChat(' .
                                         $group->id .
                                         ')\'>' .
                                         e($group->name) .
                                         '</a>';
-                                })->implode(', ') !!}
+                                    })->implode('<span class="dark:text-gray-400">, </span>') !!}
                         </p>
                     @else
                         <p class="dark:text-gray-400">No groups in common</p>

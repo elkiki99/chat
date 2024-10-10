@@ -10,7 +10,8 @@ use App\Events\MessageSent;
 use Illuminate\Support\Str;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\File as HttpFile;
 
 class ShowChat extends Component
 {
@@ -24,27 +25,10 @@ class ShowChat extends Component
     public $files = [];
     public $file;
 
-    // public function mount()
-    // {
-    //     if (Auth::user()->is_active_in_chat) {
-    //         $this->loadChat(Auth::user()->is_active_in_chat);
-    //         $this->user = $this->chat->users->where('id', '!==', Auth::id())->first();
-    //     } else {
-    //         $this->chat = null;
-    //     }
-    // }
-
     public function mount()
     {
         if (Auth::user()->is_active_in_chat) {
             $this->loadChat(Auth::user()->is_active_in_chat);
-
-            if ($this->chat && $this->chat->users) {
-                $this->user = $this->chat->users->where('id', '!==', Auth::id())->first();
-            } else {
-                // Handle case when chat is found but there are no users, if necessary
-                $this->user = null;
-            }
         } else {
             $this->chat = null;
         }
@@ -71,35 +55,28 @@ class ShowChat extends Component
     {
         foreach ($this->files as $file) {
             $tempPath = $file['path'];
-            $destinationPath = storage_path('app/public/uploads');
-
             $extension = $file['extension'];
 
-            $imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'svg'];
+            $imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp'];
+            $newFileName = !in_array(strtolower($extension), $imageExtensions)
+                ? $file['name']
+                : Str::random(20) . '.' . $extension;
 
-            if (!in_array(strtolower($extension), $imageExtensions)) {
-                $newFileName = $file['name'];
-            } else {
-                $newFileName = Str::random(20) . '.' . $extension;
-            }
-            File::ensureDirectoryExists($destinationPath);
+            $newFileName = Storage::disk('s3')->putFileAs('uploads', new HttpFile($tempPath), $newFileName);
 
-            if (File::exists($tempPath)) {
-                File::move($tempPath, $destinationPath . '/' . $newFileName);
-            }
-            $this->chat->messages()->create([
+            $message = $this->chat->messages()->create([
                 'chat_id' => $this->chat->id,
                 'user_id' => Auth::id(),
                 'body' => $newFileName,
                 'is_file' => true,
             ]);
         }
-
-        if ($this->chat->users()->updateExistingPivot(Auth::id(), ['is_active' => false])) {
-            $this->chat->users()->updateExistingPivot(Auth::id(), ['is_active' => true]);
-        }
-
+        $this->chat->users()->updateExistingPivot(Auth::id(), ['is_active' => false]);
+        $this->chat->users()->updateExistingPivot(Auth::id(), ['is_active' => true]);
         $this->files = [];
+
+        broadcast(new MessageSent($this->chat, $message));
+        $this->checkForActiveUsersAndMarkSeen();
         $this->updateChatInRealTime();
     }
 
@@ -123,12 +100,12 @@ class ShowChat extends Component
     {
         $this->chat = Chat::with('users', 'messages')->find($chatId);
         $this->markMessagesAsSeen($chatId);
+        $this->scrollDown();
     }
 
     public function changeToSelectedChat($chatId)
     {
         $this->loadChat($chatId);
-        $this->scrollDown();
     }
 
     public function sendMessage()
@@ -149,7 +126,7 @@ class ShowChat extends Component
         if ($this->chat->users()->updateExistingPivot(Auth::id(), ['is_active' => false])) {
             $this->chat->users()->updateExistingPivot(Auth::id(), ['is_active' => true]);
         }
-        
+
         if ($this->chat->users()->updateExistingPivot(Auth::id(), ['is_archived' => true])) {
             $this->chat->users()->updateExistingPivot(Auth::id(), ['is_archived' => false]);
             $this->dispatch('chatUnarchived', $this->chat->id);
