@@ -16,6 +16,7 @@ class ShowContacts extends Component
         return [
             'contactCreated' => 'loadContacts',
             'contactRemoved' => 'loadContacts',
+            'contactAdded' => 'loadContacts',
         ];
     }
 

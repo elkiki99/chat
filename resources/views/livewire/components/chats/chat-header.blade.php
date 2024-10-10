@@ -114,7 +114,8 @@
                                         <button x-on:click="$dispatch('close')"
                                             wire:click='selectChat({{ $chat->id }})' class="ml-2">
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                                stroke-width="1.5" stroke="currentColor" class="size-6 dark:text-gray-200">
+                                                stroke-width="1.5" stroke="currentColor"
+                                                class="size-6 dark:text-gray-200">
                                                 <path stroke-linecap="round" stroke-linejoin="round"
                                                     d="M17.25 8.25 21 12m0 0-3.75 3.75M21 12H3" />
                                             </svg>
@@ -123,7 +124,8 @@
                                         <button x-on:click="$dispatch('close')"
                                             wire:click='createChat({{ $user->id }})' class="ml-2">
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                                stroke-width="1.5" stroke="currentColor" class="size-6 dark:text-gray-200">
+                                                stroke-width="1.5" stroke="currentColor"
+                                                class="size-6 dark:text-gray-200">
                                                 <path stroke-linecap="round" stroke-linejoin="round"
                                                     d="M17.25 8.25 21 12m0 0-3.75 3.75M21 12H3" />
                                             </svg>
@@ -156,12 +158,12 @@
                                     @if ($sharedGroups->count() > 0)
                                         <p>
                                             {!! $sharedGroups->map(function ($group) {
-                                                    return '<a class="hover:underline dark:text-gray-400" href="javascript:void(0);" wire:click=\'selectChat(' .
+                                                    return '<a class="hover:underline hover:cursor-pointer dark:text-gray-400" wire:click=\'selectChat(' .
                                                         $group->id .
                                                         ')\'>' .
                                                         e($group->name) .
                                                         '</a>';
-                                                })->implode(', ') !!}
+                                                })->implode('<span class="dark:text-gray-400">, </span>') !!}
                                         </p>
                                     @else
                                         <p class="dark:text-gray-400">No groups in common</p>
@@ -212,9 +214,9 @@
                     <!-- Archive chat dropdown -->
                     <x-dropdown align="right" width="48">
                         <x-slot name="trigger">
-                            <button class="p-2 mr-3 hover:bg-gray-100 hover:rounded-lg">
+                            <button class="p-2 mr-3 dark:hover:bg-gray-750 hover:bg-gray-100 hover:rounded-lg">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                    stroke-width="1" stroke="currentColor" class="size-5">
+                                    stroke-width="1" stroke="currentColor" class="size-5 dark:text-gray-200">
                                     <path stroke-linecap="round" stroke-linejoin="round"
                                         d="M12 6.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 12.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 18.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5Z" />
                                 </svg>
@@ -305,7 +307,9 @@
                                                 ->first();
                                         @endphp
 
-                                        <a x-on:click.prevent="$dispatch('open-modal', 'show-contact-info-on-group-modal-{{ $user->id }}')"
+                                        <a 
+                                            wire:click="selectChat({{ $userChat->id }})"
+                                            x-on:click="$dispatch('close')"
                                             class="p-3 cursor-pointer">
                                             <div class="flex items-center gap-2">
                                                 <x-profile-picture :user="$user" class="size-12" />
@@ -321,130 +325,6 @@
                                             </div>
                                         </a>
                                     @endif
-
-                                    <x-modal maxWidth="sm"
-                                        name="show-contact-info-on-group-modal-{{ $user->id }}" focusable
-                                        wire:key="show-contact-info-on-header-{{ $user->id }}">
-                                        <div class="flex min-h-[50vh]">
-                                            <div class="flex flex-col w-full gap-4 p-6">
-                                                <div class="flex flex-col items-center space-y-2">
-                                                    <x-profile-picture :user="$user" class="size-24" />
-
-                                                    <div class="flex items-center justify-between">
-                                                        <h2
-                                                            class="text-lg font-medium text-gray-900 dark:text-gray-100">
-                                                            {{ $user->name }}
-                                                        </h2>
-
-                                                        @php
-                                                            $chatExists = Auth::user()
-                                                                ->chats()
-                                                                ->where('is_group', false)
-                                                                ->whereHas('users', function ($query) use ($user) {
-                                                                    $query->where('users.id', $user->id);
-                                                                })
-                                                                ->exists();
-
-                                                            $userChat = $user
-                                                                ->chats()
-                                                                ->where('is_group', false)
-                                                                ->whereHas('users', function ($query) {
-                                                                    $query->where('users.id', Auth::id());
-                                                                })
-                                                                ->first();
-                                                        @endphp
-
-                                                        @if ($chatExists)
-                                                            <button x-on:click="$dispatch('close')"
-                                                                wire:click='selectChat({{ $userChat->id }})'
-                                                                class="ml-2">
-                                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none"
-                                                                    viewBox="0 0 24 24" stroke-width="1.5"
-                                                                    stroke="currentColor" class="size-6 dark:text-gray-200">
-                                                                    <path stroke-linecap="round"
-                                                                        stroke-linejoin="round"
-                                                                        d="M17.25 8.25 21 12m0 0-3.75 3.75M21 12H3" />
-                                                                </svg>
-                                                            </button>
-                                                        @else
-                                                            <button x-on:click="$dispatch('close')"
-                                                                wire:click='createChat({{ $user->id }})'
-                                                                class="ml-2">
-                                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none"
-                                                                    viewBox="0 0 24 24" stroke-width="1.5"
-                                                                    stroke="currentColor" class="size-6 dark:text-gray-200">
-                                                                    <path stroke-linecap="round"
-                                                                        stroke-linejoin="round"
-                                                                        d="M17.25 8.25 21 12m0 0-3.75 3.75M21 12H3" />
-                                                                </svg>
-                                                            </button>
-                                                        @endif
-                                                    </div>
-
-                                                    <h3 class="text-gray-900 text-md dark:text-gray-100">
-                                                        {{ $user->username }}
-                                                    </h3>
-                                                </div>
-
-                                                <div class="space-y-2">
-                                                    @php
-                                                        $authUserGroups = Auth::user()
-                                                            ->chats()
-                                                            ->where('is_group', true)
-                                                            ->pluck('chats.id');
-                                                        $sharedGroups = $user
-                                                            ->chats()
-                                                            ->where('is_group', true)
-                                                            ->whereIn('chats.id', $authUserGroups)
-                                                            ->get();
-                                                    @endphp
-
-                                                    <div>
-                                                        <p class="text-gray-500">Info:</p>
-                                                        <p class="dark:text-gray-400">Available</p>
-                                                    </div>
-
-                                                    <div>
-                                                        <p class="text-gray-500">Groups:</p>
-                                                        @if ($sharedGroups->count() > 0)
-                                                            <p>
-                                                                {!! $sharedGroups->map(function ($group) {
-                                                                        return '<a class="hover:underline dark:text-gray-400" href="javascript:void(0);" wire:click=\'selectChat(' .
-                                                                            $group->id .
-                                                                            ')\'>' .
-                                                                            e($group->name) .
-                                                                            '</a>';
-                                                                    })->implode(', ') !!}
-                                                            </p>
-                                                        @else
-                                                            <p>No groups in common</p>
-                                                        @endif
-                                                    </div>
-
-                                                    <div>
-                                                        <p class="text-gray-500">Last conection:</p>
-                                                        <p class="dark:text-gray-400">10 min ago</p>
-                                                    </div>
-                                                </div>
-
-                                                <div class="flex justify-between pt-10 mt-auto">
-                                                    @if (Auth::user()->contacts()->where('contact_user_id', $user->id)->exists())
-                                                        <x-danger-button
-                                                            wire:click='removeContact({{ $user->id }})'
-                                                            x-on:click="$dispatch('close')">
-                                                            {{ __('Remove contact') }}
-                                                        </x-danger-button>
-                                                    @else
-                                                        <x-secondary-button
-                                                            wire:click='addContact({{ $user->id }})'
-                                                            x-on:click="$dispatch('close')">
-                                                            {{ __('Add contact') }}
-                                                        </x-secondary-button>
-                                                    @endif
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </x-modal>
                                 @endforeach
                             </div>
 

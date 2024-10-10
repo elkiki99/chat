@@ -72,17 +72,17 @@
     <div class="px-2 py-6">
         <label class="block text-sm font-medium text-gray-600 dark:text-gray-300">Group image</label>
 
-        {{-- <x-text-input id="chat_image" type="file" wire:model="chat_image"
-            class="block w-full mt-1 border-gray-300 rounded-md shadow-sm" /> --}}
+        <x-text-input id="chat_image" type="file" wire:model="chat_image"
+            class="block w-full mt-1 border-gray-300 rounded-md shadow-sm" />
 
-        <livewire:dropzone wire:model="chat_image" :multiple="false" />
-
-        {{-- @if ($chat_image)
+        @if ($chat_image)
             <div class="mt-4">
                 <img src="{{ $chat_image->temporaryUrl() }}" alt="Image Preview"
                     class="object-cover p-1 mr-2 rounded-full shadow size-32" />
             </div>
-        @endif --}}
+        @endif
+
+        {{-- <livewire:dropzone wire:model="chat_image" :multiple="false" /> --}}
 
         @error('chat_image')
             <span x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = false, 2000)" class="text-sm text-red-500">

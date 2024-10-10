@@ -94,6 +94,11 @@ class ShowChat extends Component
                 'is_file' => true,
             ]);
         }
+
+        if ($this->chat->users()->updateExistingPivot(Auth::id(), ['is_active' => false])) {
+            $this->chat->users()->updateExistingPivot(Auth::id(), ['is_active' => true]);
+        }
+
         $this->files = [];
         $this->updateChatInRealTime();
     }
@@ -140,6 +145,24 @@ class ShowChat extends Component
             'is_file' => false,
         ]);
         $this->reset('body');
+
+        if ($this->chat->users()->updateExistingPivot(Auth::id(), ['is_active' => false])) {
+            $this->chat->users()->updateExistingPivot(Auth::id(), ['is_active' => true]);
+        }
+        
+        if ($this->chat->users()->updateExistingPivot(Auth::id(), ['is_archived' => true])) {
+            $this->chat->users()->updateExistingPivot(Auth::id(), ['is_archived' => false]);
+            $this->dispatch('chatUnarchived', $this->chat->id);
+        }
+
+        $recipients = $this->chat->users->where('id', '!=', Auth::id());
+        foreach ($recipients as $user) {
+            $isArchived = $user->pivot->is_archived ?? false;
+            if ($isArchived) {
+                $this->chat->users()->updateExistingPivot($user->id, ['is_archived' => false]);
+                $this->dispatch('chatUnarchived', $this->chat->id);
+            }
+        }
 
         broadcast(new MessageSent($this->chat, $message));
         $this->checkForActiveUsersAndMarkSeen();

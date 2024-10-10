@@ -110,7 +110,7 @@
                                             @if ($chat->is_group && !$isCurrentUser)
                                                 <div class="flex items-center gap-2">
                                                     <p class="text-sm text-gray-600 dark:text-gray-400">
-                                                        {{ Str::limit($lastMessage->user->name, 15, '') }}: </p>
+                                                        {{ Str::limit($lastMessage->user->name, 20, '') }}: </p>
                                                     <p class="text-sm text-gray-500 dark:text-gray-400">
                                                         {{ Str::limit($lastMessage->body, 15) }}
                                                     </p>
@@ -149,10 +149,10 @@
                                         </div>
 
                                         @if (!$isCurrentUser && $unreadMessages)
-                                            <div
-                                                class="flex items-center justify-center text-sm text-white bg-green-500 rounded-full size-4">
-                                                <p>{{ $unreadMessages }}</p>
-                                            </div>
+                                        <div
+                                        class="flex items-center justify-center p-2 text-sm text-white bg-green-500 rounded-full size-4">
+                                        <p class="text-xs">{{ $unreadMessages > 9 ? '9+' : $unreadMessages }}</p>
+                                    </div>
                                         @endif
                                     @else
                                         <p class="text-sm text-gray-400">No messages yet</p>

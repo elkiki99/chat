@@ -96,8 +96,8 @@
 
                                         @if (!$isCurrentUser && $unreadMessages)
                                             <div
-                                                class="flex items-center justify-center text-sm text-white bg-green-500 rounded-full size-4">
-                                                <p>{{ $unreadMessages }}</p>
+                                                class="flex items-center justify-center p-2 text-sm text-white bg-green-500 rounded-full size-4">
+                                                <p class="text-xs">{{ $unreadMessages > 9 ? '9+' : $unreadMessages }}</p>
                                             </div>
                                         @endif
                                     @else

@@ -18,6 +18,7 @@ class ShowChats extends Component
     public function getListeners(): array
     {
         $listeners = [
+            'chatUnarchived' => 'pushLastMessage',
             'chatCreated' => 'pushLastMessage',
             'chatArchived' => 'userRemoveActionOnChat',
             'userLeftGroup' => 'userRemoveActionOnChat',
@@ -60,7 +61,6 @@ class ShowChats extends Component
     public function fetchChats()
     {
         $this->allChats = Auth::user()->chats()
-            // ->withPivot('is_archived')
             ->where('chat_user.is_active', true)
             ->where('is_archived', false)
             ->with(['users', 'messages' => function ($query) {

@@ -12,16 +12,22 @@ class ChatHeader extends Component
     public $user;
     public $chats;
     public $selectedChat;
+    public $contacts;
 
     protected $listeners = [
         'chatSelected' => 'changeToSelectedChat',
         'archivedSelected' => 'changeToSelectedChat',
-        // 'contactRemoved' => 'handleContactRemoved',
+        'contactRemoved' => 'updateUserContacts',
     ];
 
     public function mount(Chat $chat)
     {
         $this->loadChat($chat->id);
+    }
+
+    public function updateUserContacts()
+    {
+        $this->contacts = Auth::user()->contacts()->get();
     }
 
     public function changeToSelectedChat($chatId)
@@ -34,11 +40,6 @@ class ChatHeader extends Component
         Auth::user()->update(['is_active_in_chat' => null]);
         $this->dispatch('chatArchived');
     }
-
-    // public function handleContactRemoved()
-    // {
-    //     $this->loadChat($this->selectedChat);
-    // }
 
     private function loadChat($chatId)
     {

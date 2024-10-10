@@ -22,6 +22,7 @@ class ShowContactInfo extends Component
 
     public function createChat($contactId)
     {
+        // $this->dispatch('chatSelected', $chatId);
         $this->dispatch('groupSelected');
 
         $userId = Auth::id();

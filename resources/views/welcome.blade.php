@@ -1,5 +1,5 @@
 <x-app-layout>
-    <div class="flex flex-col items-center justify-center h-screen text-white bg-gradient-to-b from-white via-green-200 to-white dark:from-gray-900 dark:via-green-600 dark:to-gray-900">
+    <div class="flex flex-col items-center justify-center h-screen text-white bg-gradient-to-b from-white via-green-200 to-white dark:from-gray-900 dark:via-green-700 dark:to-gray-900">
 
         <div class="w-full max-w-4xl p-8 bg-white rounded-lg shadow-lg dark:bg-gray-800 bg-opacity-30 backdrop-blur-lg dark:bg-opacity-80">
 

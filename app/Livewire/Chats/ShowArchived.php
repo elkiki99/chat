@@ -18,8 +18,8 @@ class ShowArchived extends Component
     public function getListeners(): array
     {
         $listeners = [
-            // 'chatCreated' => 'pushLastMessage',
             'chatUnarchived' => 'unarchiveChatAndUpdate',
+            'chatArchived' => 'archiveChatAndUpdate',
         ];
 
         foreach ($this->chats as $chat) {
@@ -34,18 +34,16 @@ class ShowArchived extends Component
 
     public function mount(): void
     {
-        // $this->selectedChat = Auth::user()->is_active_in_chat;
+        $this->fetchChats();
+    }
+        
+    public function archiveChatAndUpdate()
+    {
         $this->fetchChats();
     }
 
-    // public function pushLastMessage()
-    // {
-    //     $this->fetchChats();
-    // }
-
     public function unarchiveChatAndUpdate()
     {
-        // $this->selectedChat = null;
         $this->fetchChats();
     }
 
@@ -53,7 +51,6 @@ class ShowArchived extends Component
     {
         $this->allChats = Auth::user()->chats()
             ->where('chat_user.is_active', true)
-            // ->withPivot('is_archived')
             ->where('is_archived', true)
             ->with(['users', 'messages' => function ($query) {
                 $query->latest()->limit(1);
