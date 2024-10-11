@@ -1,4 +1,4 @@
-<div class="flex flex-col w-full h-screen ml-0 bg-gray-100 dark:bg-gray-900 sm:ml-12 md:ml-0">
+<div class="flex flex-col w-full h-screen pl-0 bg-gray-100 dark:bg-gray-900 sm:pl-12 md:pl-0">
 
     @if ($chat)
         <livewire:components.chats.chat-header :chat="$chat" :user="$user" />

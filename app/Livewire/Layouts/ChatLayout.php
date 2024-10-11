@@ -15,6 +15,12 @@ class ChatLayout extends Component
     public function setActiveComponent($component)
     {
         $this->activeComponent = $component;
+
+        // if($component === 'chats') {
+        //     return;
+        // } else {
+        //     $this->dispatch('chatArchived');
+        // }
     }
 
     public function render()

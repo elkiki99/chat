@@ -11,14 +11,6 @@
                     </h2>
 
                     @php
-                        $chatExists = Auth::user()
-                            ->chats()
-                            ->where('is_group', false)
-                            ->whereHas('users', function ($query) use ($user) {
-                                $query->where('users.id', $user->id);
-                            })
-                            ->exists();
-
                         $chat = $user
                             ->chats()
                             ->where('is_group', false)
@@ -28,7 +20,7 @@
                             ->first();
                     @endphp
 
-                    @if ($chatExists)
+                    @if ($chat)
                         <button x-on:click="$dispatch('close')" wire:click='selectChat({{ $chat->id }})'
                             class="ml-2">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"

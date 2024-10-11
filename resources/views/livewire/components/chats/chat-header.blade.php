@@ -295,35 +295,51 @@
                                     {{ __('Members') }}
                                 </p>
 
-                                @foreach ($chat->users as $user)
-                                    @if ($user->id !== Auth::id())
+                                {{-- @foreach ($chat->users as $member)
+                                    @if ($member->id !== Auth::id())
                                         @php
-                                            $userChat = $user
+                                            $userChat = $member
                                                 ->chats()
-                                                ->where('is_group', true)
+                                                ->where('is_group', false)
                                                 ->whereHas('users', function ($query) {
                                                     $query->where('users.id', Auth::id());
                                                 })
                                                 ->first();
                                         @endphp
 
-                                        <a wire:click="selectChat({{ $userChat->id }})"
-                                            x-on:click="$dispatch('close')" class="p-3 cursor-pointer">
-                                            <div class="flex items-center gap-2">
-                                                <x-profile-picture :user="$user" class="size-12" />
+                                        @if ($userChat)
+                                            <a wire:click="selectChat({{ $userChat->id }})"
+                                                x-on:click="$dispatch('close')" class="p-3 cursor-pointer">
+                                                <div class="flex items-center gap-2">
+                                                    <x-profile-picture :user="$member" class="size-12" />
 
-                                                <div class="flex-1 mx-2">
-                                                    <div class="flex items-center justify-between">
-                                                        <!-- User name -->
-                                                        <p class="text-sm font-medium dark:text-gray-200">
-                                                            {{ $user->name }}
-                                                        </p>
+                                                    <div class="flex-1 mx-2">
+                                                        <div class="flex items-center justify-between">
+                                                            <p class="text-sm font-medium dark:text-gray-200">
+                                                                {{ $member->name }}
+                                                            </p>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </a>
+                                            </a>
+                                        @else
+                                            <a wire:click="createChat({{ $member->id }})"
+                                                x-on:click="$dispatch('close')" class="p-3 cursor-pointer">
+                                                <div class="flex items-center gap-2">
+                                                    <x-profile-picture :user="$member" class="size-12" />
+
+                                                    <div class="flex-1 mx-2">
+                                                        <div class="flex items-center justify-between">
+                                                            <p class="text-sm font-medium dark:text-gray-200">
+                                                                {{ $member->name }}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        @endif
                                     @endif
-                                @endforeach
+                                @endforeach --}}
                             </div>
 
                             <div class="flex justify-between pt-10 mt-auto">

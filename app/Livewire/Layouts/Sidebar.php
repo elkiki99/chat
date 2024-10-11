@@ -3,7 +3,6 @@
 namespace App\Livewire\Layouts;
 
 use Livewire\Component;
-use Illuminate\Support\Facades\Auth;
 
 class Sidebar extends Component
 {
@@ -22,17 +21,15 @@ class Sidebar extends Component
 
     public function selectContacts()
     {
-        Auth::user()->is_active_in_chat = null;
-        Auth::user()->save();
         $this->dispatch('componentChanged', 'contacts');
+
         $this->activeComponent = 'contacts';
     }
 
     public function selectArchived()
     {
-        Auth::user()->is_active_in_chat = null;
-        Auth::user()->save();
         $this->dispatch('componentChanged', 'archived');
+
         $this->activeComponent = 'archived';
     }
 

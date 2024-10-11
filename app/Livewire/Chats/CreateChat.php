@@ -12,10 +12,6 @@ class CreateChat extends Component
     public $search = '';
     public $contacts = [];
 
-    protected $listeners = [
-        // 'createChat' => 'createChat',
-    ];
-
     public function mount()
     {
         $this->loadContacts();
