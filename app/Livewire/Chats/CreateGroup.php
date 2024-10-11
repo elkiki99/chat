@@ -54,14 +54,15 @@ class CreateGroup extends Component
             $file = $this->chat_image;
             $filename = Str::random(10) . '.' . $file->getClientOriginalExtension();
 
-            $file->storeAs('chat-images', $filename, 'public');
+            // $file->storeAs('chat-images', $filename, 'public');
+            $filePath = Storage::disk('s3')->putFileAs('chat-images', $file, $filename, 'public');
         }
 
         if ($this->selectedContacts->count() > 0) {
             $chat = Chat::create([
                 'name' => $validated['name'],
                 'is_group' => true,
-                'chat_image' => $filename ?? null,
+                'chat_image' => $filePath ?? null,
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);

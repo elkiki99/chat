@@ -3,7 +3,7 @@
 <div class="relative flex items-center justify-center {{ $class }} rounded-full bg-gray-200 dark:bg-gray-500">
     @if ($chat->chat_image)
         <img class="absolute inset-0 object-cover w-full h-full rounded-full"
-            src="{{ Str::startsWith($chat->chat_image, ['http://', 'https://']) ? $chat->chat_image : url('/storage/chat-images/' . $chat->chat_image) }}"
+            src="{{ Str::startsWith($chat->chat_image, ['http://', 'https://']) ? $chat->chat_image : Storage::disk('s3')->url($chat->chat_image) }}"
             alt="{{ $chat->name }}"
         >
     @else

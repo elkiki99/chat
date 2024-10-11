@@ -1,6 +1,6 @@
 <form wire:submit.prevent="createGroup" class="p-6" enctype="multipart/form-data">
     <input type="text" wire:model.live="name" placeholder="New group name..."
-        class="w-full text-gray-100 border-none dark:placeholder:text-gray-400 dark:bg-gray-800 focus:outline-none focus:ring-0" />
+        class="w-full border-none dark:text-gray-100 dark:placeholder:text-gray-400 dark:bg-gray-800 focus:outline-none focus:ring-0" />
 
     @error('name')
         <span x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = false, 2000)"

@@ -2,12 +2,14 @@
     class="flex {{ $message->user_id === Auth::id() ? 'justify-end' : 'justify-start' }} {{ $isLastInBlock ? 'mb-3' : 'mb-1' }}">
 
     @if ($chat->is_group && !$isCurrentUser && $isFirstInBlock)
-        <x-profile-picture :user="$message->user" class="mr-3 size-8" />
+        <div class="pr-3">
+            <x-profile-picture :user="$message->user" class=" size-8" />
+        </div>
     @endif
 
     <div
         class="relative max-w-md p-2 text-sm rounded shadow
-                {{ $isCurrentUser ? 'bg-green-200 text-gray-800 dark:bg-emerald-800 dark:text-white' : 'bg-white text-gray-800 dark:bg-gray-800 dark:text-gray-200' }}
+                {{ $isCurrentUser ? 'bg-green-200 text-gray-800 dark:bg-emerald-800 dark:text-white ml-11' : 'bg-white mr-11 text-gray-800 dark:bg-gray-800 dark:text-gray-200' }}
                 {{ !$isFirstInBlock && $chat->is_group ? 'ml-11' : '' }}">
 
         <div class="flex h-full gap-5">
@@ -24,8 +26,6 @@
                             <div class="relative w-full h-full">
                                 <img src="{{ Storage::disk('s3')->url($message->body) }}" alt="Imagen enviada"
                                     class="w-full h-full rounded-lg">
-                                {{-- @dd(Storage::disk('s3')->url($message->body)); --}}
-
                                 <div class="absolute flex items-center gap-1 text-xs text-gray-500 bottom-2 right-2">
                                     <span class="text-white">{{ $message->created_at->format('H:i') }}</span>
 
@@ -36,9 +36,9 @@
                             </div>
                         @elseif (Str::endsWith($message->body, ['pdf']))
                             <!-- Display PDF link -->
-                            <div class="flex flex-col items-end ">
+                            <div class="flex flex-col items-end">
                                 <div class="flex items-center gap-2 text-xs text-gray-500">
-                                    <a href="{{ Storage::disk('s3')->url($message->body) }} target="_blank"
+                                    <a href="{{ Storage::disk('s3')->url($message->body) }}" target="_blank"
                                         class="flex items-center">
                                         <x-pdf-svg width="24px" height="24px" />
                                         <span
@@ -48,11 +48,11 @@
                             </div>
                         @elseif(Str::endsWith($message->body, ['docx', 'doc']))
                             <!-- Display Word link -->
-                            <div class="flex flex-col items-end ">
+                            <div class="flex flex-col items-end">
                                 <div class="flex items-center gap-2 text-xs text-gray-500">
-                                    <a href="{{ Storage::disk('s3')->url($message->body) }} target="_blank"
+                                    <a href="{{ Storage::disk('s3')->url($message->body) }}" target="_blank"
                                         class="flex items-center">
-                                        <x-word-svg width="32px" height="32px" />
+                                        <x-word-svg width="24px" height="24px" />
                                         <span
                                             class="ml-1 dark:text-white">{{ pathinfo($message->body, PATHINFO_BASENAME) }}</span>
                                     </a>

@@ -300,17 +300,15 @@
                                         @php
                                             $userChat = $user
                                                 ->chats()
-                                                ->where('is_group', false)
+                                                ->where('is_group', true)
                                                 ->whereHas('users', function ($query) {
                                                     $query->where('users.id', Auth::id());
                                                 })
                                                 ->first();
                                         @endphp
 
-                                        <a 
-                                            wire:click="selectChat({{ $userChat->id }})"
-                                            x-on:click="$dispatch('close')"
-                                            class="p-3 cursor-pointer">
+                                        <a wire:click="selectChat({{ $userChat->id }})"
+                                            x-on:click="$dispatch('close')" class="p-3 cursor-pointer">
                                             <div class="flex items-center gap-2">
                                                 <x-profile-picture :user="$user" class="size-12" />
 

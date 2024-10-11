@@ -3,7 +3,7 @@
 @endphp
 
 <aside
-    class="p-1 h-screen ml-0 overflow-auto dark:bg-gray-800 dark:border-gray-900 bg-white border-gray-300 min-w-96 border-r sm:ml-12 {{ $showAside ? 'w-full sm:w-96' : 'hidden sm:block' }}">
+    class="p-1 h-screen ml-0 overflow-auto dark:bg-gray-800 dark:border-gray-900 bg-white border-gray-300 min-w-96 border-r sm:ml-12 {{ $showAside ? 'w-full md:w-96' : 'hidden md:block' }}">
     <h2 class="px-4 py-4 text-xl font-semibold dark:text-gray-200">Contacts</h2>
 
     <!-- Search bar for contacts -->
