@@ -20,6 +20,7 @@ class ShowChats extends Component
         $listeners = [
             'chatUnarchived' => 'pushLastMessage',
             'chatCreated' => 'pushLastMessage',
+            // 'componentChanged' => 'userRemoveActionOnChat',
             'chatArchived' => 'userRemoveActionOnChat',
             'userLeftGroup' => 'userRemoveActionOnChat',
             'chatDeleted' => 'userRemoveActionOnChat',

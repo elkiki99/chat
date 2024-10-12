@@ -3,6 +3,7 @@
 namespace App\Livewire\Layouts;
 
 use Livewire\Component;
+use Illuminate\Support\Facades\Auth;
 
 class ChatLayout extends Component
 {
@@ -15,12 +16,7 @@ class ChatLayout extends Component
     public function setActiveComponent($component)
     {
         $this->activeComponent = $component;
-
-        // if($component === 'chats') {
-        //     return;
-        // } else {
-        //     $this->dispatch('chatArchived');
-        // }
+        // Auth::user()->update(['is_active_in_chat' => null]);
     }
 
     public function render()

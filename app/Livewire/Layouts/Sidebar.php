@@ -22,15 +22,15 @@ class Sidebar extends Component
     public function selectContacts()
     {
         $this->dispatch('componentChanged', 'contacts');
-
         $this->activeComponent = 'contacts';
+        $this->dispatch('chatArchived');
     }
 
     public function selectArchived()
     {
         $this->dispatch('componentChanged', 'archived');
-
         $this->activeComponent = 'archived';
+        $this->dispatch('chatArchived');
     }
 
     public function render()
