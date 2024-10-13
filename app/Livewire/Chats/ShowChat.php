@@ -38,7 +38,6 @@ class ShowChat extends Component
     {
         $listeners = [
             'chatSelected' => 'changeToSelectedChat',
-            'archivedSelected' => 'changeToSelectedChat',
             'chatArchived' => 'setChatToNull',
             'userLeftGroup' => 'setChatToNull',
             'chatDeleted' => 'setChatToNull',

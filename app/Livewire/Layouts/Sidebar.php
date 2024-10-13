@@ -3,6 +3,7 @@
 namespace App\Livewire\Layouts;
 
 use Livewire\Component;
+use Illuminate\Support\Facades\Auth;
 
 class Sidebar extends Component
 {
@@ -11,7 +12,13 @@ class Sidebar extends Component
     protected $listeners = [
         'chatSelected' => 'selectChats',
         'chatUnarchived' => 'selectChats',
+        'chatArchived' => 'setChatToNull',
     ];
+
+    public function setChatToNull()
+    {
+        Auth::user()->update(['is_active_in_chat' => null]);
+    }
 
     public function selectChats()
     {
@@ -22,15 +29,15 @@ class Sidebar extends Component
     public function selectContacts()
     {
         $this->dispatch('componentChanged', 'contacts');
-        $this->activeComponent = 'contacts';
         $this->dispatch('chatArchived');
-    }
+        $this->activeComponent = 'contacts';
+    }   
 
     public function selectArchived()
     {
         $this->dispatch('componentChanged', 'archived');
-        $this->activeComponent = 'archived';
         $this->dispatch('chatArchived');
+        $this->activeComponent = 'archived';
     }
 
     public function render()

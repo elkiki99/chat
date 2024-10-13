@@ -20,6 +20,7 @@ class ShowArchived extends Component
         $listeners = [
             'chatUnarchived' => 'unarchiveChatAndUpdate',
             'chatArchived' => 'archiveChatAndUpdate',
+            'goToArchived' => 'goBackToArchived',
         ];
 
         foreach ($this->chats as $chat) {
@@ -34,11 +35,18 @@ class ShowArchived extends Component
 
     public function mount(): void
     {
+        $this->selectedChat = Auth::user()->is_active_in_chat;
         $this->fetchChats();
     }
         
     public function archiveChatAndUpdate()
     {
+        $this->fetchChats();
+    }
+
+    public function goBackToArchived()
+    {
+        $this->selectedChat = null;
         $this->fetchChats();
     }
 
@@ -68,7 +76,7 @@ class ShowArchived extends Component
         $this->chat = Chat::find($chatId);
         $this->user = $this->chats->where('id', $chatId)->first()->users->where('id', '!=', Auth::id())->first();
         $this->selectedChat = $chatId;
-        $this->dispatch('archivedSelected', $chatId);
+        $this->dispatch('chatSelected', $chatId);
         Auth::user()->update(['is_active_in_chat' => $chatId]);
     }
 

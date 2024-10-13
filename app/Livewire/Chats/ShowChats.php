@@ -20,7 +20,6 @@ class ShowChats extends Component
         $listeners = [
             'chatUnarchived' => 'pushLastMessage',
             'chatCreated' => 'pushLastMessage',
-            // 'componentChanged' => 'userRemoveActionOnChat',
             'chatArchived' => 'userRemoveActionOnChat',
             'userLeftGroup' => 'userRemoveActionOnChat',
             'chatDeleted' => 'userRemoveActionOnChat',
@@ -48,7 +47,7 @@ class ShowChats extends Component
         $this->selectedChat = null;
         $this->fetchChats();
     }
-    
+
     public function userAddActionOnChat()
     {
         $this->fetchChats();

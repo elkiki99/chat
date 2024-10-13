@@ -51,8 +51,8 @@
         </div>
     </div>
 
-    <!-- Chats list -->
-    <div class="mt-4">
+    <!-- Contact list -->
+    <div class="mt-4 {{ $showAside ? 'mb-12 sm:mb-0' : 'mb-0' }}">
         <ul>
             @forelse ($contacts as $index => $user)
                 <li>

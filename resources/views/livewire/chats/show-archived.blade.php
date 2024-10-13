@@ -26,7 +26,7 @@
     </div>
 
     <!-- Chats list -->
-    <div class="mt-4">
+    <div class="mt-4 {{ $showAside ? 'mb-12 sm:mb-0' : 'mb-0' }}">
         <ul>
             @forelse ($chats as $chat)
                 @php

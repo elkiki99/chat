@@ -16,7 +16,6 @@ class ChatLayout extends Component
     public function setActiveComponent($component)
     {
         $this->activeComponent = $component;
-        // Auth::user()->update(['is_active_in_chat' => null]);
     }
 
     public function render()
