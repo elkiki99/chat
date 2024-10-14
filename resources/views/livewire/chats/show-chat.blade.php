@@ -29,9 +29,9 @@
         @php
             $showAside = Auth::user()->is_active_in_chat === null;
         @endphp
-        
+
         <div
-            class="flex items-center px-4 py-2 {{ $showAside ? 'mb-12 sm:mb-0' : ''}} bg-white border-t border-gray-300 dark:border-t-0 dark:bg-gray-800">
+            class="flex items-center px-4 py-2 {{ $showAside ? 'mb-12 sm:mb-0' : '' }} bg-white border-t border-gray-300 dark:border-t-0 dark:bg-gray-800">
             <!-- Send file clip button -->
             <button x-on:click="$dispatch('open-modal', 'send-file')"
                 class="p-2 hover:bg-gray-100 dark:hover:bg-gray-750 hover:rounded-lg">
@@ -60,7 +60,7 @@
             </x-modal>
 
             <!-- Message input -->
-            <form wire:submit.prevent="sendMessage" class="flex w-full">
+            <form wire:submit.prevent="sendMessage" x-on:input="$dispatch('userTyping')" class="flex w-full">
                 <input type="text" wire:model="body" placeholder="Type a message here..."
                     class="w-full mx-2 border-none focus:outline-none dark:placeholder:text-gray-400 dark:bg-gray-800 dark:text-gray-100 focus:ring-0" />
                 <button type="submit" class="text-green-600 dark:text-green-400">

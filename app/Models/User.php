@@ -22,6 +22,7 @@ class User extends Authenticatable
         'name',
         'email',
         'username',
+        'info',
         'profile_picture',
         'password',
         'is_active_in_chat',
@@ -52,7 +53,7 @@ class User extends Authenticatable
 
     public function isActive()
     {
-        return $this->updated_at->gt(Carbon::now()->subMinutes(2));
+        return $this->updated_at->diffForHumans() === Carbon::now()->diffForHumans();
     }
 
     public function lastActive()

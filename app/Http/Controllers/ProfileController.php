@@ -35,7 +35,6 @@ class ProfileController extends Controller
 
         if ($request->hasFile('profile_picture')) {
             $profilePicturePath = Storage::disk('s3')->put('profile-pictures', $request->file('profile_picture'));
-                // $request->file('profile_picture')->store('profile-pictures', 'public');
             $request->user()->profile_picture = $profilePicturePath;
         }
 

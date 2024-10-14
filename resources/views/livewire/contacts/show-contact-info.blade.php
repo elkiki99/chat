@@ -58,7 +58,7 @@
 
                 <div class="">
                     <p class="text-gray-500">Info:</p>
-                    <p class="dark:text-gray-400">Available</p>
+                    <p class="dark:text-gray-400">{{ $user->info ?? 'No info' }}</p>
                 </div>
 
                 <div>

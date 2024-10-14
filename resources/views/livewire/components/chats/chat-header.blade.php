@@ -14,13 +14,10 @@
                     href="#">
                     <x-profile-picture :user="$user" class="size-10" />
                 </a>
-                <div class="">
+                <div class="block">
                     <p class="dark:text-gray-200">{{ $user->name }}</p>
-                    @if ($user->isActive())
-                        <p class="text-gray-600 dark:text-gray-400">Online</p>
-                    @else
-                        <p class="text-gray-600 dark:text-gray-400">Last seen {{ $user->lastActive() }}</p>
-                    @endif
+                    <!-- User status -->
+                    <livewire:users.user-status :user="$user" />
                 </div>
                 <!-- Chat actions -->
                 <div class="flex gap-4 ml-auto">
@@ -156,7 +153,7 @@
 
                                 <div class="">
                                     <p class="text-gray-500">Info:</p>
-                                    <p class="dark:text-gray-400">Available</p>
+                                    <p class="dark:text-gray-400">{{ $user->info ?? 'No info' }}</p>
                                 </div>
 
                                 <div>

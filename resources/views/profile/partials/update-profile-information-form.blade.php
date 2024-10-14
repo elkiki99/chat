@@ -64,6 +64,13 @@
         </div>
 
         <div>
+            <x-input-label for="info" :value="__('Info')" />
+            <x-text-input id="info" name="info" type="text" class="block w-full mt-1" :value="old('info', $user->info)"
+                required autofocus autocomplete="info" />
+            <x-input-error class="mt-2" :messages="$errors->get('info')" />
+        </div>
+        
+        <div>
             <x-input-label for="profile_picture" :value="__('Profile picture')" />
             <x-text-input id="profile_picture" name="profile_picture" type="file" class="block w-full mt-1" autofocus
                 autocomplete="profile_picture" />
