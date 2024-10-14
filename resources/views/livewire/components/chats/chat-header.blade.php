@@ -14,8 +14,14 @@
                     href="#">
                     <x-profile-picture :user="$user" class="size-10" />
                 </a>
-                <p class="dark:text-gray-200">{{ $user->name }}</p>
-
+                <div class="">
+                    <p class="dark:text-gray-200">{{ $user->name }}</p>
+                    @if ($user->isActive())
+                        <p class="text-gray-600 dark:text-gray-400">Online</p>
+                    @else
+                        <p class="text-gray-600 dark:text-gray-400">Last seen {{ $user->lastActive() }}</p>
+                    @endif
+                </div>
                 <!-- Chat actions -->
                 <div class="flex gap-4 ml-auto">
                     <!-- Archive chat dropdown -->
@@ -171,8 +177,20 @@
                                 </div>
 
                                 <div class="">
-                                    <p class="text-gray-500">Last conection:</p>
-                                    <p class="dark:text-gray-400">10 min ago</p>
+                                    <p class="text-gray-500">Activity:</p>
+                                    @if ($user->isActive())
+                                        <div class="flex items-center gap-2">
+                                            <p class="dark:text-gray-400">Active now</p>
+                                            <span class="relative flex w-3 h-3">
+                                                <span
+                                                    class="absolute inline-flex w-full h-full bg-green-400 rounded-full opacity-75 animate-ping"></span>
+                                                <span
+                                                    class="relative inline-flex w-3 h-3 bg-green-500 rounded-full"></span>
+                                            </span>
+                                        </div>
+                                    @else
+                                        <p class="dark:text-gray-400">Active {{ $user->lastActive() }}</p>
+                                    @endif
                                 </div>
                             </div>
 
@@ -295,7 +313,7 @@
                                     {{ __('Members') }}
                                 </p>
 
-                                {{-- @foreach ($chat->users as $member)
+                                @foreach ($chat->users as $member)
                                     @if ($member->id !== Auth::id())
                                         @php
                                             $userChat = $member
@@ -339,7 +357,7 @@
                                             </a>
                                         @endif
                                     @endif
-                                @endforeach --}}
+                                @endforeach
                             </div>
 
                             <div class="flex justify-between pt-10 mt-auto">

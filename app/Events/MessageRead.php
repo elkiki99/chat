@@ -3,7 +3,6 @@
 namespace App\Events;
 
 use App\Models\User;
-use App\Models\Message;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Broadcasting\PrivateChannel;
@@ -16,16 +15,18 @@ class MessageRead implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $message;
+    public $messageIds;  // Cambiado para almacenar IDs de mensajes
     public $user;    
+    public $chatId;      // Agregado para almacenar el ID del chat
 
     /**
      * Create a new event instance.
      */
-    public function __construct(Message $message, User $user)
+    public function __construct(array $messageIds, User $user, $chatId)
     {
-        $this->message = $message;
+        $this->messageIds = $messageIds;
         $this->user = $user;
+        $this->chatId = $chatId; // Almacenar ID del chat
     }
 
     /**
@@ -36,7 +37,7 @@ class MessageRead implements ShouldBroadcastNow
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel('App.Models.Chat.' . $this->message->chat_id),
+            new PrivateChannel('App.Models.Chat.' . $this->chatId),
             new PrivateChannel('App.Models.User.' . $this->user->id),
         ];
     }
@@ -44,8 +45,8 @@ class MessageRead implements ShouldBroadcastNow
     public function broadcastWith(): array
     {
         return [
-            'message' => $this->message, 
-            'user' => $this->user
+            'messageIds' => $this->messageIds, // Enviar los IDs de los mensajes
+            'user' => $this->user,
         ];
     }
 }

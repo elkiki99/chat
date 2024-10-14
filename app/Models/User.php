@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Carbon\Carbon;
 use App\Models\Chat;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -49,6 +50,16 @@ class User extends Authenticatable
         ];
     }
 
+    public function isActive()
+    {
+        return $this->updated_at->gt(Carbon::now()->subMinutes(2));
+    }
+
+    public function lastActive()
+    {
+        return $this->updated_at->diffForHumans();
+    }
+    
     public function chats()
     {
         return $this->belongsToMany(Chat::class)->withTimestamps()->withPivot('is_archived');

@@ -10,8 +10,9 @@ use App\Events\MessageSent;
 use Illuminate\Support\Str;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\File as HttpFile;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Storage;
 
 class ShowChat extends Component
 {
@@ -19,20 +20,12 @@ class ShowChat extends Component
 
     public ?Chat $chat = null;
     public $body = '';
-    public $messages;
+    public $messages = [];
     public $messageAmount = 100;
     public $user;
     public $files = [];
     public $file;
-
-    public function mount()
-    {
-        if (Auth::user()->is_active_in_chat) {
-            $this->loadChat(Auth::user()->is_active_in_chat);
-        } else {
-            $this->chat = null;
-        }
-    }
+    public $readMessages = [];
 
     public function getListeners(): array
     {
@@ -48,6 +41,15 @@ class ShowChat extends Component
             $listeners["echo-private:App.Models.Chat.{$this->chat->id},MessageRead"] = 'handleMessageRead';
         }
         return $listeners;
+    }
+
+    public function mount()
+    {
+        if (Auth::user()->is_active_in_chat) {
+            $this->loadChat(Auth::user()->is_active_in_chat);
+        } else {
+            $this->chat = null;
+        }
     }
 
     public function sendFile()
@@ -98,6 +100,7 @@ class ShowChat extends Component
     private function loadChat($chatId)
     {
         $this->chat = Chat::with('users', 'messages')->find($chatId);
+        // $this->messages;
         $this->markMessagesAsSeen($chatId);
         $this->scrollDown();
     }
@@ -121,6 +124,8 @@ class ShowChat extends Component
             'is_file' => false,
         ]);
         $this->reset('body');
+
+        Cache::forget('chat-' . $this->chat->id . '-messages');
 
         if ($this->chat->users()->updateExistingPivot(Auth::id(), ['is_active' => false])) {
             $this->chat->users()->updateExistingPivot(Auth::id(), ['is_active' => true]);
@@ -148,19 +153,33 @@ class ShowChat extends Component
     public function markMessagesAsSeen($chatId)
     {
         $user = Auth::user();
+        $cacheKey = "chat_{$chatId}_read_messages_{$user->id}";
+    
+        $readMessages = Cache::get($cacheKey, []);
+    
         $messages = Message::where('chat_id', $chatId)
             ->whereDoesntHave('seenBy', function ($query) use ($user) {
                 $query->where('user_id', $user->id);
             })
-            ->get();
-
+            ->whereNotIn('id', $readMessages)
+            ->pluck('id');
+    
         if ($messages->isNotEmpty()) {
-            $messageIds = $messages->pluck('id')->toArray();
+            $messageIds = $messages->toArray();
+            // Message::whereIn('id', $messageIds)->each(function ($message) use ($user) {
+            //     $message->seenBy()->syncWithoutDetaching([$user->id]);
+            //     broadcast(new MessageRead($message, $user));
+            // });
             Message::whereIn('id', $messageIds)->each(function ($message) use ($user) {
                 $message->seenBy()->syncWithoutDetaching([$user->id]);
-                broadcast(new MessageRead($message, $user));
             });
+
+            // broadcast(new MessageRead($chatId, $messageIds, $user));
+            broadcast(new MessageRead($messageIds, $user, $chatId));
+            
+            Cache::put($cacheKey, array_merge($readMessages, $messageIds), 600);
         }
+    
         $this->updateChatInRealTime();
     }
 
@@ -191,16 +210,25 @@ class ShowChat extends Component
         if (!$this->chat) {
             return;
         }
-        $this->messages = $this->chat->messages()
-            ->with('seenBy')
-            ->latest()
-            ->take($this->messageAmount)
-            ->get()
-            ->sortBy('created_at')
-            ->values();
 
-        $this->body = '';
+        $cacheKey = "chat-{$this->chat->id}-messages";
+
+        if (Cache::has($cacheKey)) {
+            $this->messages = Cache::get($cacheKey);
+        } else {
+            $this->messages = $this->chat->messages()
+                ->with('seenBy')
+                ->latest()
+                ->take($this->messageAmount)
+                ->get()
+                ->sortBy('created_at')
+                ->values();
+
+            Cache::put($cacheKey, $this->messages, 600);
+        }
+
         $this->scrollDown();
+        $this->body = '';
     }
 
     public function render()
