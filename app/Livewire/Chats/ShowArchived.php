@@ -5,6 +5,7 @@ namespace App\Livewire\Chats;
 use App\Models\Chat;
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 
 class ShowArchived extends Component
 {
@@ -35,12 +36,14 @@ class ShowArchived extends Component
 
     public function mount(): void
     {
+        Cache::forget("archived-chats-" . Auth::id());
         $this->selectedChat = Auth::user()->is_active_in_chat;
         $this->fetchChats();
     }
         
     public function archiveChatAndUpdate()
     {
+        Cache::forget("archived-chats-" . Auth::id());
         $this->fetchChats();
     }
 
@@ -52,22 +55,25 @@ class ShowArchived extends Component
 
     public function unarchiveChatAndUpdate()
     {
+        Cache::forget("archived-chats-" . Auth::id());
         $this->fetchChats();
     }
 
     public function fetchChats()
     {
-        $this->allChats = Auth::user()->chats()
-            ->where('chat_user.is_active', true)
-            ->where('is_archived', true)
-            ->with(['users', 'messages' => function ($query) {
-                $query->latest()->limit(1);
-            }])
-            ->get()
-            ->sortByDesc(function ($chat) {
-                return optional($chat->messages->first())->created_at;
-            });
-
+        $this->allChats = Cache::remember("archived-chats-" . Auth::id(), now()->addMinutes(10), function () {
+            return Auth::user()->chats()
+                ->where('chat_user.is_active', true)
+                ->where('is_archived', true)
+                ->with(['users', 'messages' => function ($query) {
+                    $query->latest()->limit(1);
+                }])
+                ->get()
+                ->sortByDesc(function ($chat) {
+                    return optional($chat->messages->first())->created_at;
+                });
+        });
+    
         $this->chats = $this->allChats->values();
     }
 

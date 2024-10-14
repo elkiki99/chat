@@ -4,6 +4,7 @@ namespace App\Livewire\Contacts;
 
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 
 class ShowContacts extends Component
 {
@@ -14,9 +15,9 @@ class ShowContacts extends Component
     public function getListeners(): array
     {
         return [
-            'contactCreated' => 'loadContacts',
-            'contactRemoved' => 'loadContacts',
-            'contactAdded' => 'loadContacts',
+            'contactCreated' => 'clearCacheAndLoadContacts',
+            'contactRemoved' => 'clearCacheAndLoadContacts',
+            'contactAdded' => 'clearCacheAndLoadContacts',
         ];
     }
 
@@ -32,13 +33,23 @@ class ShowContacts extends Component
 
     public function loadContacts()
     {
-        $this->allContacts = Auth::user()
-            ->contacts()
-            ->orderBy('name')
-            ->where('contact_user_id', '!=', Auth::id())
-            ->get();
-    
+        $cacheKey = 'user_contacts_' . Auth::id();
+
+        $this->allContacts = Cache::remember($cacheKey, now()->addMinutes(10), function () {
+            return Auth::user()
+                ->contacts()
+                ->orderBy('name')
+                ->where('contact_user_id', '!=', Auth::id())
+                ->get();
+        });
+
         $this->contacts = $this->allContacts->sortBy('name')->values();
+    }
+
+    public function clearCacheAndLoadContacts()
+    {
+        Cache::forget('user_contacts_' . Auth::id());
+        $this->loadContacts();
     }
 
     public function updatedSearch($value)
@@ -54,6 +65,8 @@ class ShowContacts extends Component
 
     public function render()
     {
-        return view('livewire.contacts.show-contacts');
+        return view('livewire.contacts.show-contacts', [
+            'contacts' => $this->contacts,
+        ]);
     }
 }

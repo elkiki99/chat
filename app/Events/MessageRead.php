@@ -15,9 +15,9 @@ class MessageRead implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $messageIds;  // Cambiado para almacenar IDs de mensajes
+    public $messageIds;
     public $user;    
-    public $chatId;      // Agregado para almacenar el ID del chat
+    public $chatId;
 
     /**
      * Create a new event instance.
@@ -26,7 +26,7 @@ class MessageRead implements ShouldBroadcastNow
     {
         $this->messageIds = $messageIds;
         $this->user = $user;
-        $this->chatId = $chatId; // Almacenar ID del chat
+        $this->chatId = $chatId;
     }
 
     /**
@@ -45,7 +45,7 @@ class MessageRead implements ShouldBroadcastNow
     public function broadcastWith(): array
     {
         return [
-            'messageIds' => $this->messageIds, // Enviar los IDs de los mensajes
+            'messageIds' => $this->messageIds,
             'user' => $this->user,
         ];
     }

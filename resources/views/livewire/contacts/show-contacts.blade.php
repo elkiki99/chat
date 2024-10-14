@@ -56,7 +56,8 @@
         <ul>
             @forelse ($contacts as $index => $user)
                 <li>
-                    <a x-on:click.prevent="$dispatch('open-modal', 'show-contact-info-{{ $user->id }}')"
+                    <a wire:key="modal-{{ $user->id }}" wire:ignore
+                        x-on:click.prevent="$dispatch('open-modal', 'show-contact-info-{{ $user->id }}')"
                         class="block p-3 rounded cursor-pointer dark:hover:bg-gray-750 hover:bg-gray-50">
                         <div class="flex items-center gap-2">
                             <!-- Contact image -->
@@ -74,7 +75,7 @@
                     </a>
                 </li>
 
-                <livewire:contacts.show-contact-info :user="$user" />
+                <livewire:contacts.show-contact-info :user="$user" wire:key="contact-info-{{ $user->id }}" />
             @empty
                 <li class="p-4 text-gray-500">No contacts found</li>
             @endforelse

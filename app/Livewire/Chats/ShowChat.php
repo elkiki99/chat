@@ -52,35 +52,6 @@ class ShowChat extends Component
         }
     }
 
-    public function sendFile()
-    {
-        foreach ($this->files as $file) {
-            $tempPath = $file['path'];
-            $extension = $file['extension'];
-
-            $imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp'];
-            $newFileName = !in_array(strtolower($extension), $imageExtensions)
-                ? $file['name']
-                : Str::random(20) . '.' . $extension;
-
-            $newFileName = Storage::disk('s3')->putFileAs('uploads', new HttpFile($tempPath), $newFileName);
-
-            $message = $this->chat->messages()->create([
-                'chat_id' => $this->chat->id,
-                'user_id' => Auth::id(),
-                'body' => $newFileName,
-                'is_file' => true,
-            ]);
-        }
-        $this->chat->users()->updateExistingPivot(Auth::id(), ['is_active' => false]);
-        $this->chat->users()->updateExistingPivot(Auth::id(), ['is_active' => true]);
-        $this->files = [];
-
-        broadcast(new MessageSent($this->chat, $message));
-        $this->checkForActiveUsersAndMarkSeen();
-        $this->updateChatInRealTime();
-    }
-
     public function loadMoreMessages()
     {
         $this->messageAmount += 100;
@@ -150,6 +121,54 @@ class ShowChat extends Component
         $this->updateChatInRealTime();
     }
 
+    public function sendFile()
+    {
+        foreach ($this->files as $file) {
+            $tempPath = $file['path'];
+            $extension = $file['extension'];
+    
+            $imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp'];
+            $newFileName = !in_array(strtolower($extension), $imageExtensions)
+                ? $file['name']
+                : Str::random(20) . '.' . $extension;
+    
+            $newFileName = Storage::disk('s3')->putFileAs('uploads', new HttpFile($tempPath), $newFileName);
+    
+            $message = $this->chat->messages()->create([
+                'chat_id' => $this->chat->id,
+                'user_id' => Auth::id(),
+                'body' => $newFileName,
+                'is_file' => true,
+            ]);
+        }
+    
+        Cache::forget('chat-' . $this->chat->id . '-messages');
+    
+        if ($this->chat->users()->updateExistingPivot(Auth::id(), ['is_active' => false])) {
+            $this->chat->users()->updateExistingPivot(Auth::id(), ['is_active' => true]);
+        }
+    
+        if ($this->chat->users()->updateExistingPivot(Auth::id(), ['is_archived' => true])) {
+            $this->chat->users()->updateExistingPivot(Auth::id(), ['is_archived' => false]);
+            $this->dispatch('chatUnarchived', $this->chat->id);
+        }
+    
+        $recipients = $this->chat->users->where('id', '!=', Auth::id());
+        foreach ($recipients as $user) {
+            $isArchived = $user->pivot->is_archived ?? false;
+            if ($isArchived) {
+                $this->chat->users()->updateExistingPivot($user->id, ['is_archived' => false]);
+                $this->dispatch('chatUnarchived', $this->chat->id);
+            }
+        }
+    
+        broadcast(new MessageSent($this->chat, $message));
+        $this->checkForActiveUsersAndMarkSeen();
+        $this->updateChatInRealTime();
+    
+        $this->files = [];
+    }
+
     public function markMessagesAsSeen($chatId)
     {
         $user = Auth::user();
@@ -166,17 +185,12 @@ class ShowChat extends Component
     
         if ($messages->isNotEmpty()) {
             $messageIds = $messages->toArray();
-            // Message::whereIn('id', $messageIds)->each(function ($message) use ($user) {
-            //     $message->seenBy()->syncWithoutDetaching([$user->id]);
-            //     broadcast(new MessageRead($message, $user));
-            // });
             Message::whereIn('id', $messageIds)->each(function ($message) use ($user) {
                 $message->seenBy()->syncWithoutDetaching([$user->id]);
             });
 
-            // broadcast(new MessageRead($chatId, $messageIds, $user));
             broadcast(new MessageRead($messageIds, $user, $chatId));
-            
+
             Cache::put($cacheKey, array_merge($readMessages, $messageIds), 600);
         }
     

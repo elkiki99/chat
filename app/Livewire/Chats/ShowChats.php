@@ -5,6 +5,7 @@ namespace App\Livewire\Chats;
 use App\Models\Chat;
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 
 class ShowChats extends Component
 {
@@ -18,8 +19,8 @@ class ShowChats extends Component
     public function getListeners(): array
     {
         $listeners = [
-            'chatUnarchived' => 'pushLastMessage',
-            'chatCreated' => 'pushLastMessage',
+            'chatUnarchived' => 'invalidateCacheAndFetchChats',
+            'chatCreated' => 'invalidateCacheAndFetchChats',
             'chatArchived' => 'userRemoveActionOnChat',
             'userLeftGroup' => 'userRemoveActionOnChat',
             'chatDeleted' => 'userRemoveActionOnChat',
@@ -29,7 +30,7 @@ class ShowChats extends Component
 
         foreach ($this->chats as $chat) {
             if ($chat) {
-                $listeners['echo-private:App.Models.Chat.' . $chat->id . ',MessageSent'] = 'fetchChats';
+                $listeners['echo-private:App.Models.Chat.' . $chat->id . ',MessageSent'] = 'invalidateCacheAndFetchChats';
                 $listeners['echo-private:App.Models.Chat.' . $chat->id . ',MessageRead'] = 'updateChatInRealTime';
             }
         }
@@ -45,31 +46,40 @@ class ShowChats extends Component
     public function userRemoveActionOnChat()
     {
         $this->selectedChat = null;
-        $this->fetchChats();
+        $this->invalidateCacheAndFetchChats();
     }
 
     public function userAddActionOnChat()
     {
-        $this->fetchChats();
+        $this->invalidateCacheAndFetchChats();
     }
 
-    public function pushLastMessage()
+    public function invalidateCacheAndFetchChats()
     {
+        Cache::forget('user-' . Auth::id() . '-chats');
         $this->fetchChats();
     }
 
     public function fetchChats()
     {
-        $this->allChats = Auth::user()->chats()
-            ->where('chat_user.is_active', true)
-            ->where('is_archived', false)
-            ->with(['users', 'messages' => function ($query) {
-                $query->latest()->limit(1);
-            }])
-            ->get()
-            ->sortByDesc(function ($chat) {
-                return optional($chat->messages->first())->created_at;
-            });
+        $cacheKey = 'user-' . Auth::id() . '-chats';
+
+        if (Cache::has($cacheKey)) {
+            $this->allChats = Cache::get($cacheKey);
+        } else {
+            $this->allChats = Auth::user()->chats()
+                ->where('chat_user.is_active', true)
+                ->where('is_archived', false)
+                ->with(['users', 'messages' => function ($query) {
+                    $query->latest()->limit(1);
+                }])
+                ->get()
+                ->sortByDesc(function ($chat) {
+                    return optional($chat->messages->first())->created_at;
+                });
+
+            Cache::put($cacheKey, $this->allChats, 600);
+        }
 
         $this->chats = $this->allChats->values();
     }
