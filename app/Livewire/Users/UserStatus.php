@@ -31,6 +31,7 @@ class UserStatus extends Component
         if ($this->typingUser) {
             Cache::put("chat_{$this->chatId}_user_typing_{$typingUserId}", true, 5);
             $this->isTyping = true;
+            $this->dispatch('userTypingStatusUpdated', $this->chatId, $this->typingUser->id);
         }
     }
 
@@ -41,6 +42,7 @@ class UserStatus extends Component
         }
         $this->isTyping = false;
         $this->typingUser = null;
+        $this->dispatch('userTypingStatusUpdated', $this->chatId, null);
     }
 
     public function render()
