@@ -60,8 +60,10 @@
             </x-modal>
 
             <!-- Message input -->
-            <form wire:submit.prevent="sendMessage" x-on:input="$dispatch('userTyping')" class="flex w-full">
-                <input type="text" wire:model="body" placeholder="Type a message here..."
+            <form wire:submit.prevent="sendMessage" class="flex w-full">
+                <input @keydown="typing = true; $dispatch('userTyping', { typingUserId: @js(Auth::id()) })"
+                    @keyup.debounce.1000="typing = false; $dispatch('userStoppedTyping')" type="text"
+                    wire:model.lazy="body" placeholder="Type a message here..."
                     class="w-full mx-2 border-none focus:outline-none dark:placeholder:text-gray-400 dark:bg-gray-800 dark:text-gray-100 focus:ring-0" />
                 <button type="submit" class="text-green-600 dark:text-green-400">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">

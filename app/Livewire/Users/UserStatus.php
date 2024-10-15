@@ -2,50 +2,33 @@
 
 namespace App\Livewire\Users;
 
+use App\Models\User;
 use Livewire\Component;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
+
 
 class UserStatus extends Component
 {
-    public $user;
-    public $status;
+    public $isTyping = false;
+    public $typingUser;
 
     protected $listeners = [
-        'userTyping' => 'setTyping',
-        'userActive' => 'setActive',
-        'userLastSeen' => 'setLastSeen',
+        'userTyping' => 'handleUserTyping',
+        'userStoppedTyping' => 'handleUserStoppedTyping',
     ];
 
-    public function mount($user)
+    public function handleUserTyping($typingUserId)
     {
-        $this->user = $user;
-        $this->status = $this->getUserStatus();
+        $this->typingUser = User::find($typingUserId);
+    
+        if ($this->typingUser) {
+            $this->isTyping = true;
+        }
     }
-
-    public function getUserStatus()
+    
+    public function handleUserStoppedTyping()
     {
-        return Cache::get('user-status-' . Auth::id(), 'Offline');
-    }
-
-    public function setTyping()
-    {
-        // if ($this->user->id !== Auth::id()) {
-            $this->status = $this->user->name . ' is typing...';
-            Cache::put('user-status-' . $this->user->id, $this->status, 5);
-        // }
-    }
-
-    public function setActive()
-    {
-        $this->status = 'Online';
-        Cache::put('user-status-' . Auth::id(), $this->status, 500);
-    }
-
-    public function setLastSeen($time)
-    {
-        $this->status = 'Last seen ' . $time;
-        Cache::put('user-status-' . Auth::id(), $this->status, 500);
+        $this->isTyping = false;
+        $this->typingUser = null;
     }
     
     public function render()

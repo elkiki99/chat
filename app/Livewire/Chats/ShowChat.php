@@ -34,6 +34,7 @@ class ShowChat extends Component
             'chatArchived' => 'setChatToNull',
             'userLeftGroup' => 'setChatToNull',
             'chatDeleted' => 'setChatToNull',
+            'userTyping' => 'handleUserTyping',
         ];
 
         if ($this->chat) {
@@ -51,7 +52,7 @@ class ShowChat extends Component
             $this->chat = null;
         }
     }
-
+    
     public function loadMoreMessages()
     {
         $this->messageAmount += 100;

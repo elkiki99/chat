@@ -1,5 +1,9 @@
 <div>
-    <span class="font-medium text-gray-600 dark:text-gray-400">
-        {{ $status }}
-    </span>
+    @if ($isTyping && $typingUser)
+        <p class="text-gray-500">
+            {{ $typingUser->name }} is typing...
+        </p>
+    @else
+        <p class="text-gray-500">Online</p>
+    @endif
 </div>
