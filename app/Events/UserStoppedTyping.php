@@ -11,12 +11,12 @@ use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 
-class UserTyping implements ShouldBroadcastNow
+class UserStoppedTyping implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $chatId;
-    
+
     /**
      * Create a new event instance.
      */
