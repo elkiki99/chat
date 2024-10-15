@@ -1,5 +1,5 @@
 <div>
-    @if ($isTyping && $typingUser)
+    @if ($isTyping && $typingUser && $typingUser->id !== Auth::id())
         <p class="text-gray-500">
             {{ $typingUser->name }} is typing...
         </p>

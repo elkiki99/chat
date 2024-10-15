@@ -17,7 +17,7 @@
                 <div class="block">
                     <p class="dark:text-gray-200">{{ $user->name }}</p>
                     <!-- User status -->
-                    <livewire:users.user-status :user="$user" />
+                    <livewire:users.user-status :user="$user" :chatId="$chat->id" />
                 </div>
                 <!-- Chat actions -->
                 <div class="flex gap-4 ml-auto">
