@@ -1,9 +1,9 @@
-# fly.toml app configuration file generated for chat-spring-star-2575 on 2024-10-10T15:24:58-03:00
+# fly.toml app configuration file generated for chat-young-glade-8549 on 2024-10-16T19:09:24-03:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'chat-spring-star-2575'
+app = 'chat-young-glade-8549'
 primary_region = 'scl'
 console_command = 'php /var/www/html/artisan tinker'
 

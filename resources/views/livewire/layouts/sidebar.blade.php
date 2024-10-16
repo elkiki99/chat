@@ -3,9 +3,11 @@
 @endphp
 
 <!-- Sidebar -->
-<aside class="fixed bottom-0 left-0 right-0 z-50 {{ $showAside ? 'flex' : 'hidden sm:flex' }} justify-around w-full h-12 p-1 text-white bg-gray-100 border-t border-gray-300 dark:border-r-0 sm:dark:border-r md:dark:border-0 dark:border-gray-800 dark:border-t-0 dark:bg-gray-900 sm:border-r sm:border-t-0 sm:justify-start sm:flex-col sm:h-full sm:w-12">
+<aside
+    class="fixed bottom-0 left-0 right-0 z-50 {{ $showAside ? 'flex' : 'hidden sm:flex' }} justify-around w-full h-12 p-1 text-white bg-gray-100 border-t border-gray-300 dark:border-r-0 sm:dark:border-r md:dark:border-0 dark:border-gray-800 dark:border-t-0 dark:bg-gray-900 sm:border-r sm:border-t-0 sm:justify-start sm:flex-col sm:h-full sm:w-12">
     <!-- Chats -->
-    <div class="flex items-center justify-center p-2 my-1 rounded-lg dark:hover:bg-gray-750 hover:cursor-pointer hover:bg-gray-150 {{ $activeComponent === 'chats' ? 'bg-gray-200 dark:bg-gray-800' : '' }}">
+    <div
+        class="flex items-center justify-center p-2 my-1 rounded-lg dark:hover:bg-gray-750 hover:cursor-pointer hover:bg-gray-150 {{ $activeComponent === 'chats' ? 'bg-gray-200 dark:bg-gray-800' : '' }}">
         <a wire:click="selectChats">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor"
                 class="text-gray-800 dark:text-gray-100 size-6">
@@ -16,7 +18,8 @@
     </div>
 
     <!-- Contacts -->
-    <div class="flex items-center justify-center p-2 my-1 dark:hover:bg-gray-750 rounded-lg hover:cursor-pointer hover:bg-gray-150 {{ $activeComponent === 'contacts' ? 'bg-gray-200 dark:bg-gray-800' : '' }}">
+    <div
+        class="flex items-center justify-center p-2 my-1 dark:hover:bg-gray-750 rounded-lg hover:cursor-pointer hover:bg-gray-150 {{ $activeComponent === 'contacts' ? 'bg-gray-200 dark:bg-gray-800' : '' }}">
         <a wire:click="selectContacts">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1"
                 stroke="currentColor" class="text-gray-800 dark:text-gray-100 size-6">
@@ -27,7 +30,8 @@
     </div>
 
     <!-- Archived -->
-    <div class="flex items-center justify-center p-2 my-1 dark:hover:bg-gray-750 rounded-lg hover:cursor-pointer hover:bg-gray-150 {{ $activeComponent === 'archived' ? 'bg-gray-200 dark:bg-gray-800' : '' }}">
+    <div
+        class="flex items-center justify-center p-2 my-1 dark:hover:bg-gray-750 rounded-lg hover:cursor-pointer hover:bg-gray-150 {{ $activeComponent === 'archived' ? 'bg-gray-200 dark:bg-gray-800' : '' }}">
         <a wire:click="selectArchived">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1"
                 stroke="currentColor" class="text-gray-800 dark:text-gray-100 size-6">
@@ -38,20 +42,22 @@
     </div>
 
     <!-- Logout -->
-    <div class="flex items-center justify-center p-2 my-1 rounded-lg dark:hover:bg-gray-750 hover:cursor-pointer hover:bg-gray-150">
+    <div
+        class="flex items-center justify-center p-2 my-1 rounded-lg dark:hover:bg-gray-750 hover:cursor-pointer hover:bg-gray-150">
         <form method="POST" action="{{ route('logout') }}">
             @csrf
             <button type="submit" class="flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor" class="text-gray-800 dark:text-gray-100 size-6">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1"
+                    stroke="currentColor" class="text-gray-800 dark:text-gray-100 size-6">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M5.636 5.636a9 9 0 1 0 12.728 0M12 3v9" />
-                  </svg>
-                  
+                </svg>
             </button>
         </form>
     </div>
 
     <!-- Profile -->
-    <a wire:navigate href="{{ route('profile.edit') }}" class="flex items-center justify-center p-2 my-1 rounded-lg dark:hover:bg-gray-750 sm:mt-auto hover:cursor-pointer hover:bg-gray-150">
+    <a wire:navigate href="{{ route('profile.edit') }}"
+        class="flex items-center justify-center p-2 my-1 rounded-lg dark:hover:bg-gray-750 sm:mt-auto hover:cursor-pointer hover:bg-gray-150">
         <div class="inline-block rounded-full bg-gray-150">
             @php
                 $user = Auth::user();

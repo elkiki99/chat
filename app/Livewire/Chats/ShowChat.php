@@ -16,7 +16,7 @@ class ShowChat extends Component
 
     public ?Chat $chat = null;
     public $messages = [];
-    public $messageAmount = 100;
+    public $messageAmount = 10;
     public $user;
     public $readMessages = [];
 
@@ -30,6 +30,7 @@ class ShowChat extends Component
             'userTyping' => 'handleUserTyping',
             'searchActiveUsers' => 'checkForActiveUsersAndMarkSeen',
             'updateChatInRealTime' => 'updateChatInRealTime',
+            // 'scrollDown' => 'scrollDown',
         ];
 
         if ($this->chat) {
@@ -50,7 +51,7 @@ class ShowChat extends Component
 
     public function loadMoreMessages()
     {
-        $this->messageAmount += 100;
+        $this->messageAmount += 10;
     }
 
     public function setChatToNull()

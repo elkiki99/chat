@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Cache;
 class ShowChats extends Component
 {
     public $search = '';
+    public $chat;
     public $selectedChat = null;
     public $chats = [];
     public $allChats = [];
@@ -28,7 +29,8 @@ class ShowChats extends Component
         ];
 
         foreach ($this->allChats as $chat) {
-            if ($chat) {
+            // if ($this->selectedChat) {
+            if ($this->chat) {
                 $listeners['echo-private:App.Models.Chat.' . $chat->id . ',MessageSent'] = 'invalidateCacheAndFetchChats';
                 $listeners['echo-private:App.Models.Chat.' . $chat->id . ',MessageRead'] = 'updateChatInRealTime';
             }
@@ -44,6 +46,7 @@ class ShowChats extends Component
     
     public function userRemoveActionOnChat()
     {
+        // $this->removeChatListeners();
         $this->selectedChat = null;
         $this->invalidateCacheAndFetchChats();
     }
@@ -91,7 +94,6 @@ class ShowChats extends Component
         $this->dispatch('chatSelected', $chatId);
         Auth::user()->update(['is_active_in_chat' => $chatId]);
         $this->dispatch('scrollDown');
-
     }
 
     public function updatedSearch($value)

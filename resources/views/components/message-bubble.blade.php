@@ -24,7 +24,7 @@
                         @if (Str::endsWith($message->body, ['jpg', 'jpeg', 'png', 'gif', 'webp']))
                             <!-- Display image -->
                             <div class="relative w-full h-full">
-                                <img src="{{ Storage::disk('s3')->url($message->body) }}" alt="Imagen enviada"
+                                <img src="{{ Storage::disk('s3')->url($message->body) }}" alt="{{ $message->body }}"
                                     class="w-full h-full rounded-lg">
                                 <div class="absolute flex items-center gap-1 text-xs text-gray-500 bottom-2 right-2">
                                     <span class="text-white">{{ $message->created_at->format('H:i') }}</span>

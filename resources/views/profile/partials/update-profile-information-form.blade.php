@@ -66,7 +66,7 @@
         <div>
             <x-input-label for="info" :value="__('Info')" />
             <x-text-input id="info" name="info" type="text" class="block w-full mt-1" :value="old('info', $user->info)"
-                required autofocus autocomplete="info" />
+                autofocus autocomplete="info" />
             <x-input-error class="mt-2" :messages="$errors->get('info')" />
         </div>
         
