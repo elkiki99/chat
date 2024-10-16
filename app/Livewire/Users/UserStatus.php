@@ -18,17 +18,12 @@ class UserStatus extends Component
 
     public function getListeners(): array
     {
-        $listeners = [
+        return [
             'userTyping' => 'handleUserTyping',
             'userStoppedTyping' => 'handleUserStoppedTyping',
+            "echo-private:App.Models.Chat.{$this->chatId},UserTyping" => 'handleUserTypingBroadcast',
+            "echo-private:App.Models.Chat.{$this->chatId},UserStoppedTyping" => 'handleUserStoppedTypingBroadcast',
         ];
-    
-        if ($this->chatId) {
-            $listeners["echo-private:App.Models.Chat.{$this->chatId},UserTyping"] = 'handleUserTypingInRealTime';
-            $listeners["echo-private:App.Models.Chat.{$this->chatId},UserStoppedTyping"] = 'handleUserStoppedTypingInRealTime';
-        }
-    
-        return $listeners;
     }
 
     public function mount($chatId)
@@ -55,7 +50,6 @@ class UserStatus extends Component
         }
         $this->isTyping = false;
         $this->typingUser = null;
-        $this->dispatch('userTypingStatusUpdated', $this->chatId, null);
         broadcast(new UserStoppedTyping($this->chatId, Auth::id()))->toOthers();
     }
 
@@ -65,16 +59,16 @@ class UserStatus extends Component
 
         if ($this->typingUser && $this->typingUser->id === $currentUserId) {
             $this->isTyping = false;
-        }
-
-        foreach (User::all() as $user) {
-            if ($user->id !== $currentUserId && Cache::has("chat_{$this->chatId}_user_typing_{$user->id}")) {
-                $this->isTyping = true;
-                $this->typingUser = $user;
-                break;
+        } else {
+            $this->isTyping = false;
+            
+            foreach (Auth::user()->contacts as $user) {
+                if ($user->id !== $currentUserId && Cache::has("chat_{$this->chatId}_user_typing_{$user->id}")) {
+                    $this->isTyping = true;
+                    $this->typingUser = $user;
+                }
             }
         }
-
         return view('livewire.users.user-status');
     }
 }

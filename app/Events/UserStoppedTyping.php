@@ -15,15 +15,12 @@ class UserStoppedTyping implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $chatId;
-
     /**
      * Create a new event instance.
      */
-    public function __construct($chatId)
-    {
-        $this->chatId = $chatId;
-    }
+    public function __construct(
+        public $chatId,
+    ) {}
 
     /**
      * Get the channels the event should broadcast on.
@@ -40,7 +37,7 @@ class UserStoppedTyping implements ShouldBroadcastNow
     public function broadcastWith(): array
     {
         return [
-            'chatId' => $this->chatId
+            'chatId' => $this->chatId,
         ];
     }
 }
