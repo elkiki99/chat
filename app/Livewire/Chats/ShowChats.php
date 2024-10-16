@@ -13,7 +13,6 @@ class ShowChats extends Component
     public $selectedChat = null;
     public $chats = [];
     public $allChats = [];
-    public $chat;
     public $user;
 
     public function getListeners(): array
@@ -28,7 +27,7 @@ class ShowChats extends Component
             'contactAdded' => 'userAddActionOnChat',
         ];
 
-        foreach ($this->chats as $chat) {
+        foreach ($this->allChats as $chat) {
             if ($chat) {
                 $listeners['echo-private:App.Models.Chat.' . $chat->id . ',MessageSent'] = 'invalidateCacheAndFetchChats';
                 $listeners['echo-private:App.Models.Chat.' . $chat->id . ',MessageRead'] = 'updateChatInRealTime';
@@ -91,6 +90,8 @@ class ShowChats extends Component
         $this->selectedChat = $chatId;
         $this->dispatch('chatSelected', $chatId);
         Auth::user()->update(['is_active_in_chat' => $chatId]);
+        $this->dispatch('scrollDown');
+
     }
 
     public function updatedSearch($value)

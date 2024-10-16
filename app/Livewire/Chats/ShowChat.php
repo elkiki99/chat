@@ -6,25 +6,18 @@ use App\Models\Chat;
 use App\Models\Message;
 use Livewire\Component;
 use App\Events\MessageRead;
-use App\Events\MessageSent;
-use Illuminate\Support\Str;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\File as HttpFile;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Storage;
 
 class ShowChat extends Component
 {
     use WithPagination;
 
     public ?Chat $chat = null;
-    public $body = '';
     public $messages = [];
     public $messageAmount = 100;
     public $user;
-    public $files = [];
-    public $file;
     public $readMessages = [];
 
     public function getListeners(): array
@@ -35,6 +28,8 @@ class ShowChat extends Component
             'userLeftGroup' => 'setChatToNull',
             'chatDeleted' => 'setChatToNull',
             'userTyping' => 'handleUserTyping',
+            'searchActiveUsers' => 'checkForActiveUsersAndMarkSeen',
+            'updateChatInRealTime' => 'updateChatInRealTime',
         ];
 
         if ($this->chat) {
@@ -52,7 +47,7 @@ class ShowChat extends Component
             $this->chat = null;
         }
     }
-    
+
     public function loadMoreMessages()
     {
         $this->messageAmount += 100;
@@ -72,7 +67,6 @@ class ShowChat extends Component
     private function loadChat($chatId)
     {
         $this->chat = Chat::with('users', 'messages')->find($chatId);
-        // $this->messages;
         $this->markMessagesAsSeen($chatId);
         $this->scrollDown();
     }
@@ -82,108 +76,20 @@ class ShowChat extends Component
         $this->loadChat($chatId);
     }
 
-    public function sendMessage()
-    {
-        $trimmedBody = trim($this->body);
-        if (empty($trimmedBody)) {
-            return;
-        }
-
-        $message = $this->chat->messages()->create([
-            'chat_id' => $this->chat->id,
-            'user_id' => Auth::id(),
-            'body' => $trimmedBody,
-            'is_file' => false,
-        ]);
-        $this->reset('body');
-
-        Cache::forget('chat-' . $this->chat->id . '-messages');
-
-        if ($this->chat->users()->updateExistingPivot(Auth::id(), ['is_active' => false])) {
-            $this->chat->users()->updateExistingPivot(Auth::id(), ['is_active' => true]);
-        }
-
-        if ($this->chat->users()->updateExistingPivot(Auth::id(), ['is_archived' => true])) {
-            $this->chat->users()->updateExistingPivot(Auth::id(), ['is_archived' => false]);
-            $this->dispatch('chatUnarchived', $this->chat->id);
-        }
-
-        $recipients = $this->chat->users->where('id', '!=', Auth::id());
-        foreach ($recipients as $user) {
-            $isArchived = $user->pivot->is_archived ?? false;
-            if ($isArchived) {
-                $this->chat->users()->updateExistingPivot($user->id, ['is_archived' => false]);
-                $this->dispatch('chatUnarchived', $this->chat->id);
-            }
-        }
-
-        broadcast(new MessageSent($this->chat, $message));
-        $this->checkForActiveUsersAndMarkSeen();
-        $this->updateChatInRealTime();
-    }
-
-    public function sendFile()
-    {
-        foreach ($this->files as $file) {
-            $tempPath = $file['path'];
-            $extension = $file['extension'];
-    
-            $imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp'];
-            $newFileName = !in_array(strtolower($extension), $imageExtensions)
-                ? $file['name']
-                : Str::random(20) . '.' . $extension;
-    
-            $newFileName = Storage::disk('s3')->putFileAs('uploads', new HttpFile($tempPath), $newFileName);
-    
-            $message = $this->chat->messages()->create([
-                'chat_id' => $this->chat->id,
-                'user_id' => Auth::id(),
-                'body' => $newFileName,
-                'is_file' => true,
-            ]);
-        }
-    
-        Cache::forget('chat-' . $this->chat->id . '-messages');
-    
-        if ($this->chat->users()->updateExistingPivot(Auth::id(), ['is_active' => false])) {
-            $this->chat->users()->updateExistingPivot(Auth::id(), ['is_active' => true]);
-        }
-    
-        if ($this->chat->users()->updateExistingPivot(Auth::id(), ['is_archived' => true])) {
-            $this->chat->users()->updateExistingPivot(Auth::id(), ['is_archived' => false]);
-            $this->dispatch('chatUnarchived', $this->chat->id);
-        }
-    
-        $recipients = $this->chat->users->where('id', '!=', Auth::id());
-        foreach ($recipients as $user) {
-            $isArchived = $user->pivot->is_archived ?? false;
-            if ($isArchived) {
-                $this->chat->users()->updateExistingPivot($user->id, ['is_archived' => false]);
-                $this->dispatch('chatUnarchived', $this->chat->id);
-            }
-        }
-    
-        broadcast(new MessageSent($this->chat, $message));
-        $this->checkForActiveUsersAndMarkSeen();
-        $this->updateChatInRealTime();
-    
-        $this->files = [];
-    }
-
     public function markMessagesAsSeen($chatId)
     {
         $user = Auth::user();
         $cacheKey = "chat_{$chatId}_read_messages_{$user->id}";
-    
+
         $readMessages = Cache::get($cacheKey, []);
-    
+
         $messages = Message::where('chat_id', $chatId)
             ->whereDoesntHave('seenBy', function ($query) use ($user) {
                 $query->where('user_id', $user->id);
             })
             ->whereNotIn('id', $readMessages)
             ->pluck('id');
-    
+
         if ($messages->isNotEmpty()) {
             $messageIds = $messages->toArray();
             Message::whereIn('id', $messageIds)->each(function ($message) use ($user) {
@@ -191,14 +97,13 @@ class ShowChat extends Component
             });
 
             broadcast(new MessageRead($messageIds, $user, $chatId));
-
             Cache::put($cacheKey, array_merge($readMessages, $messageIds), 600);
         }
-    
+
         $this->updateChatInRealTime();
     }
 
-    private function checkForActiveUsersAndMarkSeen()
+    public function checkForActiveUsersAndMarkSeen()
     {
         if (!$this->chat) {
             return;
@@ -206,13 +111,14 @@ class ShowChat extends Component
         $activeUsers = $this->chat->users()
             ->where('users.id', '!=', Auth::id())
             ->get();
-
+    
         foreach ($activeUsers as $user) {
             if ($user->is_active_in_chat === $this->chat->id) {
                 $this->markMessagesAsSeen($this->chat->id);
                 break;
             }
         }
+        $this->updateChatInRealTime();
     }
 
     public function handleMessageRead()
@@ -243,7 +149,6 @@ class ShowChat extends Component
         }
 
         $this->scrollDown();
-        $this->body = '';
     }
 
     public function render()
