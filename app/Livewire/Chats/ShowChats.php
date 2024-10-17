@@ -29,11 +29,8 @@ class ShowChats extends Component
         ];
 
         foreach ($this->allChats as $chat) {
-            // if ($this->selectedChat) {
-            if ($this->chat) {
-                $listeners['echo-private:App.Models.Chat.' . $chat->id . ',MessageSent'] = 'invalidateCacheAndFetchChats';
-                $listeners['echo-private:App.Models.Chat.' . $chat->id . ',MessageRead'] = 'updateChatInRealTime';
-            }
+            $listeners['echo-private:App.Models.Chat.' . $chat->id . ',MessageSent'] = 'invalidateCacheAndFetchChats';
+            $listeners['echo-private:App.Models.Chat.' . $chat->id . ',MessageRead'] = 'updateChatInRealTime';
         }
         return $listeners;
     }
@@ -43,10 +40,9 @@ class ShowChats extends Component
         $this->selectedChat = Auth::user()->is_active_in_chat;
         $this->fetchChats();
     }
-    
+
     public function userRemoveActionOnChat()
     {
-        // $this->removeChatListeners();
         $this->selectedChat = null;
         $this->invalidateCacheAndFetchChats();
     }

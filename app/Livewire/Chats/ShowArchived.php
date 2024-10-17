@@ -25,10 +25,8 @@ class ShowArchived extends Component
         ];
 
         foreach ($this->chats as $chat) {
-            if ($chat) {
-                $listeners['echo-private:App.Models.Chat.' . $chat->id . ',MessageSent'] = 'fetchChats';
-                $listeners['echo-private:App.Models.Chat.' . $chat->id . ',MessageRead'] = 'updateChatInRealTime';
-            }
+            $listeners['echo-private:App.Models.Chat.' . $chat->id . ',MessageSent'] = 'fetchChats';
+            $listeners['echo-private:App.Models.Chat.' . $chat->id . ',MessageRead'] = 'updateChatInRealTime';
         }
 
         return $listeners;
@@ -40,7 +38,7 @@ class ShowArchived extends Component
         $this->selectedChat = Auth::user()->is_active_in_chat;
         $this->fetchChats();
     }
-        
+
     public function archiveChatAndUpdate()
     {
         Cache::forget("archived-chats-" . Auth::id());
@@ -73,7 +71,7 @@ class ShowArchived extends Component
                     return optional($chat->messages->first())->created_at;
                 });
         });
-    
+
         $this->chats = $this->allChats->values();
     }
 

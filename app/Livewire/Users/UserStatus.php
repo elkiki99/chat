@@ -21,8 +21,8 @@ class UserStatus extends Component
         return [
             'userTyping' => 'handleUserTyping',
             'userStoppedTyping' => 'handleUserStoppedTyping',
-            "echo-private:App.Models.Chat.{$this->chatId},UserTyping" => 'handleUserTypingBroadcast',
-            "echo-private:App.Models.Chat.{$this->chatId},UserStoppedTyping" => 'handleUserStoppedTypingBroadcast',
+            "echo-private:App.Models.Chat.{$this->chatId},UserTyping" => '',
+            "echo-private:App.Models.Chat.{$this->chatId},UserStoppedTyping" => '',
         ];
     }
 
