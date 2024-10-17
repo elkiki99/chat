@@ -61,4 +61,4 @@ For any inquiries, please reach out at brossani23@gmail.com.
 
 ## Demo
 
-https://chat-spring-star-2575.fly.dev/
+https://chat-young-glade-8549.fly.dev/
