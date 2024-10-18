@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\Auth\LoginRequest;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Cache;
+use App\Http\Requests\Auth\LoginRequest;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -28,6 +29,8 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
+        Auth::user()->update(['last_seen' => null]);
+
         return redirect()->intended(route('dashboard', absolute: false));
     }
 
@@ -37,7 +40,12 @@ class AuthenticatedSessionController extends Controller
     public function destroy(Request $request): RedirectResponse
     {
         if (Auth::check()) {
-            Auth::user()->update(['is_active_in_chat' => null]);
+            $user = Auth::user();
+            $user->update([
+                'is_active_in_chat' => null,
+                'last_seen' => now(),
+            ]);
+            Cache::forget("user_online_{$user->id}");
         }
 
         Auth::guard('web')->logout();

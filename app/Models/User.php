@@ -26,6 +26,7 @@ class User extends Authenticatable
         'profile_picture',
         'password',
         'is_active_in_chat',
+        'last_seen',
     ];
 
     /**
@@ -85,4 +86,9 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Message::class, 'message_user');
     }
+
+    // public function status()
+    // {
+        
+    // }
 }
