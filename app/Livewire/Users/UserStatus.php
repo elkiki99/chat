@@ -62,22 +62,19 @@ class UserStatus extends Component
     public function updateUserStatus()
     {
         $currentUserId = Auth::id();
+        Cache::forget("user_online_{$currentUserId}");
+        Auth::user()->update(['last_seen' => now()]);
 
-        // Verificamos si el usuario está autenticado
         if (Auth::check()) {
-            // Si el usuario está autenticado, actualizamos su estado a 'online'
-            Cache::put("user_online_{$currentUserId}", true, now()->addMinutes(5)); // Online por 5 minutos
-            // Auth::user()->update(['last_seen' => null]);
+            Cache::put("user_online_{$currentUserId}", true, now()->addSeconds(30));
+            Auth::user()->update(['last_seen' => null]);
         }
     }
 
-
     public function render()
     {
-        // Actualizamos el estado de conexión del usuario
         $this->updateUserStatus();
 
-        // Manejamos el estado de typing como antes
         $currentUserId = Auth::id();
         if ($this->typingUser && $this->typingUser->id === $currentUserId) {
             $this->isTyping = false;

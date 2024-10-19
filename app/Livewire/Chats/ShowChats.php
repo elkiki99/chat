@@ -37,7 +37,6 @@ class ShowChats extends Component
 
     public function mount(): void
     {
-        $this->selectedChat = Auth::user()->is_active_in_chat;
         $this->fetchChats();
     }
 
@@ -84,12 +83,20 @@ class ShowChats extends Component
 
     public function selectChat($chatId)
     {
+        if ($this->selectedChat) {
+            $previousCacheKey = "chat-{$this->selectedChat}-user-" . Auth::id() . "-active";
+            Cache::forget($previousCacheKey);
+        }
+
         $this->chat = Chat::find($chatId);
-        $this->user = $this->chats->where('id', $chatId)->first()->users->where('id', '!=', Auth::id())->first();
+        $this->user = $this->chat->users->where('id', '!=', Auth::id())->first();
         $this->selectedChat = $chatId;
         $this->dispatch('chatSelected', $chatId);
-        Auth::user()->update(['is_active_in_chat' => $chatId]);
-        $this->dispatch('scrollDown');
+
+        $newCacheKey = "chat-{$chatId}-user-" . Auth::id() . "-active";
+        Cache::put($newCacheKey, true, now()->addMinutes(10));
+
+        $this->dispatch('scroll');
     }
 
     public function updatedSearch($value)

@@ -51,16 +51,6 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
-
-    public function isActive()
-    {
-        return $this->updated_at->diffForHumans() === Carbon::now()->diffForHumans();
-    }
-
-    public function lastActive()
-    {
-        return $this->updated_at->diffForHumans();
-    }
     
     public function chats()
     {

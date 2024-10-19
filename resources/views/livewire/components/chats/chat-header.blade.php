@@ -172,21 +172,20 @@
                                         <p class="dark:text-gray-400">No groups in common</p>
                                     @endif
                                 </div>
-
+                                
                                 <div class="">
                                     <p class="text-gray-500">Activity:</p>
-                                    @if ($user->isActive())
+                                    @if ($user->last_seen === null)
                                         <div class="flex items-center gap-2">
-                                            <p class="dark:text-gray-400">Active now</p>
-                                            <span class="relative flex w-3 h-3">
+                                            <p class="dark:text-gray-400">Online</p>
+                                            <span class="relative flex size-2">
                                                 <span
                                                     class="absolute inline-flex w-full h-full bg-green-400 rounded-full opacity-75 animate-ping"></span>
-                                                <span
-                                                    class="relative inline-flex w-3 h-3 bg-green-500 rounded-full"></span>
+                                                <span class="relative inline-flex bg-green-500 rounded-full size-2"></span>
                                             </span>
                                         </div>
                                     @else
-                                        <p class="dark:text-gray-400">Active {{ $user->lastActive() }}</p>
+                                        <p class="dark:text-gray-400">{{ \Carbon\Carbon::parse($user->last_seen)->diffForHumans() }}</p>
                                     @endif
                                 </div>
                             </div>

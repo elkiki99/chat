@@ -30,7 +30,6 @@ class ShowChat extends Component
             'userTyping' => 'handleUserTyping',
             'searchActiveUsers' => 'checkForActiveUsersAndMarkSeen',
             'updateChatInRealTime' => 'updateChatInRealTime',
-            // 'scrollDown' => 'scrollDown',
         ];
 
         if ($this->chat) {
@@ -42,8 +41,26 @@ class ShowChat extends Component
 
     public function mount()
     {
-        if (Auth::user()->is_active_in_chat) {
-            $this->loadChat(Auth::user()->is_active_in_chat);
+        $this->user = Auth::user();
+        $this->loadChat();
+    }
+    
+    private function loadChat($chatId = null)
+    {
+        if (!$chatId) {
+            $activeChatCacheKey = "user-{$this->user->id}-active-chat";
+            $chatId = Cache::get($activeChatCacheKey);
+        }
+    
+        if ($chatId) {
+            $this->chat = Chat::with('users', 'messages')->find($chatId);
+            if ($this->chat) {
+                $this->messages = Cache::get("chat-{$chatId}-messages", []);
+                $this->markMessagesAsSeen($chatId);
+                $this->updateChatInRealTime();
+            } else {
+                $this->chat = null;
+            }
         } else {
             $this->chat = null;
         }
@@ -56,20 +73,13 @@ class ShowChat extends Component
 
     public function setChatToNull()
     {
-        $this->chat = null;
+        if ($this->chat) {
+            $cacheKey = "chat-{$this->chat->id}-user-{$this->user->id}-active";
+            Cache::forget($cacheKey);
+            $this->chat = null;
+        }
+        
         $this->updateChatInRealTime();
-    }
-
-    public function scrollDown()
-    {
-        $this->dispatch('scrollDown');
-    }
-
-    private function loadChat($chatId)
-    {
-        $this->chat = Chat::with('users', 'messages')->find($chatId);
-        $this->markMessagesAsSeen($chatId);
-        $this->scrollDown();
     }
 
     public function changeToSelectedChat($chatId)
@@ -100,7 +110,6 @@ class ShowChat extends Component
             broadcast(new MessageRead($messageIds, $user, $chatId));
             Cache::put($cacheKey, array_merge($readMessages, $messageIds), 600);
         }
-
         $this->updateChatInRealTime();
     }
 
@@ -109,16 +118,19 @@ class ShowChat extends Component
         if (!$this->chat) {
             return;
         }
+    
         $activeUsers = $this->chat->users()
             ->where('users.id', '!=', Auth::id())
             ->get();
     
         foreach ($activeUsers as $user) {
-            if ($user->is_active_in_chat === $this->chat->id) {
+            $cacheKey = "chat-{$this->chat->id}-user-{$user->id}-active";
+            if (Cache::has($cacheKey)) {
                 $this->markMessagesAsSeen($this->chat->id);
                 break;
             }
         }
+    
         $this->updateChatInRealTime();
     }
 
@@ -148,12 +160,13 @@ class ShowChat extends Component
 
             Cache::put($cacheKey, $this->messages, 600);
         }
-
-        $this->scrollDown();
+        $this->dispatch('scrollDown');
     }
 
     public function render()
     {
+        $this->updateChatInRealTime();
+
         return view('livewire.chats.show-chat', [
             'user' => $this->user,
         ]);

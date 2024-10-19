@@ -30,6 +30,8 @@ class UserFactory extends Factory
             'username' => $this->faker->userName(),
             'email_verified_at' => now(),
             // 'password' => static::$password ??= Hash::make('password'),
+            'last_seen' => now(),
+            'info' => $this->faker->sentence(),
             'password' => "@DoctorWho2332",
             'remember_token' => Str::random(10),
         ];
