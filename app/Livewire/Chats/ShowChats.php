@@ -83,19 +83,15 @@ class ShowChats extends Component
 
     public function selectChat($chatId)
     {
-        if ($this->selectedChat) {
-            $previousCacheKey = "chat-{$this->selectedChat}-user-" . Auth::id() . "-active";
-            Cache::forget($previousCacheKey);
-        }
+        // if ($this->selectedChat) {
+        //     $previousCacheKey = "user-{$this->user->id}-active-chat";
+        //     Cache::forget($previousCacheKey, $this->selectedChat);
+        // }
 
         $this->chat = Chat::find($chatId);
         $this->user = $this->chat->users->where('id', '!=', Auth::id())->first();
         $this->selectedChat = $chatId;
         $this->dispatch('chatSelected', $chatId);
-
-        $newCacheKey = "chat-{$chatId}-user-" . Auth::id() . "-active";
-        Cache::put($newCacheKey, true, now()->addMinutes(10));
-
         $this->dispatch('scroll');
     }
 

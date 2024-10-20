@@ -44,14 +44,14 @@ class ShowChat extends Component
         $this->user = Auth::user();
         $this->loadChat();
     }
-    
+
     private function loadChat($chatId = null)
     {
         if (!$chatId) {
-            $activeChatCacheKey = "user-{$this->user->id}-active-chat";
-            $chatId = Cache::get($activeChatCacheKey);
+            $cacheKey = "user-{$this->user->id}-active-chat";
+            $chatId = Cache::get($cacheKey);
         }
-    
+        
         if ($chatId) {
             $this->chat = Chat::with('users', 'messages')->find($chatId);
             if ($this->chat) {
@@ -61,8 +61,6 @@ class ShowChat extends Component
             } else {
                 $this->chat = null;
             }
-        } else {
-            $this->chat = null;
         }
     }
 
@@ -74,17 +72,19 @@ class ShowChat extends Component
     public function setChatToNull()
     {
         if ($this->chat) {
-            $cacheKey = "chat-{$this->chat->id}-user-{$this->user->id}-active";
+            $cacheKey = "user-{$this->user->id}-active-chat";
             Cache::forget($cacheKey);
             $this->chat = null;
         }
-        
+
         $this->updateChatInRealTime();
     }
 
     public function changeToSelectedChat($chatId)
     {
         $this->loadChat($chatId);
+        $cacheKey = "user-{$this->user->id}-active-chat";
+        Cache::put($cacheKey, $chatId, 600);
     }
 
     public function markMessagesAsSeen($chatId)
@@ -118,11 +118,11 @@ class ShowChat extends Component
         if (!$this->chat) {
             return;
         }
-    
+
         $activeUsers = $this->chat->users()
             ->where('users.id', '!=', Auth::id())
             ->get();
-    
+
         foreach ($activeUsers as $user) {
             $cacheKey = "chat-{$this->chat->id}-user-{$user->id}-active";
             if (Cache::has($cacheKey)) {
@@ -130,7 +130,7 @@ class ShowChat extends Component
                 break;
             }
         }
-    
+
         $this->updateChatInRealTime();
     }
 
