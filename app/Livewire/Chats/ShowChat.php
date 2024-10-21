@@ -51,7 +51,7 @@ class ShowChat extends Component
             $cacheKey = "user-{$this->user->id}-active-chat";
             $chatId = Cache::get($cacheKey);
         }
-        
+
         if ($chatId) {
             $this->chat = Chat::with('users', 'messages')->find($chatId);
             if ($this->chat) {

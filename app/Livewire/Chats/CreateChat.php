@@ -6,6 +6,7 @@ use App\Models\Chat;
 use App\Models\User;
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 
 class CreateChat extends Component
 {
@@ -47,11 +48,14 @@ class CreateChat extends Component
 
             $chat->users()->attach([Auth::id(), $contactId]);
 
-            Auth::user()->update(['is_active_in_chat' => $chat->id]);
+            $cacheKey = "user-{$userId}-active-chat";
+            Cache::put($cacheKey, $chat->id, 600);
+            
             $this->dispatch('chatCreated', $chat->id);
             $this->dispatch('chatSelected', $chat->id);
         } else {
-            Auth::user()->update(['is_active_in_chat' => $chatExists->id]);
+            $cacheKey = "user-{$userId}-active-chat";
+            Cache::put($cacheKey, $chatExists->id, 600);
             $this->dispatch('chatSelected', $chatExists->id);
         }
     }

@@ -5,6 +5,7 @@ namespace App\Livewire\Components\Chats;
 use App\Models\Chat;
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 
 class ChatHeader extends Component
 {
@@ -37,13 +38,11 @@ class ChatHeader extends Component
 
     public function backToChats()
     {
-        Auth::user()->update(['is_active_in_chat' => null]);
         $this->dispatch('chatArchived');
     }
 
     public function backToArchived()
     {
-        Auth::user()->update(['is_active_in_chat' => null]);
         $this->dispatch('goToArchived');
     }
 
@@ -59,9 +58,7 @@ class ChatHeader extends Component
     public function leaveGroup()
     {
         $user = Auth::user();
-        $this->chat->users()->detach($user->id);
-        $user->is_active_in_chat = null;
-        $user->save();
+        $this->chat->users()->detach($user->id);;
         $this->dispatch('userLeftGroup');
     }
 
@@ -69,8 +66,8 @@ class ChatHeader extends Component
     {
         $this->dispatch('chatSelected', $chatId);
         $this->selectedChat = $chatId;
-        Auth::user()->update(['is_active_in_chat' => $chatId]);
-    }
+        $cacheKey = "user-{$this->user->id}-active-chat";
+        Cache::put($cacheKey, $chatId, 600);    }
 
     public function createChat($contactId)
     {
@@ -97,11 +94,13 @@ class ChatHeader extends Component
 
             $chat->users()->attach([Auth::id(), $contactId]);
 
-            Auth::user()->update(['is_active_in_chat' => $chat->id]);
+            $cacheKey = "user-{$this->user->id}-active-chat";
+            Cache::put($cacheKey, $chat->id, 600);            
             $this->dispatch('chatCreated', $chat->id);
             $this->dispatch('chatSelected', $chat->id);
         } else {
-            Auth::user()->update(['is_active_in_chat' => $chatExists->id]);
+            $cacheKey = "user-{$this->user->id}-active-chat";
+            Cache::put($cacheKey, $chatExists->id, 600);
             $this->dispatch('chatSelected', $chatExists->id);
         }
     }
@@ -110,7 +109,6 @@ class ChatHeader extends Component
     {
         $chat = Chat::find($chatId);
         $chat->users()->updateExistingPivot(Auth::id(), ['is_archived' => true]);
-        Auth::user()->update(['is_active_in_chat' => null]);
         $this->dispatch('chatArchived', $chatId);
     }
 
@@ -118,7 +116,6 @@ class ChatHeader extends Component
     {
         $chat = Chat::find($chatId);
         $chat->users()->updateExistingPivot(Auth::id(), ['is_active' => false]);
-        Auth::user()->update(['is_active_in_chat' => null]);
         $this->dispatch('chatDeleted', $chatId);    
     }
 
@@ -132,14 +129,12 @@ class ChatHeader extends Component
     public function removeContact($userId)
     {
         Auth::user()->contacts()->detach($userId);
-        Auth::user()->update(['is_active_in_chat' => null]);
         $this->dispatch('contactRemoved');
     }
 
     public function addContact($userId)
     {
         Auth::user()->contacts()->attach($userId);
-        Auth::user()->update(['is_active_in_chat' => $userId]);
         $this->dispatch('contactAdded', $userId);
     }
 

@@ -17,8 +17,28 @@ class SendMessage extends Component
     public $body = '';
     public $chat;
 
+    public function mount()
+    {
+        $this->loadChatFromCache();
+    }
+
+    public function loadChatFromCache()
+    {
+        $userId = Auth::id();
+        $chatId = Cache::get("user-{$userId}-active-chat");
+
+        if ($chatId) {
+            $this->chat = \App\Models\Chat::find($chatId);
+        }
+    }
+
     public function sendMessage()
     {
+        $this->loadChatFromCache();
+        if (!$this->chat) {
+            return;
+        }
+        
         $trimmedBody = trim($this->body);
         if (empty($trimmedBody)) {
             return;
@@ -43,17 +63,17 @@ class SendMessage extends Component
             $this->dispatch('chatUnarchived', $this->chat->id);
         }
 
-        // $recipients = $this->chat->users->where('id', '!=', Auth::id());
-        // foreach ($recipients as $user) {
-        //     $this->chat->users()->updateExistingPivot($user->id, ['is_archived' => false, 'is_active' => true]);
-        //     $this->dispatch('chatUnarchived', $this->chat->id);
-        // }
         broadcast(new MessageSent($this->chat, $message));
         $this->dispatch('searchActiveUsers');
     }
 
     public function sendFile()
     {
+        $this->loadChatFromCache();
+        if (!$this->chat) {
+            return;
+        }
+        
         foreach ($this->files as $file) {
             $tempPath = $file['path'];
             $extension = $file['extension'];
@@ -84,11 +104,6 @@ class SendMessage extends Component
             $this->dispatch('chatUnarchived', $this->chat->id);
         }
 
-        // $recipients = $this->chat->users->where('id', '!=', Auth::id());
-        // foreach ($recipients as $user) {
-        //     $this->chat->users()->updateExistingPivot($user->id, ['is_archived' => false, 'is_active' => true]);
-        //     $this->dispatch('chatUnarchived', $this->chat->id);
-        // }
         broadcast(new MessageSent($this->chat, $message));
         $this->dispatch('searchActiveUsers');
     }

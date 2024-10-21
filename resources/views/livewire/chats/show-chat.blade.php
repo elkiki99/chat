@@ -25,7 +25,7 @@
             </div>
         </div>
 
-        <livewire:messages.send-message :chat="$chat" />
+        <livewire:messages.send-message />
     @else
         <div class="relative hidden h-full md:flex">
             <x-lobby />

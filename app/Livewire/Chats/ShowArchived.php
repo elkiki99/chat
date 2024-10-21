@@ -35,7 +35,6 @@ class ShowArchived extends Component
     public function mount(): void
     {
         Cache::forget("archived-chats-" . Auth::id());
-        $this->selectedChat = Auth::user()->is_active_in_chat;
         $this->fetchChats();
     }
 
@@ -47,7 +46,7 @@ class ShowArchived extends Component
 
     public function goBackToArchived()
     {
-        $this->selectedChat = null;
+        Cache::forget('user-' . Auth::id() . '-active-chat');
         $this->fetchChats();
     }
 
@@ -81,7 +80,8 @@ class ShowArchived extends Component
         $this->user = $this->chats->where('id', $chatId)->first()->users->where('id', '!=', Auth::id())->first();
         $this->selectedChat = $chatId;
         $this->dispatch('chatSelected', $chatId);
-        Auth::user()->update(['is_active_in_chat' => $chatId]);
+        Cache::put("user-".Auth::id()."-active-chat", $chatId, 600);
+
     }
 
     public function updatedSearch($value)

@@ -9,6 +9,7 @@ use Illuminate\Http\File;
 use Illuminate\Support\Str;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 
 class CreateGroup extends Component
@@ -45,6 +46,8 @@ class CreateGroup extends Component
 
     public function createGroup()
     {
+        $userId = Auth::id();
+
         $validated = $this->validate([
             'name' => 'required|min:3|max:45',
             'chat_image' => 'nullable|image|max:2048|mimes:png,jpeg,jpg,webp',
@@ -54,7 +57,6 @@ class CreateGroup extends Component
             $file = $this->chat_image;
             $filename = Str::random(10) . '.' . $file->getClientOriginalExtension();
 
-            // $file->storeAs('chat-images', $filename, 'public');
             $filePath = Storage::disk('s3')->putFileAs('chat-images', $file, $filename, 'public');
         }
 
@@ -69,7 +71,8 @@ class CreateGroup extends Component
             $chat->users()->attach(Auth::id());
             $chat->users()->attach($this->selectedContacts->all());
 
-            Auth::user()->update(['is_active_in_chat' => $chat->id]);
+            $cacheKey = "user-{$userId}-active-chat";
+            Cache::put($cacheKey, $chat->id, 600);
 
             $this->dispatch('close');
             $this->dispatch('chatCreated', $chat->id);
