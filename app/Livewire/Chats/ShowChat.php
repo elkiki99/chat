@@ -48,6 +48,7 @@ class ShowChat extends Component
 
     private function loadChat($chatId = null)
     {
+        
         if (!$chatId) {
             $cacheKey = "user-{$this->user->id}-active-chat";
             $chatId = Cache::get($cacheKey);
@@ -84,6 +85,7 @@ class ShowChat extends Component
         $this->loadChat($chatId);
         $cacheKey = "user-{$this->user->id}-active-chat";
         Cache::put($cacheKey, $chatId, 600);
+        $this->dispatch('hideSidebar');
     }
 
     public function markMessagesAsSeen($chatId)

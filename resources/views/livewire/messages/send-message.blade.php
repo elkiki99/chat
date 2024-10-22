@@ -1,11 +1,8 @@
 <div class="">
     <!-- Chat actions -->
-    @php
-        $showAside = Auth::user()->is_active_in_chat === null;
-    @endphp
 
     <div
-        class="flex items-center px-4 py-2 {{ $showAside ? 'mb-12 sm:mb-0' : '' }} bg-white border-t border-gray-300 dark:border-t-0 dark:bg-gray-800">
+        class="flex items-center px-4 py-2 bg-white border-t border-gray-300 dark:border-t-0 dark:bg-gray-800">
         <!-- Send file clip button -->
         <button x-on:click="$dispatch('open-modal', 'send-file')"
             class="p-2 hover:bg-gray-100 dark:hover:bg-gray-750 hover:rounded-lg">

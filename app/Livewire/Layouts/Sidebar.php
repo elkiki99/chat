@@ -4,21 +4,42 @@ namespace App\Livewire\Layouts;
 
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 
 class Sidebar extends Component
 {
     public $activeComponent = 'chats';
+    public $showSidebar;
+
+    public function mount()
+    {
+        $this->showSidebar = !Cache::has('user-' . Auth::id() . '-active-chat');
+    }
 
     protected $listeners = [
         'chatSelected' => 'selectChats',
         'chatUnarchived' => 'selectChats',
         'chatArchived' => 'setChatToNull',
+        'hideSidebar' => 'handleHideSidebar',
+        'showSidebar' => 'handleShowSidebar',
     ];
 
     public function setChatToNull()
     {
-        Auth::user()->update(['is_active_in_chat' => null]);
+        $cacheKey = "user-" . Auth::id() . "-active-chat";
+        Cache::forget($cacheKey);
     }
+
+    public function handleShowSidebar()
+    {
+        $this->showSidebar = true;
+    }
+
+    public function handleHideSidebar()
+    {
+        $this->showSidebar = false;
+    }
+    
 
     public function selectChats()
     {
@@ -31,7 +52,7 @@ class Sidebar extends Component
         $this->dispatch('componentChanged', 'contacts');
         $this->dispatch('chatArchived');
         $this->activeComponent = 'contacts';
-    }   
+    }
 
     public function selectArchived()
     {

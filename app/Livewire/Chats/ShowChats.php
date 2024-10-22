@@ -45,12 +45,14 @@ class ShowChats extends Component
 
     public function userRemoveActionOnChat()
     {
+        $this->showAside = true;
         $this->invalidateCacheAndFetchChats();
     }
 
     public function handleBackToChats()
     {
         $this->showAside = true;
+        $this->dispatch('showSidebar');
     }
 
     public function invalidateCacheAndFetchChats()

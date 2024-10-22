@@ -1,10 +1,8 @@
-@php
-    $showAside = Auth::user()->is_active_in_chat === null;
-@endphp
-
-<!-- Sidebar -->
 <aside
-    class="fixed bottom-0 left-0 right-0 z-50 {{ $showAside ? 'flex' : 'hidden sm:flex' }} justify-around w-full h-12 p-1 text-white bg-gray-100 border-t border-gray-300 dark:border-r-0 sm:dark:border-r md:dark:border-0 dark:border-gray-800 dark:border-t-0 dark:bg-gray-900 sm:border-r sm:border-t-0 sm:justify-start sm:flex-col sm:h-full sm:w-12">
+    x-cloak 
+    x-data="{ showSidebar: @entangle('showSidebar') }"
+    x-bind:class="showSidebar ? 'flex' : 'hidden sm:flex'"
+    class="fixed bottom-0 left-0 right-0 z-50 justify-around w-full h-12 p-1 text-white bg-gray-100 border-t border-gray-300 dark:border-r-0 sm:dark:border-r md:dark:border-0 dark:border-gray-800 dark:border-t-0 dark:bg-gray-900 sm:border-r sm:border-t-0 sm:justify-start sm:flex-col sm:h-full sm:w-12">
     <!-- Chats -->
     <div
         class="flex items-center justify-center p-2 my-1 rounded-lg dark:hover:bg-gray-750 hover:cursor-pointer hover:bg-gray-150 {{ $activeComponent === 'chats' ? 'bg-gray-200 dark:bg-gray-800' : '' }}">

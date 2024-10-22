@@ -22,6 +22,11 @@ class SendMessage extends Component
         $this->loadChatFromCache();
     }
 
+    public function scrollDown()
+    {
+        $this->dispatch('scrollDown');
+    }
+
     public function loadChatFromCache()
     {
         $userId = Auth::id();
@@ -63,6 +68,7 @@ class SendMessage extends Component
             $this->dispatch('chatUnarchived', $this->chat->id);
         }
 
+        $this->scrollDown();
         broadcast(new MessageSent($this->chat, $message));
         $this->dispatch('searchActiveUsers');
     }
@@ -104,6 +110,7 @@ class SendMessage extends Component
             $this->dispatch('chatUnarchived', $this->chat->id);
         }
 
+        $this->scrollDown();
         broadcast(new MessageSent($this->chat, $message));
         $this->dispatch('searchActiveUsers');
     }
