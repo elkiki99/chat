@@ -16,7 +16,7 @@ class ShowChat extends Component
 
     public ?Chat $chat = null;
     public $messages = [];
-    public $messageAmount = 10;
+    public $messageAmount = 100;
     public $user;
     public $readMessages = [];
 
@@ -25,6 +25,7 @@ class ShowChat extends Component
         $listeners = [
             'chatSelected' => 'changeToSelectedChat',
             'chatArchived' => 'setChatToNull',
+            'backToChats' => 'setChatToNull',
             'userLeftGroup' => 'setChatToNull',
             'chatDeleted' => 'setChatToNull',
             'userTyping' => 'handleUserTyping',
@@ -66,7 +67,7 @@ class ShowChat extends Component
 
     public function loadMoreMessages()
     {
-        $this->messageAmount += 10;
+        $this->messageAmount += 100;
     }
 
     public function setChatToNull()
@@ -76,8 +77,6 @@ class ShowChat extends Component
             Cache::forget($cacheKey);
             $this->chat = null;
         }
-
-        $this->updateChatInRealTime();
     }
 
     public function changeToSelectedChat($chatId)

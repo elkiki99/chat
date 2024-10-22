@@ -15,40 +15,42 @@ class ShowChats extends Component
     public $chats = [];
     public $allChats = [];
     public $user;
+    public $showAside = true;
 
     public function getListeners(): array
     {
         $listeners = [
             'chatUnarchived' => 'invalidateCacheAndFetchChats',
             'chatCreated' => 'invalidateCacheAndFetchChats',
+            'backToChats' => 'handleBackToChats',
             'chatArchived' => 'userRemoveActionOnChat',
             'userLeftGroup' => 'userRemoveActionOnChat',
             'chatDeleted' => 'userRemoveActionOnChat',
             'contactRemoved' => 'userRemoveActionOnChat',
-            'contactAdded' => 'userAddActionOnChat',
         ];
 
         foreach ($this->allChats as $chat) {
             $listeners['echo-private:App.Models.Chat.' . $chat->id . ',MessageSent'] = 'invalidateCacheAndFetchChats';
             $listeners['echo-private:App.Models.Chat.' . $chat->id . ',MessageRead'] = 'updateChatInRealTime';
         }
+
         return $listeners;
     }
 
     public function mount(): void
     {
+        $this->showAside = !Cache::has('user-' . Auth::id() . '-active-chat');
         $this->fetchChats();
     }
 
     public function userRemoveActionOnChat()
     {
-        $this->selectedChat = null;
         $this->invalidateCacheAndFetchChats();
     }
 
-    public function userAddActionOnChat()
+    public function handleBackToChats()
     {
-        $this->invalidateCacheAndFetchChats();
+        $this->showAside = true;
     }
 
     public function invalidateCacheAndFetchChats()
@@ -61,10 +63,8 @@ class ShowChats extends Component
     {
         $cacheKey = 'user-' . Auth::id() . '-chats';
 
-        if (Cache::has($cacheKey)) {
-            $this->allChats = Cache::get($cacheKey);
-        } else {
-            $this->allChats = Auth::user()->chats()
+        $this->allChats = Cache::remember($cacheKey, 600, function () {
+            return Auth::user()->chats()
                 ->where('chat_user.is_active', true)
                 ->where('is_archived', false)
                 ->with(['users', 'messages' => function ($query) {
@@ -74,18 +74,20 @@ class ShowChats extends Component
                 ->sortByDesc(function ($chat) {
                     return optional($chat->messages->first())->created_at;
                 });
-
-            Cache::put($cacheKey, $this->allChats, 600);
-        }
+        });
 
         $this->chats = $this->allChats->values();
     }
 
     public function selectChat($chatId)
     {
-        $this->chat = Chat::find($chatId);
+        $this->showAside = false;
+
+        $this->chat = $this->allChats->where('id', $chatId)->first();
+
         $this->user = $this->chat->users->where('id', '!=', Auth::id())->first();
         $this->selectedChat = $chatId;
+
         $this->dispatch('chatSelected', $chatId);
         $this->dispatch('scroll');
     }

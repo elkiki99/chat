@@ -7,7 +7,7 @@
             <div class="p-6">
                 <div x-intersect="$wire.loadMoreMessages()"></div>
 
-                <div class="h-full" x-cloak>
+                <div class="h-full">
                     @forelse($messages as $index => $message)
                         @php
                             $isCurrentUser = $message->user_id === Auth::id();
@@ -16,7 +16,7 @@
                             $isFirstInBlock = $index === 0 || $messages[$index - 1]->user_id !== $message->user_id;
                         @endphp
 
-                        <x-message-bubble :chat="$chat" :message="$message" :isLastInBlock="$isLastInBlock" :isFirstInBlock="$isFirstInBlock"
+                        <x-message-bubble x-cloak :chat="$chat" :message="$message" :isLastInBlock="$isLastInBlock" :isFirstInBlock="$isFirstInBlock"
                             :isCurrentUser="$isCurrentUser" />
                     @empty
                         <x-lobby />

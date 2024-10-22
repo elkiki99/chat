@@ -1,11 +1,7 @@
-@php
-    $showAside = Auth::user()->is_active_in_chat === null;
-@endphp
-
-<aside
-    class="p-1 h-screen ml-0 overflow-auto bg-white dark:bg-gray-800 dark:border-gray-900 border-gray-300 min-w-96 border-r sm:ml-12 {{ $showAside ? 'w-full md:w-96' : 'hidden md:block' }}">
+<aside x-cloak x-data="{ showAside: @entangle('showAside') }" x-bind:class="showAside ? 'w-full md:w-96' : 'hidden md:block'"
+    class="h-screen p-1 ml-0 overflow-auto bg-white border-r border-gray-300 dark:bg-gray-800 dark:border-gray-900 min-w-96 sm:ml-12">
     <h2 class="px-4 py-4 text-xl font-semibold dark:text-gray-200">Chats</h2>
-    
+
     <!-- Search bar for chats -->
     <div class="flex items-center justify-between">
         <div class="w-full px-4">
@@ -149,10 +145,11 @@
                                         </div>
 
                                         @if (!$isCurrentUser && $unreadMessages)
-                                        <div
-                                        class="flex items-center justify-center p-2 text-sm text-white bg-green-500 rounded-full size-4">
-                                        <p class="text-xs">{{ $unreadMessages > 9 ? '9+' : $unreadMessages }}</p>
-                                    </div>
+                                            <div
+                                                class="flex items-center justify-center p-2 text-sm text-white bg-green-500 rounded-full size-4">
+                                                <p class="text-xs">{{ $unreadMessages > 9 ? '9+' : $unreadMessages }}
+                                                </p>
+                                            </div>
                                         @endif
                                     @else
                                         <p class="text-sm text-gray-400">No messages yet</p>

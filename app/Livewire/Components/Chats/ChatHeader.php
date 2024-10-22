@@ -38,7 +38,7 @@ class ChatHeader extends Component
 
     public function backToChats()
     {
-        $this->dispatch('chatArchived');
+        $this->dispatch('backToChats');
     }
 
     public function backToArchived()
