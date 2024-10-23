@@ -84,14 +84,13 @@ class ShowChats extends Component
     public function selectChat($chatId)
     {
         $this->showAside = false;
-
         $this->chat = $this->allChats->where('id', $chatId)->first();
 
         $this->user = $this->chat->users->where('id', '!=', Auth::id())->first();
         $this->selectedChat = $chatId;
 
         $this->dispatch('chatSelected', $chatId);
-        $this->dispatch('scroll');
+        $this->dispatch('refreshUserStatus', $this->user->id, $this->chat->id);
     }
 
     public function updatedSearch($value)

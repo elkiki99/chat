@@ -20,6 +20,7 @@ class UserStatus extends Component
     public function getListeners(): array
     {
         return [
+            'changeUserStatus' => 'handleRefreshUserStatus',
             'userTyping' => 'handleUserTyping',
             'userStoppedTyping' => 'handleUserStoppedTyping',
             "echo-private:App.Models.Chat.{$this->chatId},UserTyping" => '',
@@ -35,6 +36,16 @@ class UserStatus extends Component
                 ->where('user_id', '!=', $authUserId);
         })->first();
         $this->chatId = $chatId;
+    }
+
+    public function handleRefreshUserStatus($userId, $chatId)
+    {
+        // Actualizar el miembro y el chatId cuando cambie de usuario
+        $this->member = User::find($userId);
+        $this->chatId = $chatId;
+    
+        // Actualizar el estado del usuario
+        $this->updateUserStatus();
     }
 
     public function handleUserTyping($typingUserId)

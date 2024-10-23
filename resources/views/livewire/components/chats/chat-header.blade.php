@@ -17,7 +17,8 @@
                 <div class="block">
                     <p class="dark:text-gray-200">{{ $user->name }}</p>
                     <!-- User status -->
-                    <livewire:users.user-status :user="$user" :chatId="$chat->id" />
+                    <livewire:users.user-status :user="$user" :chatId="$chat->id"
+                        wire:key="user-status-{{ $chat->id }}" />
                 </div>
                 <!-- Chat actions -->
                 <div class="flex gap-4 ml-auto">
@@ -172,7 +173,7 @@
                                         <p class="dark:text-gray-400">No groups in common</p>
                                     @endif
                                 </div>
-                                
+
                                 <div class="">
                                     <p class="text-gray-500">Activity:</p>
                                     @if ($user->last_seen === null)
@@ -181,11 +182,13 @@
                                             <span class="relative flex size-2">
                                                 <span
                                                     class="absolute inline-flex w-full h-full bg-green-400 rounded-full opacity-75 animate-ping"></span>
-                                                <span class="relative inline-flex bg-green-500 rounded-full size-2"></span>
+                                                <span
+                                                    class="relative inline-flex bg-green-500 rounded-full size-2"></span>
                                             </span>
                                         </div>
                                     @else
-                                        <p class="dark:text-gray-400">{{ \Carbon\Carbon::parse($user->last_seen)->diffForHumans() }}</p>
+                                        <p class="dark:text-gray-400">
+                                            {{ \Carbon\Carbon::parse($user->last_seen)->diffForHumans() }}</p>
                                     @endif
                                 </div>
                             </div>

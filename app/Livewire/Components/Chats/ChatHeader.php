@@ -67,7 +67,8 @@ class ChatHeader extends Component
         $this->dispatch('chatSelected', $chatId);
         $this->selectedChat = $chatId;
         $cacheKey = "user-{$this->user->id}-active-chat";
-        Cache::put($cacheKey, $chatId, 600);    }
+        Cache::put($cacheKey, $chatId, 600);    
+    }
 
     public function createChat($contactId)
     {

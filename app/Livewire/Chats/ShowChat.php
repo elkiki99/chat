@@ -48,14 +48,18 @@ class ShowChat extends Component
 
     private function loadChat($chatId = null)
     {
-        
         if (!$chatId) {
             $cacheKey = "user-{$this->user->id}-active-chat";
             $chatId = Cache::get($cacheKey);
         }
-
+    
         if ($chatId) {
-            $this->chat = Chat::with('users', 'messages')->find($chatId);
+            $this->chat = Chat::with(['users:id,name', 'messages' => function($query) {
+                $query->select('id', 'chat_id', 'user_id', 'body', 'created_at')
+                      ->latest()
+                      ->take($this->messageAmount);
+            }])->find($chatId);
+    
             if ($this->chat) {
                 $this->messages = Cache::get("chat-{$chatId}-messages", []);
                 $this->markMessagesAsSeen($chatId);
@@ -145,22 +149,25 @@ class ShowChat extends Component
         if (!$this->chat) {
             return;
         }
-
+    
         $cacheKey = "chat-{$this->chat->id}-messages";
-
+    
         if (Cache::has($cacheKey)) {
             $this->messages = Cache::get($cacheKey);
         } else {
             $this->messages = $this->chat->messages()
-                ->with('seenBy')
+                ->select('id', 'chat_id', 'user_id', 'body', 'created_at')
+                ->with('seenBy:id,name')
                 ->latest()
                 ->take($this->messageAmount)
                 ->get()
                 ->sortBy('created_at')
                 ->values();
-
+    
             Cache::put($cacheKey, $this->messages, 600);
         }
+        
+        // Only dispatch scroll event when necessary
         $this->dispatch('scrollDown');
     }
 
